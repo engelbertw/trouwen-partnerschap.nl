@@ -61,6 +61,13 @@ export async function PUT(
         );
       }
 
+      // Calculate placeholder dates (1 year from now)
+      const now = new Date();
+      const placeholderDate = new Date(now);
+      placeholderDate.setFullYear(placeholderDate.getFullYear() + 1);
+      const wijzigbaarTot = new Date(placeholderDate);
+      wijzigbaarTot.setDate(wijzigbaarTot.getDate() + 7); // 7 days before ceremony
+
       const [newCeremonie] = await db
         .insert(ceremonie)
         .values({
@@ -68,6 +75,10 @@ export async function PUT(
           gemeenteOin: dossierData.gemeenteOin,
           locatieId: firstLocatie.id,
           taal,
+          datum: placeholderDate.toISOString().split('T')[0], // YYYY-MM-DD format
+          startTijd: '14:00:00', // Placeholder time
+          eindTijd: '15:00:00', // Placeholder time
+          wijzigbaarTot: wijzigbaarTot,
         })
         .returning();
 
