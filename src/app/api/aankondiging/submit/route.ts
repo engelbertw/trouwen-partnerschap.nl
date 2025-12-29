@@ -131,7 +131,7 @@ export async function POST(request: NextRequest) {
             geslachtsnaam: partner1.achternaam,
             geboortedatum: convertDateFormat(partner1.geboortedatum),
             geboorteplaats: partner1.plaats || 'Onbekend',
-            email: partner1.email,
+            // Email not in AankondigingData interface, so we don't update it
             updatedAt: new Date(),
           })
           .where(eq(partner.id, existingPartner1[0].id));
@@ -147,7 +147,7 @@ export async function POST(request: NextRequest) {
           geboortedatum: convertDateFormat(partner1.geboortedatum),
           geboorteplaats: partner1.plaats || 'Onbekend',
           geboorteland: 'Nederland',
-          email: partner1.email,
+          // Email not in AankondigingData interface, so we don't set it
           oudersOnbekend: false,
         }).returning();
       }
@@ -161,7 +161,7 @@ export async function POST(request: NextRequest) {
             geslachtsnaam: partner2.achternaam,
             geboortedatum: convertDateFormat(partner2.geboortedatum),
             geboorteplaats: partner2.plaats || 'Onbekend',
-            email: partner2.email,
+            // Email not in AankondigingData interface, so we don't update it
             updatedAt: new Date(),
           })
           .where(eq(partner.id, existingPartner2[0].id));
@@ -177,7 +177,7 @@ export async function POST(request: NextRequest) {
           geboortedatum: convertDateFormat(partner2.geboortedatum),
           geboorteplaats: partner2.plaats || 'Onbekend',
           geboorteland: 'Nederland',
-          email: partner2.email,
+          // Email not in AankondigingData interface, so we don't set it
           oudersOnbekend: false,
         }).returning();
       }
