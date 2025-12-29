@@ -41,6 +41,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // TypeScript: After the check above, we know partner1 and partner2 are defined
+    const partner1 = formData.partner1;
+    const partner2 = formData.partner2;
+
     // 4. Get gemeente OIN (hardcoded voor nu, later uit Clerk metadata of user settings)
     const gemeenteOin = '00000001002564440000'; // Voorbeeld OIN voor Amsterdam
 
@@ -123,11 +127,11 @@ export async function POST(request: NextRequest) {
         await tx
           .update(partner)
           .set({
-            voornamen: formData.partner1.voornamen,
-            geslachtsnaam: formData.partner1.achternaam,
-            geboortedatum: convertDateFormat(formData.partner1.geboortedatum),
-            geboorteplaats: formData.partner1.plaats || 'Onbekend',
-            email: formData.partner1.email,
+            voornamen: partner1.voornamen,
+            geslachtsnaam: partner1.achternaam,
+            geboortedatum: convertDateFormat(partner1.geboortedatum),
+            geboorteplaats: partner1.plaats || 'Onbekend',
+            email: partner1.email,
             updatedAt: new Date(),
           })
           .where(eq(partner.id, existingPartner1[0].id));
@@ -138,12 +142,12 @@ export async function POST(request: NextRequest) {
           dossierId: newDossier.id,
           gemeenteOin,
           sequence: 1,
-          voornamen: formData.partner1.voornamen,
-          geslachtsnaam: formData.partner1.achternaam,
-          geboortedatum: convertDateFormat(formData.partner1.geboortedatum),
-          geboorteplaats: formData.partner1.plaats || 'Onbekend',
+          voornamen: partner1.voornamen,
+          geslachtsnaam: partner1.achternaam,
+          geboortedatum: convertDateFormat(partner1.geboortedatum),
+          geboorteplaats: partner1.plaats || 'Onbekend',
           geboorteland: 'Nederland',
-          email: formData.partner1.email,
+          email: partner1.email,
           oudersOnbekend: false,
         }).returning();
       }
@@ -153,11 +157,11 @@ export async function POST(request: NextRequest) {
         await tx
           .update(partner)
           .set({
-            voornamen: formData.partner2.voornamen,
-            geslachtsnaam: formData.partner2.achternaam,
-            geboortedatum: convertDateFormat(formData.partner2.geboortedatum),
-            geboorteplaats: formData.partner2.plaats || 'Onbekend',
-            email: formData.partner2.email,
+            voornamen: partner2.voornamen,
+            geslachtsnaam: partner2.achternaam,
+            geboortedatum: convertDateFormat(partner2.geboortedatum),
+            geboorteplaats: partner2.plaats || 'Onbekend',
+            email: partner2.email,
             updatedAt: new Date(),
           })
           .where(eq(partner.id, existingPartner2[0].id));
@@ -168,12 +172,12 @@ export async function POST(request: NextRequest) {
           dossierId: newDossier.id,
           gemeenteOin,
           sequence: 2,
-          voornamen: formData.partner2.voornamen,
-          geslachtsnaam: formData.partner2.achternaam,
-          geboortedatum: convertDateFormat(formData.partner2.geboortedatum),
-          geboorteplaats: formData.partner2.plaats || 'Onbekend',
+          voornamen: partner2.voornamen,
+          geslachtsnaam: partner2.achternaam,
+          geboortedatum: convertDateFormat(partner2.geboortedatum),
+          geboorteplaats: partner2.plaats || 'Onbekend',
           geboorteland: 'Nederland',
-          email: formData.partner2.email,
+          email: partner2.email,
           oudersOnbekend: false,
         }).returning();
       }
