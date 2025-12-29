@@ -200,9 +200,9 @@ export function SoortCeremonieClient({ dossierId, types }: SoortCeremonieClientP
                     </h3>
                     <p className="font-sans text-sm text-gray-700">
                       {type.uitgebreideOmschrijving || type.omschrijving || 'Geen beschrijving beschikbaar.'}
-                      {type.talen && Array.isArray(type.talen) && type.talen.length > 0 && (
+                      {type.talen && Array.isArray(type.talen) && type.talen.length > 0 ? (
                         <> Deze is in het {formatTalen(type.talen)}.</>
-                      )}
+                      ) : null}
                     </p>
                   </div>
                 </div>
@@ -242,9 +242,9 @@ export function SoortCeremonieClient({ dossierId, types }: SoortCeremonieClientP
                     </h3>
                     <p className="font-sans text-sm text-gray-700">
                       {type.uitgebreideOmschrijving || type.omschrijving || 'Geen beschrijving beschikbaar.'}
-                      {type.talen && Array.isArray(type.talen) && type.talen.length > 0 && (
+                      {type.talen && Array.isArray(type.talen) && type.talen.length > 0 ? (
                         <> Deze is in het {formatTalen(type.talen)}.</>
-                      )}
+                      ) : null}
                     </p>
                   </div>
                 </div>
@@ -285,9 +285,9 @@ export function SoortCeremonieClient({ dossierId, types }: SoortCeremonieClientP
                     </h3>
                     <p className="font-sans text-sm text-gray-700">
                       {type.uitgebreideOmschrijving || type.omschrijving || 'Geen beschrijving beschikbaar.'}
-                      {type.talen && Array.isArray(type.talen) && type.talen.length > 0 && (
+                      {type.talen && Array.isArray(type.talen) && type.talen.length > 0 ? (
                         <> Deze is in het {formatTalen(type.talen)}.</>
-                      )}
+                      ) : null}
                     </p>
                   </div>
                 </div>
