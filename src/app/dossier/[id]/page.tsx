@@ -161,17 +161,28 @@ export default function HuwelijksdossierPage(): JSX.Element {
   const handleDownloadPDF = () => {
     try {
       // Convert dossier data to AankondigingData format
+      // Note: Some fields are not available in dossier structure, using placeholders
       const aankondigingData: AankondigingData = {
         type: dossier.type,
         partner1: {
-          voornamen: dossier.partner1.voornamen,
-          achternaam: dossier.partner1.geslachtsnaam,
+          voornamen: dossier.partner1.voornamen || '',
+          achternaam: dossier.partner1.geslachtsnaam || '',
           geboortedatum: '', // Not available in this data structure
+          adres: '', // Not available in this data structure
+          postcode: '', // Not available in this data structure
+          plaats: '', // Not available in this data structure
+          burgerlijkeStaat: '', // Not available in this data structure
+          ouders: [], // Not available in this data structure
         },
         partner2: {
-          voornamen: dossier.partner2.voornamen,
-          achternaam: dossier.partner2.geslachtsnaam,
+          voornamen: dossier.partner2.voornamen || '',
+          achternaam: dossier.partner2.geslachtsnaam || '',
           geboortedatum: '', // Not available in this data structure
+          adres: '', // Not available in this data structure
+          postcode: '', // Not available in this data structure
+          plaats: '', // Not available in this data structure
+          burgerlijkeStaat: '', // Not available in this data structure
+          ouders: [], // Not available in this data structure
         },
       };
 
