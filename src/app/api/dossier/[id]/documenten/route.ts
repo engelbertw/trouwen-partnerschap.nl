@@ -135,13 +135,24 @@ export async function POST(
 
     // Insert new documents
     if (documents.length > 0) {
-      const documentsToInsert = documents.map((doc: { documentId: string; code: string; type: string }) => ({
-        dossierId: dossierId,
-        gemeenteOin: dossierRecord.gemeenteOin,
-        type: doc.type,
-        status: 'ontbreekt' as const,
-        omschrijving: doc.code, // Store the document code
-      }));
+      // Valid papier types from enum
+      const validPapierTypes = ['geboorteakte', 'nationaliteitsverklaring', 'identiteitsbewijs', 'scheidingsbeschikking', 'overlijdensakte', 'trouwboekje', 'anders'] as const;
+      type PapierType = typeof validPapierTypes[number];
+
+      const documentsToInsert = documents.map((doc: { documentId: string; code: string; type: string }) => {
+        // Validate and cast type to enum
+        if (!validPapierTypes.includes(doc.type as PapierType)) {
+          throw new Error(`Invalid papier type: ${doc.type}`);
+        }
+
+        return {
+          dossierId: dossierId,
+          gemeenteOin: dossierRecord.gemeenteOin,
+          type: doc.type as PapierType,
+          status: 'ontbreekt' as const,
+          omschrijving: doc.code, // Store the document code
+        };
+      });
 
       await db.insert(papier).values(documentsToInsert);
     }
