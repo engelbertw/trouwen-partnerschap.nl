@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db';
-import { ceremonie, locatie } from '@/db/schema';
+import { ceremonie, locatie, dossier } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 
 /**
@@ -47,6 +47,20 @@ export async function PUT(
         message: babsId ? 'BABS opgeslagen' : 'BABS selectie overgeslagen',
       });
     } else {
+      // Get dossier to retrieve gemeenteOin
+      const [dossierData] = await db
+        .select({ gemeenteOin: dossier.gemeenteOin })
+        .from(dossier)
+        .where(eq(dossier.id, dossierId))
+        .limit(1);
+
+      if (!dossierData) {
+        return NextResponse.json(
+          { success: false, error: 'Dossier niet gevonden' },
+          { status: 404 }
+        );
+      }
+
       // Create new ceremony record with placeholder location
       const [firstLocation] = await db
         .select()
@@ -61,13 +75,24 @@ export async function PUT(
         );
       }
 
+      // Calculate placeholder dates (1 year from now)
+      const now = new Date();
+      const placeholderDate = new Date(now);
+      placeholderDate.setFullYear(placeholderDate.getFullYear() + 1);
+      const wijzigbaarTot = new Date(placeholderDate);
+      wijzigbaarTot.setDate(wijzigbaarTot.getDate() + 7); // 7 days before ceremony
+
       const [created] = await db
         .insert(ceremonie)
         .values({
           dossierId,
+          gemeenteOin: dossierData.gemeenteOin,
           babsId: babsId || null,
           locatieId: firstLocation.id, // Placeholder
-          status: 'concept',
+          datum: placeholderDate.toISOString().split('T')[0], // YYYY-MM-DD format
+          startTijd: '14:00:00', // Placeholder time
+          eindTijd: '15:00:00', // Placeholder time
+          wijzigbaarTot: wijzigbaarTot,
         })
         .returning();
 
