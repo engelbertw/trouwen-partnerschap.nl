@@ -1,0 +1,2152 @@
+{
+  "id": "e46328b5-5a72-4eba-9852-cc72c3f857bd",
+  "prevId": "79604660-2c5d-4d71-936f-98f769fe76d2",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "ihw.aankondiging": {
+      "name": "aankondiging",
+      "schema": "ihw",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "dossier_id": {
+          "name": "dossier_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "gemeente_oin": {
+          "name": "gemeente_oin",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reeds_gehuwd": {
+          "name": "reeds_gehuwd",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "partnerschap": {
+          "name": "partnerschap",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "omzetting": {
+          "name": "omzetting",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "beiden_niet_woonachtig": {
+          "name": "beiden_niet_woonachtig",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "valid": {
+          "name": "valid",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "invalid_reason": {
+          "name": "invalid_reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "aangemaakt_op": {
+          "name": "aangemaakt_op",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "gevalideerd_op": {
+          "name": "gevalideerd_op",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gevalideerd_door": {
+          "name": "gevalideerd_door",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "aankondiging_dossier_id_dossier_id_fk": {
+          "name": "aankondiging_dossier_id_dossier_id_fk",
+          "tableFrom": "aankondiging",
+          "tableTo": "dossier",
+          "schemaTo": "ihw",
+          "columnsFrom": [
+            "dossier_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "aankondiging_gemeente_oin_gemeente_oin_fk": {
+          "name": "aankondiging_gemeente_oin_gemeente_oin_fk",
+          "tableFrom": "aankondiging",
+          "tableTo": "gemeente",
+          "schemaTo": "ihw",
+          "columnsFrom": [
+            "gemeente_oin"
+          ],
+          "columnsTo": [
+            "oin"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "aankondiging_dossier_id_unique": {
+          "name": "aankondiging_dossier_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "dossier_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "ihw.babs": {
+      "name": "babs",
+      "schema": "ihw",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "code": {
+          "name": "code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "naam": {
+          "name": "naam",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "voornaam": {
+          "name": "voornaam",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tussenvoegsel": {
+          "name": "tussenvoegsel",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "achternaam": {
+          "name": "achternaam",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "babs_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'in_aanvraag'"
+        },
+        "beedigd_vanaf": {
+          "name": "beedigd_vanaf",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "beedigd_tot": {
+          "name": "beedigd_tot",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "aanvraag_datum": {
+          "name": "aanvraag_datum",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "opmerkingen": {
+          "name": "opmerkingen",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "beschikbaarheid": {
+          "name": "beschikbaarheid",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'{}'::jsonb"
+        },
+        "beschikbaar_vanaf": {
+          "name": "beschikbaar_vanaf",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "beschikbaar_tot": {
+          "name": "beschikbaar_tot",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "opmerking_beschikbaarheid": {
+          "name": "opmerking_beschikbaarheid",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "actief": {
+          "name": "actief",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "babs_code_unique": {
+          "name": "babs_code_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "code"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "ihw.babs_blocked_date": {
+      "name": "babs_blocked_date",
+      "schema": "ihw",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "babs_id": {
+          "name": "babs_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "blocked_date": {
+          "name": "blocked_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "all_day": {
+          "name": "all_day",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "start_time": {
+          "name": "start_time",
+          "type": "time",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "end_time": {
+          "name": "end_time",
+          "type": "time",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reason": {
+          "name": "reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_by": {
+          "name": "created_by",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "babs_blocked_date_babs_id_babs_id_fk": {
+          "name": "babs_blocked_date_babs_id_babs_id_fk",
+          "tableFrom": "babs_blocked_date",
+          "tableTo": "babs",
+          "schemaTo": "ihw",
+          "columnsFrom": [
+            "babs_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "ihw.babs_recurring_rule": {
+      "name": "babs_recurring_rule",
+      "schema": "ihw",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "babs_id": {
+          "name": "babs_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "rule_type": {
+          "name": "rule_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "day_of_week": {
+          "name": "day_of_week",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "day_of_month": {
+          "name": "day_of_month",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "week_of_month": {
+          "name": "week_of_month",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "interval_weeks": {
+          "name": "interval_weeks",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "start_time": {
+          "name": "start_time",
+          "type": "time",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "end_time": {
+          "name": "end_time",
+          "type": "time",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "valid_from": {
+          "name": "valid_from",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "valid_until": {
+          "name": "valid_until",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rrule_string": {
+          "name": "rrule_string",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "babs_recurring_rule_babs_id_babs_id_fk": {
+          "name": "babs_recurring_rule_babs_id_babs_id_fk",
+          "tableFrom": "babs_recurring_rule",
+          "tableTo": "babs",
+          "schemaTo": "ihw",
+          "columnsFrom": [
+            "babs_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "ihw.ceremonie": {
+      "name": "ceremonie",
+      "schema": "ihw",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "dossier_id": {
+          "name": "dossier_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "gemeente_oin": {
+          "name": "gemeente_oin",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "locatie_id": {
+          "name": "locatie_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "babs_id": {
+          "name": "babs_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "datum": {
+          "name": "datum",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "start_tijd": {
+          "name": "start_tijd",
+          "type": "time",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "eind_tijd": {
+          "name": "eind_tijd",
+          "type": "time",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "wensen": {
+          "name": "wensen",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'{}'::jsonb"
+        },
+        "taal": {
+          "name": "taal",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'nl'"
+        },
+        "trouwboekje": {
+          "name": "trouwboekje",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "speech": {
+          "name": "speech",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "wijzigbaar_tot": {
+          "name": "wijzigbaar_tot",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "geboekt_op": {
+          "name": "geboekt_op",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "laatste_wijziging": {
+          "name": "laatste_wijziging",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gewijzigd_door": {
+          "name": "gewijzigd_door",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ceremonie_dossier_id_dossier_id_fk": {
+          "name": "ceremonie_dossier_id_dossier_id_fk",
+          "tableFrom": "ceremonie",
+          "tableTo": "dossier",
+          "schemaTo": "ihw",
+          "columnsFrom": [
+            "dossier_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "ceremonie_gemeente_oin_gemeente_oin_fk": {
+          "name": "ceremonie_gemeente_oin_gemeente_oin_fk",
+          "tableFrom": "ceremonie",
+          "tableTo": "gemeente",
+          "schemaTo": "ihw",
+          "columnsFrom": [
+            "gemeente_oin"
+          ],
+          "columnsTo": [
+            "oin"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "ceremonie_locatie_id_locatie_id_fk": {
+          "name": "ceremonie_locatie_id_locatie_id_fk",
+          "tableFrom": "ceremonie",
+          "tableTo": "locatie",
+          "schemaTo": "ihw",
+          "columnsFrom": [
+            "locatie_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "ceremonie_babs_id_babs_id_fk": {
+          "name": "ceremonie_babs_id_babs_id_fk",
+          "tableFrom": "ceremonie",
+          "tableTo": "babs",
+          "schemaTo": "ihw",
+          "columnsFrom": [
+            "babs_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "ceremonie_dossier_id_unique": {
+          "name": "ceremonie_dossier_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "dossier_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "ihw.document_optie": {
+      "name": "document_optie",
+      "schema": "ihw",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "gemeente_oin": {
+          "name": "gemeente_oin",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "code": {
+          "name": "code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "naam": {
+          "name": "naam",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "omschrijving": {
+          "name": "omschrijving",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "papier_type": {
+          "name": "papier_type",
+          "type": "papier_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "prijs_cents": {
+          "name": "prijs_cents",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "gratis": {
+          "name": "gratis",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "verplicht": {
+          "name": "verplicht",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "actief": {
+          "name": "actief",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "volgorde": {
+          "name": "volgorde",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "document_optie_gemeente_oin_gemeente_oin_fk": {
+          "name": "document_optie_gemeente_oin_gemeente_oin_fk",
+          "tableFrom": "document_optie",
+          "tableTo": "gemeente",
+          "schemaTo": "ihw",
+          "columnsFrom": [
+            "gemeente_oin"
+          ],
+          "columnsTo": [
+            "oin"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "ihw.dossier": {
+      "name": "dossier",
+      "schema": "ihw",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "identificatie": {
+          "name": "identificatie",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "zaaktype_url": {
+          "name": "zaaktype_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gemeente_oin": {
+          "name": "gemeente_oin",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "dossier_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'draft'"
+        },
+        "type_ceremonie_id": {
+          "name": "type_ceremonie_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "municipality_code": {
+          "name": "municipality_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'NL.IMBAG.Gemeente.0363'"
+        },
+        "iburgerzaken_case_id": {
+          "name": "iburgerzaken_case_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_by": {
+          "name": "created_by",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "ready_for_payment_at": {
+          "name": "ready_for_payment_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "locked_at": {
+          "name": "locked_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ceremony_date": {
+          "name": "ceremony_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_test": {
+          "name": "is_test",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "dossier_gemeente_oin_gemeente_oin_fk": {
+          "name": "dossier_gemeente_oin_gemeente_oin_fk",
+          "tableFrom": "dossier",
+          "tableTo": "gemeente",
+          "schemaTo": "ihw",
+          "columnsFrom": [
+            "gemeente_oin"
+          ],
+          "columnsTo": [
+            "oin"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "dossier_type_ceremonie_id_type_ceremonie_id_fk": {
+          "name": "dossier_type_ceremonie_id_type_ceremonie_id_fk",
+          "tableFrom": "dossier",
+          "tableTo": "type_ceremonie",
+          "schemaTo": "ihw",
+          "columnsFrom": [
+            "type_ceremonie_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "dossier_identificatie_unique": {
+          "name": "dossier_identificatie_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "identificatie"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "ihw.dossier_block": {
+      "name": "dossier_block",
+      "schema": "ihw",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "dossier_id": {
+          "name": "dossier_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "gemeente_oin": {
+          "name": "gemeente_oin",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "code": {
+          "name": "code",
+          "type": "block_code",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "complete": {
+          "name": "complete",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "required": {
+          "name": "required",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "completed_by": {
+          "name": "completed_by",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "dossier_block_dossier_id_dossier_id_fk": {
+          "name": "dossier_block_dossier_id_dossier_id_fk",
+          "tableFrom": "dossier_block",
+          "tableTo": "dossier",
+          "schemaTo": "ihw",
+          "columnsFrom": [
+            "dossier_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "dossier_block_gemeente_oin_gemeente_oin_fk": {
+          "name": "dossier_block_gemeente_oin_gemeente_oin_fk",
+          "tableFrom": "dossier_block",
+          "tableTo": "gemeente",
+          "schemaTo": "ihw",
+          "columnsFrom": [
+            "gemeente_oin"
+          ],
+          "columnsTo": [
+            "oin"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "ihw.gemeente": {
+      "name": "gemeente",
+      "schema": "ihw",
+      "columns": {
+        "oin": {
+          "name": "oin",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "naam": {
+          "name": "naam",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "gemeente_code": {
+          "name": "gemeente_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "actief": {
+          "name": "actief",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "gemeente_gemeente_code_unique": {
+          "name": "gemeente_gemeente_code_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "gemeente_code"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "ihw.getuige": {
+      "name": "getuige",
+      "schema": "ihw",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "dossier_id": {
+          "name": "dossier_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "gemeente_oin": {
+          "name": "gemeente_oin",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_gemeentelijke_getuige": {
+          "name": "is_gemeentelijke_getuige",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "voornamen": {
+          "name": "voornamen",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "voorvoegsel": {
+          "name": "voorvoegsel",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "achternaam": {
+          "name": "achternaam",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "geboortedatum": {
+          "name": "geboortedatum",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "geboorteplaats": {
+          "name": "geboorteplaats",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "document_upload_id": {
+          "name": "document_upload_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "document_status": {
+          "name": "document_status",
+          "type": "papier_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'ontbreekt'"
+        },
+        "volgorde": {
+          "name": "volgorde",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "getuige_dossier_id_dossier_id_fk": {
+          "name": "getuige_dossier_id_dossier_id_fk",
+          "tableFrom": "getuige",
+          "tableTo": "dossier",
+          "schemaTo": "ihw",
+          "columnsFrom": [
+            "dossier_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "getuige_gemeente_oin_gemeente_oin_fk": {
+          "name": "getuige_gemeente_oin_gemeente_oin_fk",
+          "tableFrom": "getuige",
+          "tableTo": "gemeente",
+          "schemaTo": "ihw",
+          "columnsFrom": [
+            "gemeente_oin"
+          ],
+          "columnsTo": [
+            "oin"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "ihw.kind": {
+      "name": "kind",
+      "schema": "ihw",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "dossier_id": {
+          "name": "dossier_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "gemeente_oin": {
+          "name": "gemeente_oin",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "partner_id": {
+          "name": "partner_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "voornamen": {
+          "name": "voornamen",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "achternaam": {
+          "name": "achternaam",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "geboortedatum": {
+          "name": "geboortedatum",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "kind_dossier_id_dossier_id_fk": {
+          "name": "kind_dossier_id_dossier_id_fk",
+          "tableFrom": "kind",
+          "tableTo": "dossier",
+          "schemaTo": "ihw",
+          "columnsFrom": [
+            "dossier_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "kind_gemeente_oin_gemeente_oin_fk": {
+          "name": "kind_gemeente_oin_gemeente_oin_fk",
+          "tableFrom": "kind",
+          "tableTo": "gemeente",
+          "schemaTo": "ihw",
+          "columnsFrom": [
+            "gemeente_oin"
+          ],
+          "columnsTo": [
+            "oin"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "kind_partner_id_partner_id_fk": {
+          "name": "kind_partner_id_partner_id_fk",
+          "tableFrom": "kind",
+          "tableTo": "partner",
+          "schemaTo": "ihw",
+          "columnsFrom": [
+            "partner_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "ihw.locatie": {
+      "name": "locatie",
+      "schema": "ihw",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "code": {
+          "name": "code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "naam": {
+          "name": "naam",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "locatie_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "adres": {
+          "name": "adres",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "afbeelding_url": {
+          "name": "afbeelding_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "capaciteit": {
+          "name": "capaciteit",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 50
+        },
+        "actief": {
+          "name": "actief",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "prijs_cents": {
+          "name": "prijs_cents",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "toelichting": {
+          "name": "toelichting",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "volgorde": {
+          "name": "volgorde",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "locatie_code_unique": {
+          "name": "locatie_code_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "code"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "ihw.papier": {
+      "name": "papier",
+      "schema": "ihw",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "dossier_id": {
+          "name": "dossier_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "gemeente_oin": {
+          "name": "gemeente_oin",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "partner_id": {
+          "name": "partner_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "name": "type",
+          "type": "papier_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "papier_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'ontbreekt'"
+        },
+        "omschrijving": {
+          "name": "omschrijving",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "beoordeeld_door": {
+          "name": "beoordeeld_door",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "beoordeeld_op": {
+          "name": "beoordeeld_op",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "opmerking": {
+          "name": "opmerking",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "papier_dossier_id_dossier_id_fk": {
+          "name": "papier_dossier_id_dossier_id_fk",
+          "tableFrom": "papier",
+          "tableTo": "dossier",
+          "schemaTo": "ihw",
+          "columnsFrom": [
+            "dossier_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "papier_gemeente_oin_gemeente_oin_fk": {
+          "name": "papier_gemeente_oin_gemeente_oin_fk",
+          "tableFrom": "papier",
+          "tableTo": "gemeente",
+          "schemaTo": "ihw",
+          "columnsFrom": [
+            "gemeente_oin"
+          ],
+          "columnsTo": [
+            "oin"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "papier_partner_id_partner_id_fk": {
+          "name": "papier_partner_id_partner_id_fk",
+          "tableFrom": "papier",
+          "tableTo": "partner",
+          "schemaTo": "ihw",
+          "columnsFrom": [
+            "partner_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "ihw.partner": {
+      "name": "partner",
+      "schema": "ihw",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "dossier_id": {
+          "name": "dossier_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "gemeente_oin": {
+          "name": "gemeente_oin",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sequence": {
+          "name": "sequence",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "bsn": {
+          "name": "bsn",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "voornamen": {
+          "name": "voornamen",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "voorvoegsel": {
+          "name": "voorvoegsel",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "geslachtsnaam": {
+          "name": "geslachtsnaam",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "geboortedatum": {
+          "name": "geboortedatum",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "geboorteplaats": {
+          "name": "geboorteplaats",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "geboorteland": {
+          "name": "geboorteland",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Nederland'"
+        },
+        "ouders_onbekend": {
+          "name": "ouders_onbekend",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "naamgebruik_keuze": {
+          "name": "naamgebruik_keuze",
+          "type": "naamgebruik_keuze",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "telefoon": {
+          "name": "telefoon",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "adres": {
+          "name": "adres",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "postcode": {
+          "name": "postcode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "plaats": {
+          "name": "plaats",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "partner_dossier_id_dossier_id_fk": {
+          "name": "partner_dossier_id_dossier_id_fk",
+          "tableFrom": "partner",
+          "tableTo": "dossier",
+          "schemaTo": "ihw",
+          "columnsFrom": [
+            "dossier_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "partner_gemeente_oin_gemeente_oin_fk": {
+          "name": "partner_gemeente_oin_gemeente_oin_fk",
+          "tableFrom": "partner",
+          "tableTo": "gemeente",
+          "schemaTo": "ihw",
+          "columnsFrom": [
+            "gemeente_oin"
+          ],
+          "columnsTo": [
+            "oin"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "ihw.payment": {
+      "name": "payment",
+      "schema": "ihw",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "dossier_id": {
+          "name": "dossier_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "gemeente_oin": {
+          "name": "gemeente_oin",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider": {
+          "name": "provider",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'worldonline'"
+        },
+        "status": {
+          "name": "status",
+          "type": "payment_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pending'"
+        },
+        "amount_cents": {
+          "name": "amount_cents",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "currency": {
+          "name": "currency",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'EUR'"
+        },
+        "external_reference": {
+          "name": "external_reference",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "external_transaction_id": {
+          "name": "external_transaction_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "redirect_url": {
+          "name": "redirect_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "initiated_at": {
+          "name": "initiated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "paid_at": {
+          "name": "paid_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "failed_at": {
+          "name": "failed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "payment_method": {
+          "name": "payment_method",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "failure_reason": {
+          "name": "failure_reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "metadata": {
+          "name": "metadata",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'{}'::jsonb"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "payment_dossier_id_dossier_id_fk": {
+          "name": "payment_dossier_id_dossier_id_fk",
+          "tableFrom": "payment",
+          "tableTo": "dossier",
+          "schemaTo": "ihw",
+          "columnsFrom": [
+            "dossier_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "payment_gemeente_oin_gemeente_oin_fk": {
+          "name": "payment_gemeente_oin_gemeente_oin_fk",
+          "tableFrom": "payment",
+          "tableTo": "gemeente",
+          "schemaTo": "ihw",
+          "columnsFrom": [
+            "gemeente_oin"
+          ],
+          "columnsTo": [
+            "oin"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "ihw.type_ceremonie": {
+      "name": "type_ceremonie",
+      "schema": "ihw",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "code": {
+          "name": "code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "naam": {
+          "name": "naam",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "omschrijving": {
+          "name": "omschrijving",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "eigen_babs_toegestaan": {
+          "name": "eigen_babs_toegestaan",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "gratis": {
+          "name": "gratis",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "budget": {
+          "name": "budget",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "openstelling_weken": {
+          "name": "openstelling_weken",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 6
+        },
+        "lead_time_days": {
+          "name": "lead_time_days",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 14
+        },
+        "wijzigbaar_tot_days": {
+          "name": "wijzigbaar_tot_days",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 7
+        },
+        "max_getuigen": {
+          "name": "max_getuigen",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 4
+        },
+        "actief": {
+          "name": "actief",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "volgorde": {
+          "name": "volgorde",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "type_ceremonie_code_unique": {
+          "name": "type_ceremonie_code_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "code"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.babs_status": {
+      "name": "babs_status",
+      "schema": "public",
+      "values": [
+        "beedigd",
+        "in_aanvraag",
+        "ongeldig"
+      ]
+    },
+    "public.block_code": {
+      "name": "block_code",
+      "schema": "public",
+      "values": [
+        "aankondiging",
+        "ceremonie",
+        "getuigen",
+        "papieren",
+        "betaling"
+      ]
+    },
+    "public.dossier_status": {
+      "name": "dossier_status",
+      "schema": "public",
+      "values": [
+        "draft",
+        "in_review",
+        "ready_for_payment",
+        "locked",
+        "cancelled"
+      ]
+    },
+    "public.locatie_type": {
+      "name": "locatie_type",
+      "schema": "public",
+      "values": [
+        "stadhuis",
+        "stadsloket",
+        "buitenlocatie"
+      ]
+    },
+    "public.naamgebruik_keuze": {
+      "name": "naamgebruik_keuze",
+      "schema": "public",
+      "values": [
+        "eigen",
+        "partner",
+        "eigen_partner",
+        "partner_eigen"
+      ]
+    },
+    "public.papier_status": {
+      "name": "papier_status",
+      "schema": "public",
+      "values": [
+        "ontbreekt",
+        "ingeleverd",
+        "goedgekeurd",
+        "afgekeurd"
+      ]
+    },
+    "public.papier_type": {
+      "name": "papier_type",
+      "schema": "public",
+      "values": [
+        "geboorteakte",
+        "nationaliteitsverklaring",
+        "identiteitsbewijs",
+        "scheidingsbeschikking",
+        "overlijdensakte",
+        "trouwboekje",
+        "anders"
+      ]
+    },
+    "public.payment_status": {
+      "name": "payment_status",
+      "schema": "public",
+      "values": [
+        "pending",
+        "paid",
+        "failed",
+        "refunded",
+        "waived"
+      ]
+    }
+  },
+  "schemas": {
+    "ihw": "ihw"
+  },
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

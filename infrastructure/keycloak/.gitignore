@@ -1,0 +1,51 @@
+# Environment variables (contains secrets)
+.env
+
+# Certificates and private keys
+certs/*.key
+certs/*.p12
+certs/*.pfx
+certs/*.pem
+certs/*.crt
+!certs/README.md
+
+# Database data
+data/
+postgres_data/
+
+# Keycloak data directory
+realm-export/*.json
+!realm-export/.gitkeep
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+.docker/
+
+# Backups
+backup/
+*.backup
+*.dump
+
+# Sensitive configuration
+secrets/
+*.secret
+*.password
+

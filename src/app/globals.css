@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  
+  /* NL Design System typography tokens */
+  --font-noto-sans: 'Noto Sans', system-ui, -apple-system, sans-serif;
+  --font-noto-serif: 'Noto Serif', Georgia, serif;
+  
+  /* Base font size: minimum 16px as per NL Design System guidelines */
+  --font-size-base: 1rem;
+  
+  /* Line height: 1.5-2.0 as per NL Design System guidelines */
+  --line-height-base: 1.5;
+  --line-height-heading: 1.2;
+  
+  /* Max line length: 75 characters as per NL Design System guidelines */
+  --max-line-length: 75ch;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-noto-sans);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  text-align: left; /* NL Design System guideline: left-aligned text */
+}
+
+/* NL Design System typography: Noto Serif for headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-noto-serif);
+  line-height: var(--line-height-heading);
+  font-weight: 700;
+}
+
+/* Optimal reading width as per NL Design System guidelines */
+p, article, section {
+  max-width: var(--max-line-length);
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+

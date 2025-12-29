@@ -1,0 +1,637 @@
+'use client';
+
+import type { JSX } from 'react';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useUser } from '@clerk/nextjs';
+
+/**
+ * Partner 1 gegevens invoer pagina
+ * Gebruiker kan gegevens handmatig invoeren
+ * Clerk gegevens worden automatisch ingevuld waar mogelijk
+ */
+export default function Partner1GegevensPage(): JSX.Element {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const dossierId = searchParams.get('dossierId');
+  const { user, isLoaded: userLoaded } = useUser();
+  
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isSaved, setIsSaved] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+
+  // Helper functions for date conversion
+  // Convert DD-MM-YYYY to YYYY-MM-DD (for date input)
+  const convertToDateInput = (dateStr: string): string => {
+    if (!dateStr) return '';
+    const parts = dateStr.split('-');
+    if (parts.length === 3 && parts[0].length === 2 && parts[1].length === 2 && parts[2].length === 4) {
+      // DD-MM-YYYY format
+      return `${parts[2]}-${parts[1]}-${parts[0]}`;
+    }
+    return dateStr; // Return as-is if format doesn't match
+  };
+
+  // Convert YYYY-MM-DD to DD-MM-YYYY (for database)
+  const convertToDatabaseFormat = (dateStr: string): string => {
+    if (!dateStr) return '';
+    const parts = dateStr.split('-');
+    if (parts.length === 3 && parts[0].length === 4) {
+      // YYYY-MM-DD format
+      return `${parts[2]}-${parts[1]}-${parts[0]}`;
+    }
+    return dateStr; // Return as-is if format doesn't match
+  };
+
+  // Form state
+  const [formData, setFormData] = useState({
+    voornamen: '',
+    geslachtsnaam: '',
+    geboortedatum: '', // Will store YYYY-MM-DD for date input
+    geboorteplaats: '',
+    geboorteland: 'Nederland',
+    email: '',
+    telefoon: '',
+    adres: '',
+    postcode: '',
+    plaats: '',
+  });
+
+  // Auto-fill from Clerk user data when available
+  useEffect(() => {
+    if (userLoaded && user) {
+      // Auto-fill voornamen from firstName
+      if (user.firstName && !formData.voornamen) {
+        setFormData(prev => ({ ...prev, voornamen: user.firstName || '' }));
+      }
+      
+      // Auto-fill geslachtsnaam from lastName
+      if (user.lastName && !formData.geslachtsnaam) {
+        setFormData(prev => ({ ...prev, geslachtsnaam: user.lastName || '' }));
+      }
+      
+      // Auto-fill email from primary email address
+      if (user.emailAddresses && user.emailAddresses.length > 0 && !formData.email) {
+        const primaryEmail = user.emailAddresses.find(e => e.id === user.primaryEmailAddressId) || user.emailAddresses[0];
+        if (primaryEmail) {
+          setFormData(prev => ({ ...prev, email: primaryEmail.emailAddress }));
+        }
+      }
+    }
+  }, [userLoaded, user]);
+
+  // Check for dossierId and load existing data on mount
+  useEffect(() => {
+    if (!dossierId) {
+      setError('Geen dossier ID gevonden. Start opnieuw.');
+      // Redirect to start after 3 seconds
+      const timeoutId = setTimeout(() => {
+        router.push('/000-aankondiging/010-aankondiging');
+      }, 3000);
+      return () => clearTimeout(timeoutId);
+    }
+
+    // Load existing partner data if available
+    async function loadPartnerData() {
+      try {
+        const response = await fetch(`/api/dossier/${dossierId}/partners`);
+        const result = await response.json();
+        
+        if (result.success && result.data && result.data.partner1) {
+          const partner1 = result.data.partner1;
+          setFormData({
+            voornamen: partner1.voornamen || '',
+            geslachtsnaam: partner1.achternaam || '',
+            geboortedatum: convertToDateInput(partner1.geboortedatum || ''), // Convert DD-MM-YYYY to YYYY-MM-DD
+            geboorteplaats: partner1.geboorteplaats || '',
+            geboorteland: partner1.geboorteland || 'Nederland',
+            email: partner1.email || '',
+            telefoon: partner1.telefoon || '',
+            adres: partner1.adres || '',
+            postcode: partner1.postcode || '',
+            plaats: partner1.plaats || '',
+          });
+        }
+      } catch (err) {
+        console.error('Error loading partner data:', err);
+        // Don't show error, just continue with empty form
+      }
+    }
+
+    loadPartnerData();
+  }, [dossierId, router]);
+
+  // Validate form data
+  const validateForm = (): boolean => {
+    const errors: Record<string, string> = {};
+
+    if (!formData.voornamen.trim()) {
+      errors.voornamen = 'Voornamen is verplicht';
+    }
+
+    if (!formData.geslachtsnaam.trim()) {
+      errors.geslachtsnaam = 'Achternaam is verplicht';
+    }
+
+    if (!formData.geboortedatum.trim()) {
+      errors.geboortedatum = 'Geboortedatum is verplicht';
+    } else {
+      // Validate date format (YYYY-MM-DD from date input)
+      const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+      if (!dateRegex.test(formData.geboortedatum)) {
+        errors.geboortedatum = 'Selecteer een geldige geboortedatum';
+      }
+    }
+
+    if (!formData.geboorteplaats.trim()) {
+      errors.geboorteplaats = 'Geboorteplaats is verplicht';
+    }
+
+    // Email validation (optional but if provided, must be valid)
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      errors.email = 'Ongeldig e-mailadres';
+    }
+
+    // Postcode validation (optional but if provided, must be valid Dutch format)
+    if (formData.postcode && !/^\d{4}\s?[A-Z]{2}$/i.test(formData.postcode)) {
+      errors.postcode = 'Postcode moet het formaat 1234AB hebben';
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  // Handle form input changes
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    // Clear validation error for this field when user starts typing
+    if (validationErrors[field]) {
+      setValidationErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
+    }
+  };
+
+  // Handle postcode change and fetch address from BAG API
+  const handlePostcodeChange = async (value: string) => {
+    // Update postcode field
+    handleInputChange('postcode', value.toUpperCase());
+
+    // Check if postcode is complete (6 characters: 4 digits + 2 letters)
+    const normalizedPostcode = value.replace(/\s/g, '').toUpperCase();
+    if (normalizedPostcode.length === 6) {
+      const postcodeRegex = /^[1-9][0-9]{3}[A-Z]{2}$/;
+      if (postcodeRegex.test(normalizedPostcode)) {
+        try {
+          // Fetch address data from BAG API
+          const response = await fetch(`/api/bag/postcode?postcode=${normalizedPostcode}`);
+          const result = await response.json();
+
+          if (result.success && result.data) {
+            // Auto-fill address fields
+            setFormData(prev => ({
+              ...prev,
+              postcode: result.data.postcode,
+              plaats: result.data.woonplaats || prev.plaats,
+              // Only update adres if it's empty or if we have a house number
+              adres: prev.adres || (result.data.huisnummer 
+                ? `${result.data.straatnaam} ${result.data.huisnummer}`.trim()
+                : result.data.straatnaam || prev.adres),
+            }));
+          }
+        } catch (error) {
+          console.error('Error fetching BAG data:', error);
+          // Don't show error to user, just silently fail
+        }
+      }
+    }
+  };
+
+  // Save partner data to database
+  const handleSave = async () => {
+    if (!dossierId) {
+      setError('Geen dossier ID gevonden');
+      return;
+    }
+
+    if (!validateForm()) {
+      setError('Controleer de ingevulde gegevens');
+      return;
+    }
+
+    setIsSaving(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`/api/dossier/${dossierId}/partners`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sequence: 1,
+          voornamen: formData.voornamen.trim(),
+          geslachtsnaam: formData.geslachtsnaam.trim(),
+          geboortedatum: convertToDatabaseFormat(formData.geboortedatum.trim()), // Convert YYYY-MM-DD to DD-MM-YYYY
+          geboorteplaats: formData.geboorteplaats.trim(),
+          geboorteland: formData.geboorteland,
+          email: formData.email.trim() || null,
+          telefoon: formData.telefoon.trim() || null,
+          adres: formData.adres.trim() || null,
+          postcode: formData.postcode.trim().toUpperCase() || null,
+          plaats: formData.plaats.trim() || null,
+        }),
+      });
+
+      const result = await response.json();
+      
+      if (!result.success) {
+        setError(result.error || 'Fout bij opslaan van gegevens');
+        return;
+      }
+
+      setIsSaved(true);
+      // Navigate to next step after short delay
+      setTimeout(() => {
+        router.push(`/000-aankondiging/030-partner2-login?dossierId=${dossierId}`);
+      }, 500);
+    } catch (err) {
+      console.error('Error saving partner data:', err);
+      setError('Er ging iets mis bij het opslaan');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100">
+      {/* Blue header bar */}
+      <div className="bg-[#154273] text-white py-4 px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto max-w-4xl">
+          <h1 className="font-sans text-xl font-bold">
+            Huwelijk of partnerschap aankondigen
+          </h1>
+        </div>
+      </div>
+
+      {/* Main content */}
+      <main className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
+        <article className="bg-white rounded-lg shadow-md p-6 sm:p-8 lg:p-12">
+          {/* Error message */}
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-600 rounded" role="alert">
+              <div className="flex items-start">
+                <svg className="w-5 h-5 text-red-600 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+                <div className="flex-1">
+                  <h3 className="text-sm font-bold text-red-900 mb-1">Fout</h3>
+                  <p className="text-sm text-red-800 mb-4">{error}</p>
+                  {error.includes('Geen dossier ID') && (
+                    <button
+                      onClick={() => router.push('/000-aankondiging/010-aankondiging')}
+                      className="inline-flex items-center gap-2 bg-[#154273] text-white font-sans text-sm font-bold px-4 py-2 rounded hover:bg-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 transition-colors"
+                    >
+                      Start opnieuw
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Loading message */}
+          {isSaving && (
+            <div className="mb-6 p-4 bg-blue-50 border-l-4 border-blue-600 rounded" role="status">
+              <p className="text-sm text-blue-800">Gegevens worden opgeslagen...</p>
+            </div>
+          )}
+
+          {/* Previous step link */}
+          <Link
+            href={dossierId ? `/000-aankondiging/020-partner1-login?dossierId=${dossierId}` : '/000-aankondiging/020-partner1-login'}
+            className="inline-flex items-center gap-2 text-[#154273] hover:text-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 mb-6 transition-colors"
+          >
+            <svg 
+              className="w-4 h-4" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M15 19l-7-7 7-7" 
+              />
+            </svg>
+            Vorige stap
+          </Link>
+
+          {/* Page heading */}
+          <h2 className="font-sans text-3xl sm:text-4xl font-bold mb-6">
+            Gegevens partner 1
+          </h2>
+
+          {/* Progress bar */}
+          <div className="mb-8">
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div 
+                className="bg-[#154273] h-2 rounded-full transition-all duration-300"
+                style={{ width: '30%' }}
+                role="progressbar"
+                aria-valuenow={30}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label="Voortgang: 30%"
+              />
+            </div>
+          </div>
+
+          {/* Instructions */}
+          <div className="mb-8">
+            <p className="text-base leading-relaxed text-gray-700 mb-2">
+              Vul hieronder uw gegevens in. Gegevens van uw inlog worden automatisch ingevuld waar mogelijk.
+            </p>
+            <p className="text-sm text-gray-600">
+              Velden met een * zijn verplicht.
+            </p>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={(e) => { e.preventDefault(); handleSave(); }} className="space-y-6 mb-8">
+            {/* Voornamen */}
+            <div>
+              <label htmlFor="voornamen" className="block text-sm font-bold text-gray-900 mb-1">
+                Voornamen <span className="text-red-600">*</span>
+              </label>
+              <input
+                type="text"
+                id="voornamen"
+                value={formData.voornamen}
+                onChange={(e) => handleInputChange('voornamen', e.target.value)}
+                className={`w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 ${
+                  validationErrors.voornamen ? 'border-red-600' : 'border-gray-300'
+                }`}
+                required
+                aria-invalid={!!validationErrors.voornamen}
+                aria-describedby={validationErrors.voornamen ? 'voornamen-error' : undefined}
+              />
+              {validationErrors.voornamen && (
+                <p id="voornamen-error" className="mt-1 text-sm text-red-600" role="alert">
+                  {validationErrors.voornamen}
+                </p>
+              )}
+            </div>
+
+            {/* Achternaam */}
+            <div>
+              <label htmlFor="geslachtsnaam" className="block text-sm font-bold text-gray-900 mb-1">
+                Achternaam <span className="text-red-600">*</span>
+              </label>
+              <input
+                type="text"
+                id="geslachtsnaam"
+                value={formData.geslachtsnaam}
+                onChange={(e) => handleInputChange('geslachtsnaam', e.target.value)}
+                className={`w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 ${
+                  validationErrors.geslachtsnaam ? 'border-red-600' : 'border-gray-300'
+                }`}
+                required
+                aria-invalid={!!validationErrors.geslachtsnaam}
+                aria-describedby={validationErrors.geslachtsnaam ? 'geslachtsnaam-error' : undefined}
+              />
+              {validationErrors.geslachtsnaam && (
+                <p id="geslachtsnaam-error" className="mt-1 text-sm text-red-600" role="alert">
+                  {validationErrors.geslachtsnaam}
+                </p>
+              )}
+            </div>
+
+            {/* Geboortedatum */}
+            <div>
+              <label htmlFor="geboortedatum" className="block text-sm font-bold text-gray-900 mb-1">
+                Geboortedatum <span className="text-red-600">*</span>
+              </label>
+              <input
+                type="date"
+                id="geboortedatum"
+                value={formData.geboortedatum}
+                onChange={(e) => handleInputChange('geboortedatum', e.target.value)}
+                max={new Date().toISOString().split('T')[0]} // Cannot select future dates
+                className={`w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 ${
+                  validationErrors.geboortedatum ? 'border-red-600' : 'border-gray-300'
+                }`}
+                required
+                aria-invalid={!!validationErrors.geboortedatum}
+                aria-describedby={validationErrors.geboortedatum ? 'geboortedatum-error' : undefined}
+              />
+              {validationErrors.geboortedatum && (
+                <p id="geboortedatum-error" className="mt-1 text-sm text-red-600" role="alert">
+                  {validationErrors.geboortedatum}
+                </p>
+              )}
+              <p className="mt-1 text-sm text-gray-600">Selecteer uw geboortedatum</p>
+            </div>
+
+            {/* Geboorteplaats */}
+            <div>
+              <label htmlFor="geboorteplaats" className="block text-sm font-bold text-gray-900 mb-1">
+                Geboorteplaats <span className="text-red-600">*</span>
+              </label>
+              <input
+                type="text"
+                id="geboorteplaats"
+                value={formData.geboorteplaats}
+                onChange={(e) => handleInputChange('geboorteplaats', e.target.value)}
+                className={`w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 ${
+                  validationErrors.geboorteplaats ? 'border-red-600' : 'border-gray-300'
+                }`}
+                required
+                aria-invalid={!!validationErrors.geboorteplaats}
+                aria-describedby={validationErrors.geboorteplaats ? 'geboorteplaats-error' : undefined}
+              />
+              {validationErrors.geboorteplaats && (
+                <p id="geboorteplaats-error" className="mt-1 text-sm text-red-600" role="alert">
+                  {validationErrors.geboorteplaats}
+                </p>
+              )}
+            </div>
+
+            {/* Geboorteland */}
+            <div>
+              <label htmlFor="geboorteland" className="block text-sm font-bold text-gray-900 mb-1">
+                Geboorteland <span className="text-red-600">*</span>
+              </label>
+              <input
+                type="text"
+                id="geboorteland"
+                value={formData.geboorteland}
+                onChange={(e) => handleInputChange('geboorteland', e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2"
+                required
+              />
+            </div>
+
+            {/* Email */}
+            <div>
+              <label htmlFor="email" className="block text-sm font-bold text-gray-900 mb-1">
+                E-mailadres
+              </label>
+              <input
+                type="email"
+                id="email"
+                value={formData.email}
+                onChange={(e) => handleInputChange('email', e.target.value)}
+                className={`w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 ${
+                  validationErrors.email ? 'border-red-600' : 'border-gray-300'
+                }`}
+                aria-invalid={!!validationErrors.email}
+                aria-describedby={validationErrors.email ? 'email-error' : undefined}
+              />
+              {validationErrors.email && (
+                <p id="email-error" className="mt-1 text-sm text-red-600" role="alert">
+                  {validationErrors.email}
+                </p>
+              )}
+            </div>
+
+            {/* Telefoon */}
+            <div>
+              <label htmlFor="telefoon" className="block text-sm font-bold text-gray-900 mb-1">
+                Telefoonnummer
+              </label>
+              <input
+                type="tel"
+                id="telefoon"
+                value={formData.telefoon}
+                onChange={(e) => handleInputChange('telefoon', e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2"
+              />
+            </div>
+
+            {/* Adres sectie */}
+            <div className="border-t border-gray-300 pt-6 mt-6">
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Adresgegevens</h3>
+              
+              {/* Adres */}
+              <div className="mb-4">
+                <label htmlFor="adres" className="block text-sm font-bold text-gray-900 mb-1">
+                  Straatnaam en huisnummer
+                </label>
+                <input
+                  type="text"
+                  id="adres"
+                  value={formData.adres}
+                  onChange={(e) => handleInputChange('adres', e.target.value)}
+                  placeholder="bijv. Kerkstraat 12"
+                  className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2"
+                />
+              </div>
+
+              {/* Postcode */}
+              <div className="mb-4">
+                <label htmlFor="postcode" className="block text-sm font-bold text-gray-900 mb-1">
+                  Postcode
+                </label>
+                <input
+                  type="text"
+                  id="postcode"
+                  value={formData.postcode}
+                  onChange={(e) => handlePostcodeChange(e.target.value)}
+                  onBlur={(e) => {
+                    // Also try to fetch on blur if postcode is complete
+                    const normalized = e.target.value.replace(/\s/g, '').toUpperCase();
+                    if (normalized.length === 6) {
+                      handlePostcodeChange(e.target.value);
+                    }
+                  }}
+                  placeholder="1234AB"
+                  maxLength={7}
+                  className={`w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 ${
+                    validationErrors.postcode ? 'border-red-600' : 'border-gray-300'
+                  }`}
+                  aria-invalid={!!validationErrors.postcode}
+                  aria-describedby={validationErrors.postcode ? 'postcode-error' : undefined}
+                />
+                {validationErrors.postcode && (
+                  <p id="postcode-error" className="mt-1 text-sm text-red-600" role="alert">
+                    {validationErrors.postcode}
+                  </p>
+                )}
+                <p className="mt-1 text-sm text-gray-600">Formaat: 1234AB</p>
+              </div>
+
+              {/* Plaats (Woonplaats) */}
+              <div>
+                <label htmlFor="plaats" className="block text-sm font-bold text-gray-900 mb-1">
+                  Woonplaats
+                </label>
+                <input
+                  type="text"
+                  id="plaats"
+                  value={formData.plaats}
+                  onChange={(e) => handleInputChange('plaats', e.target.value)}
+                  placeholder="bijv. Amsterdam"
+                  className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2"
+                />
+              </div>
+            </div>
+          </form>
+
+          {/* Action buttons */}
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button
+              type="button"
+              onClick={handleSave}
+              disabled={isSaving || isSaved}
+              className="inline-flex items-center justify-center gap-2 bg-[#154273] text-white font-sans text-base font-bold px-6 py-3 rounded hover:bg-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isSaving ? (
+                <>
+                  <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Opslaan...
+                </>
+              ) : isSaved ? (
+                <>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Opgeslagen
+                </>
+              ) : (
+                <>
+                  Opslaan en doorgaan
+                  <svg 
+                    className="w-5 h-5" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth={2} 
+                      d="M9 5l7 7-7 7" 
+                    />
+                  </svg>
+                </>
+              )}
+            </button>
+          </div>
+        </article>
+      </main>
+    </div>
+  );
+}
+
