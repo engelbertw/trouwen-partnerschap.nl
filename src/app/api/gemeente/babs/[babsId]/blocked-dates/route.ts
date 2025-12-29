@@ -27,22 +27,22 @@ export async function GET(
     const startDate = searchParams.get('startDate');
     const endDate = searchParams.get('endDate');
 
-    let query = db
-      .select()
-      .from(babsBlockedDate)
-      .where(eq(babsBlockedDate.babsId, babsId));
-
+    // Build where conditions
+    const whereConditions = [eq(babsBlockedDate.babsId, babsId)];
+    
     // Filter by date range if provided
     if (startDate && endDate) {
-      query = query.where(
-        and(
-          gte(babsBlockedDate.blockedDate, startDate),
-          lte(babsBlockedDate.blockedDate, endDate)
-        )
-      ) as any;
+      whereConditions.push(
+        gte(babsBlockedDate.blockedDate, startDate),
+        lte(babsBlockedDate.blockedDate, endDate)
+      );
     }
 
-    const blockedDates = await query.orderBy(babsBlockedDate.blockedDate);
+    const blockedDates = await db
+      .select()
+      .from(babsBlockedDate)
+      .where(and(...whereConditions))
+      .orderBy(babsBlockedDate.blockedDate);
 
     return NextResponse.json({
       success: true,
