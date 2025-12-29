@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { GemeenteLogoCompact } from '@/components/GemeenteLogo';
 
-export default function BloedverwantschapPage(): JSX.Element {
+export default function BloedverwantschapPage(): JSX.Element | null {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dossierId = searchParams.get('dossierId');

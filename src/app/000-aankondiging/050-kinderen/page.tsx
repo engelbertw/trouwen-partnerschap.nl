@@ -25,7 +25,7 @@ interface Child {
  * Collects information about children from previous marriages for both partners
  * Includes comprehensive validation based on database rules
  */
-export default function KinderenPage(): JSX.Element {
+export default function KinderenPage(): JSX.Element | null {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dossierId = searchParams.get('dossierId');

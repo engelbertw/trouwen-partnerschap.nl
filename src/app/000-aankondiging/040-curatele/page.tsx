@@ -9,7 +9,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
  * Curatele page - Guardianship status for both partners
  * Shows conditional file upload if under guardianship
  */
-export default function CuratelePage(): JSX.Element {
+export default function CuratelePage(): JSX.Element | null {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dossierId = searchParams.get('dossierId');
