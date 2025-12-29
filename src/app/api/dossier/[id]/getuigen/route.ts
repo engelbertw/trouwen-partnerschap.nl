@@ -103,6 +103,9 @@ export async function POST(
     await db.delete(getuige).where(eq(getuige.dossierId, dossierId));
 
     // Insert new witnesses
+    // Valid document status values from enum
+    type DocumentStatus = 'ontbreekt' | 'ingeleverd' | 'goedgekeurd' | 'afgekeurd';
+    
     const getuigenToInsert = getuigenData.map((g, index) => ({
       dossierId: dossierId,
       gemeenteOin: dossierRecord.gemeenteOin,
@@ -113,7 +116,7 @@ export async function POST(
       geboortedatum: formatDateForDatabase(g.geboortedatum),
       geboorteplaats: g.geboorteplaats || null,
       documentUploadId: g.documentUploadId || null,
-      documentStatus: g.documentUploadId ? 'ingeleverd' : 'ontbreekt',
+      documentStatus: (g.documentUploadId ? 'ingeleverd' : 'ontbreekt') as DocumentStatus,
       volgorde: index + 1,
     }));
 
