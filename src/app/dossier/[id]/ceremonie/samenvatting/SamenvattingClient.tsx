@@ -192,7 +192,7 @@ export function SamenvattingClient({
                   <dd className="font-sans text-base font-semibold text-gray-900">
                     {ceremonieData?.typeCeremonieNaam || 'Nog niet gekozen'}
                     {ceremonieData?.typeCeremonieDuur && (
-                      <span className="font-normal text-gray-700"> - {formatDuur(ceremonieData.typeCeremonieDuur)}</span>
+                      <span className="font-normal text-gray-700"> - {formatDuur(ceremonieData?.typeCeremonieDuur)}</span>
                     )}
                   </dd>
                 </div>
@@ -200,15 +200,15 @@ export function SamenvattingClient({
                   <div>
                     <dt className="font-sans text-sm text-gray-600">Beschrijving</dt>
                     <dd className="font-sans text-sm text-gray-700">
-                      {ceremonieData.typeCeremonieOmschrijving}
+                      {ceremonieData?.typeCeremonieOmschrijving}
                     </dd>
                   </div>
                 )}
-                {ceremonieData?.typeCeremonieTalen && ceremonieData.typeCeremonieTalen.length > 0 && (
+                {ceremonieData?.typeCeremonieTalen && ceremonieData?.typeCeremonieTalen.length > 0 && (
                   <div>
                     <dt className="font-sans text-sm text-gray-600">Beschikbare talen</dt>
                     <dd className="font-sans text-sm text-gray-700">
-                      {formatTalen(ceremonieData.typeCeremonieTalen)}
+                      {formatTalen(ceremonieData?.typeCeremonieTalen)}
                     </dd>
                   </div>
                 )}
@@ -216,7 +216,7 @@ export function SamenvattingClient({
                   <div>
                     <dt className="font-sans text-sm text-gray-600">Eigen BABS mogelijk</dt>
                     <dd className="font-sans text-sm text-gray-700">
-                      {ceremonieData.typeCeremonieEigenBabs ? 'Ja' : 'Nee'}
+                      {ceremonieData?.typeCeremonieEigenBabs ? 'Ja' : 'Nee'}
                     </dd>
                   </div>
                 )}
@@ -271,7 +271,7 @@ export function SamenvattingClient({
                   </dd>
                   {ceremonieData?.locatieAdres && (
                     <dd className="font-sans text-sm text-gray-600 mt-1">
-                      {ceremonieData.locatieAdres}
+                      {ceremonieData?.locatieAdres}
                     </dd>
                   )}
                 </div>
