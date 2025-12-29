@@ -36,7 +36,7 @@ export async function PUT(
 
     const { 
       code, naam, voornaam, tussenvoegsel, achternaam, status, 
-      beedigdVanaf, beedigdTot, aanvraagDatum, opmerkingen, 
+      beeddigdVanaf, beeddigdTot, aanvraagDatum, opmerkingen, 
       beschikbaarVanaf, beschikbaarTot, opmerkingBeschikbaarheid,
       talen, // Talen die deze BABS spreekt
       email, // Email adres
@@ -75,8 +75,8 @@ export async function PUT(
     const auditFields = [
       { name: 'status', oldValue: currentBabs.status, newValue: status },
       { name: 'actief', oldValue: String(currentBabs.actief), newValue: String(actief) },
-      { name: 'beedigdVanaf', oldValue: currentBabs.beedigdVanaf, newValue: beedigdVanaf },
-      { name: 'beedigdTot', oldValue: currentBabs.beedigdTot, newValue: beedigdTot },
+      { name: 'beeddigdVanaf', oldValue: currentBabs.beeddigdVanaf, newValue: beeddigdVanaf },
+      { name: 'beeddigdTot', oldValue: currentBabs.beeddigdTot, newValue: beeddigdTot },
       { name: 'beschikbaarVanaf', oldValue: currentBabs.beschikbaarVanaf, newValue: beschikbaarVanaf },
       { name: 'beschikbaarTot', oldValue: currentBabs.beschikbaarTot, newValue: beschikbaarTot },
       { name: 'opmerkingBeschikbaarheid', oldValue: currentBabs.opmerkingBeschikbaarheid, newValue: opmerkingBeschikbaarheid },
@@ -105,8 +105,8 @@ export async function PUT(
         tussenvoegsel: tussenvoegsel || null,
         achternaam,
         status: status || 'in_aanvraag',
-        beedigdVanaf: beedigdVanaf || null,
-        beedigdTot: beedigdTot || null,
+        beeddigdVanaf: beeddigdVanaf || null,
+        beeddigdTot: beeddigdTot || null,
         aanvraagDatum: aanvraagDatum || null,
         opmerkingen: opmerkingen || null,
         beschikbaarVanaf: beschikbaarVanaf || null,
