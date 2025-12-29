@@ -147,10 +147,11 @@ export default function SamenvattingPage(): JSX.Element {
     
     try {
       // Convert data format for PDF generator
+      // Convert null to undefined to match AankondigingData interface
       const pdfData = {
         type: data.type,
-        partner1: data.partner1,
-        partner2: data.partner2,
+        partner1: data.partner1 ?? undefined,
+        partner2: data.partner2 ?? undefined,
         curatele: {
           partner1UnderGuardianship: data.curatele.partner1 === 'Ja',
           partner2UnderGuardianship: data.curatele.partner2 === 'Ja',
