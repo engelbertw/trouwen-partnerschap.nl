@@ -100,33 +100,42 @@ export default function BevestigingPage(): JSX.Element {
       
       // Convert samenvatting data to format expected by PDF generator
       // The PDF generator expects the old format, so we need to transform it
+      // Convert null to undefined to match AankondigingData interface
       const formData = {
         type: samenvattingData.type,
         partner1: samenvattingData.partner1 ? {
           voornamen: samenvattingData.partner1.voornamen || '',
-          achternaam: samenvattingData.partner1.achternaam || '',
+          achternaam: samenvattingData.partner1.geslachtsnaam || samenvattingData.partner1.achternaam || '',
           geboortedatum: samenvattingData.partner1.geboortedatum || '',
-          geboorteplaats: samenvattingData.partner1.geboorteplaats || '',
-          email: samenvattingData.partner1.email || '',
-          telefoon: samenvattingData.partner1.telefoon || '',
           adres: samenvattingData.partner1.adres || '',
           postcode: samenvattingData.partner1.postcode || '',
           plaats: samenvattingData.partner1.plaats || '',
-        } : null,
+          burgerlijkeStaat: samenvattingData.partner1.burgerlijkeStaat || '',
+          ouders: samenvattingData.partner1.ouders || [],
+        } : undefined,
         partner2: samenvattingData.partner2 ? {
           voornamen: samenvattingData.partner2.voornamen || '',
-          achternaam: samenvattingData.partner2.achternaam || '',
+          achternaam: samenvattingData.partner2.geslachtsnaam || samenvattingData.partner2.achternaam || '',
           geboortedatum: samenvattingData.partner2.geboortedatum || '',
-          geboorteplaats: samenvattingData.partner2.geboorteplaats || '',
-          email: samenvattingData.partner2.email || '',
-          telefoon: samenvattingData.partner2.telefoon || '',
           adres: samenvattingData.partner2.adres || '',
           postcode: samenvattingData.partner2.postcode || '',
           plaats: samenvattingData.partner2.plaats || '',
-        } : null,
-        kinderen: samenvattingData.kinderen || null,
-        curatele: samenvattingData.curatele || null,
-        bloedverwantschap: samenvattingData.bloedverwantschap || null,
+          burgerlijkeStaat: samenvattingData.partner2.burgerlijkeStaat || '',
+          ouders: samenvattingData.partner2.ouders || [],
+        } : undefined,
+        kinderen: samenvattingData.kinderen ? {
+          partner1HasChildren: samenvattingData.kinderen.partner1 === 'Ja',
+          partner1Children: samenvattingData.kinderen.partner1Children || [],
+          partner2HasChildren: samenvattingData.kinderen.partner2 === 'Ja',
+          partner2Children: samenvattingData.kinderen.partner2Children || [],
+        } : undefined,
+        curatele: samenvattingData.curatele ? {
+          partner1UnderGuardianship: samenvattingData.curatele.partner1 === 'Ja',
+          partner2UnderGuardianship: samenvattingData.curatele.partner2 === 'Ja',
+        } : undefined,
+        bloedverwantschap: samenvattingData.bloedverwantschap ? {
+          areBloodRelatives: samenvattingData.bloedverwantschap === 'Ja',
+        } : undefined,
       };
       
       // Generate and download PDF
