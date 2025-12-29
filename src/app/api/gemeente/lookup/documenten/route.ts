@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
     const [newDocument] = await db
       .insert(documentOptie)
       .values({
-        gemeenteOin: context.gemeenteOin!,
+        gemeenteOin: context.data.gemeenteOin,
         code,
         naam,
         omschrijving: omschrijving || null,
