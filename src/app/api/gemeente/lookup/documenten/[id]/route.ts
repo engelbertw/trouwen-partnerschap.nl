@@ -58,7 +58,7 @@ export async function PUT(
       .where(
         and(
           eq(documentOptie.id, id),
-          eq(documentOptie.gemeenteOin, gemeenteContext.gemeenteOin!)
+          eq(documentOptie.gemeenteOin, gemeenteContext.data.gemeenteOin)
         )
       )
       .returning();
@@ -108,7 +108,7 @@ export async function DELETE(
       .where(
         and(
           eq(documentOptie.id, id),
-          eq(documentOptie.gemeenteOin, gemeenteContext.gemeenteOin!)
+          eq(documentOptie.gemeenteOin, gemeenteContext.data.gemeenteOin)
         )
       )
       .returning();
