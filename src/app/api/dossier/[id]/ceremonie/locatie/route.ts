@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 import { db } from '@/db';
 import { ceremonie, locatie, dossier } from '@/db/schema';
 import { eq } from 'drizzle-orm';
@@ -12,6 +13,14 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json(
+        { success: false, error: 'Niet geautoriseerd' },
+        { status: 401 }
+      );
+    }
+
     const { id: dossierId } = await params;
     const { locatieId } = await request.json();
 
@@ -19,6 +28,27 @@ export async function PUT(
       return NextResponse.json(
         { success: false, error: 'locatieId is verplicht' },
         { status: 400 }
+      );
+    }
+
+    // Verify dossier exists and user owns it
+    const [dossierCheck] = await db
+      .select()
+      .from(dossier)
+      .where(eq(dossier.id, dossierId))
+      .limit(1);
+
+    if (!dossierCheck) {
+      return NextResponse.json(
+        { success: false, error: 'Dossier niet gevonden' },
+        { status: 404 }
+      );
+    }
+
+    if (dossierCheck.createdBy !== userId) {
+      return NextResponse.json(
+        { success: false, error: 'Geen toegang tot dit dossier' },
+        { status: 403 }
       );
     }
 
@@ -119,7 +149,36 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json(
+        { success: false, error: 'Niet geautoriseerd' },
+        { status: 401 }
+      );
+    }
+
     const { id: dossierId } = await params;
+
+    // Verify dossier exists and user owns it
+    const [dossierCheck] = await db
+      .select()
+      .from(dossier)
+      .where(eq(dossier.id, dossierId))
+      .limit(1);
+
+    if (!dossierCheck) {
+      return NextResponse.json(
+        { success: false, error: 'Dossier niet gevonden' },
+        { status: 404 }
+      );
+    }
+
+    if (dossierCheck.createdBy !== userId) {
+      return NextResponse.json(
+        { success: false, error: 'Geen toegang tot dit dossier' },
+        { status: 403 }
+      );
+    }
 
     const [existingCeremonie] = await db
       .select({

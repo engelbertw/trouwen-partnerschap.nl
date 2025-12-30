@@ -34,6 +34,14 @@ export async function GET(
       );
     }
 
+    // Verify ownership
+    if (dossierRecord.createdBy !== userId) {
+      return NextResponse.json(
+        { success: false, error: 'Geen toegang tot dit dossier' },
+        { status: 403 }
+      );
+    }
+
     // Fetch all witnesses for this dossier
     const getuigenList = await db
       .select()
@@ -96,6 +104,14 @@ export async function POST(
       return NextResponse.json(
         { success: false, error: 'Dossier niet gevonden' },
         { status: 404 }
+      );
+    }
+
+    // Verify ownership
+    if (dossierRecord.createdBy !== userId) {
+      return NextResponse.json(
+        { success: false, error: 'Geen toegang tot dit dossier' },
+        { status: 403 }
       );
     }
 
@@ -163,6 +179,14 @@ export async function DELETE(
       return NextResponse.json(
         { success: false, error: 'Dossier niet gevonden' },
         { status: 404 }
+      );
+    }
+
+    // Verify ownership
+    if (dossierRecord.createdBy !== userId) {
+      return NextResponse.json(
+        { success: false, error: 'Geen toegang tot dit dossier' },
+        { status: 403 }
       );
     }
 
