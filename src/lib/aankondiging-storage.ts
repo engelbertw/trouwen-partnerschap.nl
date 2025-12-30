@@ -30,6 +30,7 @@ export interface AankondigingData {
     voornamen: string;
     achternaam: string;
     geboortedatum: string;
+    geboorteNaam?: string;
     adres?: string;
     postcode?: string;
     plaats?: string;
@@ -43,6 +44,7 @@ export interface AankondigingData {
     voornamen: string;
     achternaam: string;
     geboortedatum: string;
+    geboorteNaam?: string;
     adres?: string;
     postcode?: string;
     plaats?: string;
