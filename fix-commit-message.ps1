@@ -41,3 +41,4 @@ Write-Host "Sla op en sluit editor" -ForegroundColor White
 Write-Host "Wijzig message naar: $newMessage" -ForegroundColor White
 
 
+

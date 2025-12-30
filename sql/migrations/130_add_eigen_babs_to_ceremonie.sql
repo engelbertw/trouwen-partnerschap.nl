@@ -8,3 +8,4 @@ COMMENT ON COLUMN ihw.ceremonie.eigen_babs IS 'Indicates if user wants own BABS 
 
 
 
+
