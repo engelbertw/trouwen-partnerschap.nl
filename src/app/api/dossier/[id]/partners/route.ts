@@ -3,6 +3,7 @@ import { auth } from '@clerk/nextjs/server';
 import { db } from '@/db';
 import { dossier, partner } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
+import { validatePartner, type PartnerData } from '@/lib/validation';
 
 /**
  * PUT /api/dossier/[id]/partners
@@ -67,7 +68,36 @@ export async function PUT(
       );
     }
 
-    // 3. Verify dossier access
+    // 3. Validate required fields
+    if (!voornamen || !voornamen.trim()) {
+      return NextResponse.json(
+        { success: false, error: 'Voornamen is verplicht' },
+        { status: 400 }
+      );
+    }
+
+    if (!geslachtsnaam || !geslachtsnaam.trim()) {
+      return NextResponse.json(
+        { success: false, error: 'Achternaam is verplicht' },
+        { status: 400 }
+      );
+    }
+
+    if (!geboortedatum || !geboortedatum.trim()) {
+      return NextResponse.json(
+        { success: false, error: 'Geboortedatum is verplicht' },
+        { status: 400 }
+      );
+    }
+
+    if (!geboorteplaats || !geboorteplaats.trim()) {
+      return NextResponse.json(
+        { success: false, error: 'Geboorteplaats is verplicht' },
+        { status: 400 }
+      );
+    }
+
+    // 4. Verify dossier access FIRST (before validation to avoid unnecessary work)
     const [existingDossier] = await db
       .select()
       .from(dossier)
@@ -91,15 +121,62 @@ export async function PUT(
     // Store gemeenteOin for use in insert/update
     const gemeenteOin = existingDossier.gemeenteOin;
 
-    // 4. Helper function to convert DD-MM-YYYY to YYYY-MM-DD
-    const convertDateFormat = (dateStr: string): string => {
+    // 5. Validate partner data using validation library
+    // Convert date format for validation (expects DD-MM-YYYY)
+    const convertDateForValidation = (dateStr: string): string => {
       if (!dateStr) return '';
+      if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+        // YYYY-MM-DD to DD-MM-YYYY
+        const [year, month, day] = dateStr.split('-');
+        return `${day}-${month}-${year}`;
+      }
+      return dateStr; // Assume already in DD-MM-YYYY format
+    };
+
+    const partnerData: PartnerData = {
+      voornamen: voornamen.trim(),
+      achternaam: geslachtsnaam.trim(),
+      geboortedatum: convertDateForValidation(geboortedatum),
+      bsn: body.bsn || undefined,
+      email: email || undefined,
+      postcode: postcode || undefined,
+    };
+
+    // Get huwelijksdatum from dossier if available for age validation
+    let huwelijksdatum: string | undefined;
+    if (existingDossier.huwelijksdatum) {
+      // Convert YYYY-MM-DD to DD-MM-YYYY
+      const [year, month, day] = existingDossier.huwelijksdatum.split('-');
+      huwelijksdatum = `${day}-${month}-${year}`;
+    }
+
+    const validationResult = validatePartner(partnerData, huwelijksdatum);
+    
+    if (!validationResult.isValid) {
+      // Format validation errors for user
+      const errorMessages = validationResult.errors.map(e => e.message);
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'Validatie gefaald',
+          validationErrors: errorMessages,
+          details: validationResult.errors,
+        },
+        { status: 400 }
+      );
+    }
+
+    // 6. Helper function to convert DD-MM-YYYY to YYYY-MM-DD
+    const convertDateFormat = (dateStr: string): string => {
+      if (!dateStr) {
+        throw new Error('Geboortedatum is verplicht');
+      }
       if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
       if (/^\d{2}-\d{2}-\d{4}$/.test(dateStr)) {
         const [day, month, year] = dateStr.split('-');
         return `${year}-${month}-${day}`;
       }
-      throw new Error(`Invalid date format: ${dateStr}`);
+      throw new Error(`Ongeldig datumformaat: ${dateStr}. Verwacht DD-MM-YYYY of YYYY-MM-DD`);
     };
 
     // 5. Upsert pattern: Try insert first, if duplicate key then update
@@ -111,7 +188,7 @@ export async function PUT(
         sequence,
         voornamen: voornamen || '',
         geslachtsnaam: geslachtsnaam || '',
-        geboortedatum: convertDateFormat(geboortedatum || ''),
+        geboortedatum: convertDateFormat(geboortedatum!),
         geboorteplaats: geboorteplaats || 'Onbekend',
         geboorteland: geboorteland || 'Nederland',
         email: email || null,
