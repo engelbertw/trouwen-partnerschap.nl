@@ -36,7 +36,6 @@ export async function GET(request: NextRequest) {
         beschikbaarTot: locatie.beschikbaarTot,
         opmerkingBeschikbaarheid: locatie.opmerkingBeschikbaarheid,
         email: locatie.email,
-        calendarFeedToken: locatie.calendarFeedToken,
         calendarFeedEnabled: locatie.calendarFeedEnabled,
         createdAt: locatie.createdAt,
         updatedAt: locatie.updatedAt,
@@ -106,9 +105,12 @@ export async function POST(request: NextRequest) {
       })
       .returning();
 
+    // Exclude calendar feed token from response
+    const { calendarFeedToken, ...locatieData } = newLocatie;
+
     return NextResponse.json({
       success: true,
-      data: newLocatie,
+      data: locatieData,
     });
   } catch (error) {
     console.error('Error creating locatie:', error);

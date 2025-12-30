@@ -41,7 +41,6 @@ export async function GET(request: NextRequest) {
         beschikbaarVanaf: babs.beschikbaarVanaf,
         beschikbaarTot: babs.beschikbaarTot,
         opmerkingBeschikbaarheid: babs.opmerkingBeschikbaarheid,
-        calendarFeedToken: babs.calendarFeedToken,
         calendarFeedEnabled: babs.calendarFeedEnabled,
         email: babs.email,
         actief: babs.actief,
@@ -394,9 +393,12 @@ export async function POST(request: NextRequest) {
       clerkError = 'Email adres is verplicht voor het aanmaken van een Clerk account.';
     }
 
+    // Exclude calendar feed token from response
+    const { calendarFeedToken, ...babsData } = babsRecord;
+
     return NextResponse.json({
       success: true,
-      data: babsRecord,
+      data: babsData,
       clerkUserId,
       warning: clerkError,
       wasExisting,

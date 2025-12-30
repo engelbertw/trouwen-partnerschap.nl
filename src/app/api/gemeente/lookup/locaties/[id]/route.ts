@@ -43,9 +43,12 @@ export async function PUT(
       );
     }
 
+    // Exclude calendar feed token from response
+    const { calendarFeedToken, ...locatieData } = updated;
+
     return NextResponse.json({
       success: true,
-      data: updated,
+      data: locatieData,
     });
   } catch (error) {
     console.error('Error updating locatie:', error);
@@ -90,6 +93,9 @@ export async function DELETE(
         { status: 404 }
       );
     }
+
+    // Exclude calendar feed token from response (even though we're not returning data, be safe)
+    const { calendarFeedToken, ...locatieData } = updated;
 
     return NextResponse.json({
       success: true,
