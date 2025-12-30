@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db';
 import { typeCeremonie } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-import { getGemeenteContext } from '@/lib/gemeente';
+import { getGemeenteContext, isAdmin } from '@/lib/gemeente';
 
 export async function PUT(
   request: NextRequest,
@@ -14,6 +14,14 @@ export async function PUT(
       return NextResponse.json(
         { success: false, error: context.error },
         { status: 401 }
+      );
+    }
+
+    // Only admins can update ceremony types
+    if (!isAdmin(context.data.rol)) {
+      return NextResponse.json(
+        { success: false, error: 'Alleen beheerders kunnen ceremonie types bijwerken' },
+        { status: 403 }
       );
     }
 
@@ -55,6 +63,14 @@ export async function DELETE(
       return NextResponse.json(
         { success: false, error: context.error },
         { status: 401 }
+      );
+    }
+
+    // Only admins can delete ceremony types
+    if (!isAdmin(context.data.rol)) {
+      return NextResponse.json(
+        { success: false, error: 'Alleen beheerders kunnen ceremonie types verwijderen' },
+        { status: 403 }
       );
     }
 

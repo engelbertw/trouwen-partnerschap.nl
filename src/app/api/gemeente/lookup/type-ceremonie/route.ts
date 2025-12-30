@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db';
 import { typeCeremonie } from '@/db/schema';
 import { asc, eq } from 'drizzle-orm';
-import { getGemeenteContext } from '@/lib/gemeente';
+import { getGemeenteContext, isAdmin } from '@/lib/gemeente';
 
 /**
  * GET /api/gemeente/lookup/type-ceremonie
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
 
 /**
  * POST /api/gemeente/lookup/type-ceremonie
- * Creates a new ceremony type (system admin only)
+ * Creates a new ceremony type (admin only)
  */
 export async function POST(request: NextRequest) {
   try {
@@ -50,6 +50,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { success: false, error: context.error },
         { status: 401 }
+      );
+    }
+
+    // Only admins can create ceremony types
+    if (!isAdmin(context.data.rol)) {
+      return NextResponse.json(
+        { success: false, error: 'Alleen beheerders kunnen ceremonie types aanmaken' },
+        { status: 403 }
       );
     }
 

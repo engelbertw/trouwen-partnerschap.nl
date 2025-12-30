@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db';
 import { locatie } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-import { getGemeenteContext } from '@/lib/gemeente';
+import { getGemeenteContext, isAdmin } from '@/lib/gemeente';
 
 /**
  * PUT /api/gemeente/lookup/locaties/[id]
@@ -18,6 +18,14 @@ export async function PUT(
       return NextResponse.json(
         { success: false, error: context.error },
         { status: 401 }
+      );
+    }
+
+    // Only admins can update locaties
+    if (!isAdmin(context.data.rol)) {
+      return NextResponse.json(
+        { success: false, error: 'Alleen beheerders kunnen locaties bijwerken' },
+        { status: 403 }
       );
     }
 
@@ -73,6 +81,14 @@ export async function DELETE(
       return NextResponse.json(
         { success: false, error: context.error },
         { status: 401 }
+      );
+    }
+
+    // Only admins can delete locaties
+    if (!isAdmin(context.data.rol)) {
+      return NextResponse.json(
+        { success: false, error: 'Alleen beheerders kunnen locaties verwijderen' },
+        { status: 403 }
       );
     }
 

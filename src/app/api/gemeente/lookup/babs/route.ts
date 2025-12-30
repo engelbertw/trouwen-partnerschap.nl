@@ -3,7 +3,7 @@ import { clerkClient } from '@clerk/nextjs/server';
 import { db } from '@/db';
 import { babs, babsGemeente, babsGemeenteTarget, ceremonie, dossier } from '@/db/schema';
 import { eq, and, or, sql } from 'drizzle-orm';
-import { getGemeenteContext } from '@/lib/gemeente';
+import { getGemeenteContext, isAdmin } from '@/lib/gemeente';
 
 /**
  * GET /api/gemeente/lookup/babs
@@ -112,6 +112,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { success: false, error: context.error },
         { status: 401 }
+      );
+    }
+
+    // Only admins can create BABS
+    if (!isAdmin(context.data.rol)) {
+      return NextResponse.json(
+        { success: false, error: 'Alleen beheerders kunnen BABS aanmaken' },
+        { status: 403 }
       );
     }
 

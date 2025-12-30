@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db';
 import { documentOptie } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
-import { getGemeenteContext } from '@/lib/gemeente';
+import { getGemeenteContext, isAdmin } from '@/lib/gemeente';
 
 /**
  * PUT /api/gemeente/lookup/documenten/[id]
@@ -18,6 +18,14 @@ export async function PUT(
       return NextResponse.json(
         { success: false, error: gemeenteContext.error },
         { status: 401 }
+      );
+    }
+
+    // Only admins can update document options
+    if (!isAdmin(gemeenteContext.data.rol)) {
+      return NextResponse.json(
+        { success: false, error: 'Alleen beheerders kunnen documentopties bijwerken' },
+        { status: 403 }
       );
     }
 
@@ -97,6 +105,14 @@ export async function DELETE(
       return NextResponse.json(
         { success: false, error: gemeenteContext.error },
         { status: 401 }
+      );
+    }
+
+    // Only admins can delete document options
+    if (!isAdmin(gemeenteContext.data.rol)) {
+      return NextResponse.json(
+        { success: false, error: 'Alleen beheerders kunnen documentopties verwijderen' },
+        { status: 403 }
       );
     }
 

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db';
 import { locatie } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-import { getGemeenteContext } from '@/lib/gemeente';
+import { getGemeenteContext, isAdmin } from '@/lib/gemeente';
 
 /**
  * GET /api/gemeente/lookup/locaties
@@ -76,6 +76,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { success: false, error: context.error },
         { status: 401 }
+      );
+    }
+
+    // Only admins can create locaties
+    if (!isAdmin(context.data.rol)) {
+      return NextResponse.json(
+        { success: false, error: 'Alleen beheerders kunnen locaties aanmaken' },
+        { status: 403 }
       );
     }
 
