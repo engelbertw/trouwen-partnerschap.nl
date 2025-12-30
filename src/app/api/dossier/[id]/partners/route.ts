@@ -142,11 +142,11 @@ export async function PUT(
       postcode: postcode || undefined,
     };
 
-    // Get huwelijksdatum from dossier if available for age validation
+    // Get ceremonyDate from dossier if available for age validation
     let huwelijksdatum: string | undefined;
-    if (existingDossier.huwelijksdatum) {
+    if (existingDossier.ceremonyDate) {
       // Convert YYYY-MM-DD to DD-MM-YYYY
-      const [year, month, day] = existingDossier.huwelijksdatum.split('-');
+      const [year, month, day] = existingDossier.ceremonyDate.split('-');
       huwelijksdatum = `${day}-${month}-${year}`;
     }
 
