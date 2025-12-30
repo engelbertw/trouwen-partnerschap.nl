@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 import { db } from '@/db';
 import { ceremonie, locatie, dossier } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-import { auth } from '@clerk/nextjs/server';
 
 /**
  * PUT /api/dossier/[id]/ceremonie/locatie
@@ -31,24 +31,21 @@ export async function PUT(
       );
     }
 
-    const [dossierRecord] = await db
-      .select({
-        id: dossier.id,
-        createdBy: dossier.createdBy,
-        gemeenteOin: dossier.gemeenteOin,
-      })
+    // Verify dossier exists and user owns it
+    const [dossierCheck] = await db
+      .select()
       .from(dossier)
       .where(eq(dossier.id, dossierId))
       .limit(1);
 
-    if (!dossierRecord) {
+    if (!dossierCheck) {
       return NextResponse.json(
         { success: false, error: 'Dossier niet gevonden' },
         { status: 404 }
       );
     }
 
-    if (dossierRecord.createdBy !== userId) {
+    if (dossierCheck.createdBy !== userId) {
       return NextResponse.json(
         { success: false, error: 'Geen toegang tot dit dossier' },
         { status: 403 }
@@ -93,6 +90,20 @@ export async function PUT(
         message: 'Locatie opgeslagen',
       });
     } else {
+      // Get dossier to retrieve gemeenteOin
+      const [dossierData] = await db
+        .select({ gemeenteOin: dossier.gemeenteOin })
+        .from(dossier)
+        .where(eq(dossier.id, dossierId))
+        .limit(1);
+
+      if (!dossierData) {
+        return NextResponse.json(
+          { success: false, error: 'Dossier niet gevonden' },
+          { status: 404 }
+        );
+      }
+
       // Calculate placeholder dates (1 year from now)
       const now = new Date();
       const placeholderDate = new Date(now);
@@ -105,7 +116,7 @@ export async function PUT(
         .insert(ceremonie)
         .values({
           dossierId,
-          gemeenteOin: dossierRecord.gemeenteOin,
+          gemeenteOin: dossierData.gemeenteOin,
           locatieId,
           datum: placeholderDate.toISOString().split('T')[0], // YYYY-MM-DD format
           startTijd: '14:00:00', // Placeholder time
@@ -148,20 +159,21 @@ export async function GET(
 
     const { id: dossierId } = await params;
 
-    const [dossierRecord] = await db
-      .select({ createdBy: dossier.createdBy })
+    // Verify dossier exists and user owns it
+    const [dossierCheck] = await db
+      .select()
       .from(dossier)
       .where(eq(dossier.id, dossierId))
       .limit(1);
 
-    if (!dossierRecord) {
+    if (!dossierCheck) {
       return NextResponse.json(
         { success: false, error: 'Dossier niet gevonden' },
         { status: 404 }
       );
     }
 
-    if (dossierRecord.createdBy !== userId) {
+    if (dossierCheck.createdBy !== userId) {
       return NextResponse.json(
         { success: false, error: 'Geen toegang tot dit dossier' },
         { status: 403 }

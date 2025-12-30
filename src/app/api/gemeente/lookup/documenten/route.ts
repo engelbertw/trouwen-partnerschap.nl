@@ -63,9 +63,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Only admins can create document options
     if (!isAdmin(context.data.rol)) {
       return NextResponse.json(
-        { success: false, error: 'Geen toegang' },
+        { success: false, error: 'Alleen beheerders kunnen documentopties aanmaken' },
         { status: 403 }
       );
     }

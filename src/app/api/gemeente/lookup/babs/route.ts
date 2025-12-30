@@ -115,9 +115,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Only admins can create BABS
     if (!isAdmin(context.data.rol)) {
       return NextResponse.json(
-        { success: false, error: 'Geen toegang' },
+        { success: false, error: 'Alleen beheerders kunnen BABS aanmaken' },
         { status: 403 }
       );
     }
@@ -400,9 +401,12 @@ export async function POST(request: NextRequest) {
       clerkError = 'Email adres is verplicht voor het aanmaken van een Clerk account.';
     }
 
+    // Exclude calendar feed token from response
+    const { calendarFeedToken, ...babsData } = babsRecord;
+
     return NextResponse.json({
       success: true,
-      data: babsRecord,
+      data: babsData,
       clerkUserId,
       warning: clerkError,
       wasExisting,

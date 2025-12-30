@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/db';
-import { ceremonie, dossier } from '@/db/schema';
-import { eq } from 'drizzle-orm';
 import { auth } from '@clerk/nextjs/server';
+import { db } from '@/db';
+import { ceremonie, locatie, dossier } from '@/db/schema';
+import { eq } from 'drizzle-orm';
 
 /**
  * PUT /api/dossier/[id]/ceremonie/ambtenaar-type
@@ -31,20 +31,21 @@ export async function PUT(
       );
     }
 
-    const [dossierRecord] = await db
-      .select({ createdBy: dossier.createdBy })
+    // Verify dossier exists and user owns it
+    const [dossierCheck] = await db
+      .select()
       .from(dossier)
       .where(eq(dossier.id, dossierId))
       .limit(1);
 
-    if (!dossierRecord) {
+    if (!dossierCheck) {
       return NextResponse.json(
         { success: false, error: 'Dossier niet gevonden' },
         { status: 404 }
       );
     }
 
-    if (dossierRecord.createdBy !== userId) {
+    if (dossierCheck.createdBy !== userId) {
       return NextResponse.json(
         { success: false, error: 'Geen toegang tot dit dossier' },
         { status: 403 }
@@ -110,20 +111,21 @@ export async function GET(
 
     const { id: dossierId } = await params;
 
-    const [dossierRecord] = await db
-      .select({ createdBy: dossier.createdBy })
+    // Verify dossier exists and user owns it
+    const [dossierCheck] = await db
+      .select()
       .from(dossier)
       .where(eq(dossier.id, dossierId))
       .limit(1);
 
-    if (!dossierRecord) {
+    if (!dossierCheck) {
       return NextResponse.json(
         { success: false, error: 'Dossier niet gevonden' },
         { status: 404 }
       );
     }
 
-    if (dossierRecord.createdBy !== userId) {
+    if (dossierCheck.createdBy !== userId) {
       return NextResponse.json(
         { success: false, error: 'Geen toegang tot dit dossier' },
         { status: 403 }

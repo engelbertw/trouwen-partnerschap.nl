@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db';
 import { typeCeremonie } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-import { getGemeenteContext, isSystemAdmin } from '@/lib/gemeente';
+import { getGemeenteContext, isAdmin } from '@/lib/gemeente';
 
 export async function PUT(
   request: NextRequest,
@@ -17,9 +17,10 @@ export async function PUT(
       );
     }
 
-    if (!isSystemAdmin(context.data.rol)) {
+    // Only admins can update ceremony types
+    if (!isAdmin(context.data.rol)) {
       return NextResponse.json(
-        { success: false, error: 'Alleen systeembeheerders hebben toegang' },
+        { success: false, error: 'Alleen beheerders kunnen ceremonie types bijwerken' },
         { status: 403 }
       );
     }
@@ -65,9 +66,10 @@ export async function DELETE(
       );
     }
 
-    if (!isSystemAdmin(context.data.rol)) {
+    // Only admins can delete ceremony types
+    if (!isAdmin(context.data.rol)) {
       return NextResponse.json(
-        { success: false, error: 'Alleen systeembeheerders hebben toegang' },
+        { success: false, error: 'Alleen beheerders kunnen ceremonie types verwijderen' },
         { status: 403 }
       );
     }

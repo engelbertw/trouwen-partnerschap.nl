@@ -79,9 +79,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Only admins can create locaties
     if (!isAdmin(context.data.rol)) {
       return NextResponse.json(
-        { success: false, error: 'Geen toegang' },
+        { success: false, error: 'Alleen beheerders kunnen locaties aanmaken' },
         { status: 403 }
       );
     }
@@ -112,9 +113,12 @@ export async function POST(request: NextRequest) {
       })
       .returning();
 
+    // Exclude calendar feed token from response
+    const { calendarFeedToken, ...locatieData } = newLocatie;
+
     return NextResponse.json({
       success: true,
-      data: newLocatie,
+      data: locatieData,
     });
   } catch (error) {
     console.error('Error creating locatie:', error);

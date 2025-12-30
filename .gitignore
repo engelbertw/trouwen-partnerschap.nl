@@ -61,6 +61,12 @@ secrets/
 credentials/
 *.secret
 
+# Clerk authentication and secrets
+.clerk/
+.clerk/**/*
+*.clerk.json
+keyless.json
+
 # Logs
 logs/
 *.log
@@ -83,7 +89,9 @@ Thumbs.db
 /test-results/
 /playwright-report/
 /playwright/.cache/
-/.playwright-auth/
+.playwright-auth/
+*.auth-state.json
+auth-state.json
 
 # Screenshots (may contain sensitive data)
 /screenshots/*.png

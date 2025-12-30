@@ -21,9 +21,10 @@ export async function PUT(
       );
     }
 
+    // Only admins can update locaties
     if (!isAdmin(context.data.rol)) {
       return NextResponse.json(
-        { success: false, error: 'Geen toegang' },
+        { success: false, error: 'Alleen beheerders kunnen locaties bijwerken' },
         { status: 403 }
       );
     }
@@ -50,9 +51,12 @@ export async function PUT(
       );
     }
 
+    // Exclude calendar feed token from response
+    const { calendarFeedToken, ...locatieData } = updated;
+
     return NextResponse.json({
       success: true,
-      data: updated,
+      data: locatieData,
     });
   } catch (error) {
     console.error('Error updating locatie:', error);
@@ -80,9 +84,10 @@ export async function DELETE(
       );
     }
 
+    // Only admins can delete locaties
     if (!isAdmin(context.data.rol)) {
       return NextResponse.json(
-        { success: false, error: 'Geen toegang' },
+        { success: false, error: 'Alleen beheerders kunnen locaties verwijderen' },
         { status: 403 }
       );
     }
@@ -104,6 +109,9 @@ export async function DELETE(
         { status: 404 }
       );
     }
+
+    // Exclude calendar feed token from response (even though we're not returning data, be safe)
+    const { calendarFeedToken, ...locatieData } = updated;
 
     return NextResponse.json({
       success: true,

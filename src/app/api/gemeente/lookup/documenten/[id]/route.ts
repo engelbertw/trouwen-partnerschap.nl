@@ -21,9 +21,10 @@ export async function PUT(
       );
     }
 
+    // Only admins can update document options
     if (!isAdmin(gemeenteContext.data.rol)) {
       return NextResponse.json(
-        { success: false, error: 'Geen toegang' },
+        { success: false, error: 'Alleen beheerders kunnen documentopties bijwerken' },
         { status: 403 }
       );
     }
@@ -107,9 +108,10 @@ export async function DELETE(
       );
     }
 
+    // Only admins can delete document options
     if (!isAdmin(gemeenteContext.data.rol)) {
       return NextResponse.json(
-        { success: false, error: 'Geen toegang' },
+        { success: false, error: 'Alleen beheerders kunnen documentopties verwijderen' },
         { status: 403 }
       );
     }

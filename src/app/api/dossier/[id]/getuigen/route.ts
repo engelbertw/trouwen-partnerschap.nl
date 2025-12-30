@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { db } from '@/db';
 import { getuige, dossier } from '@/db/schema';
-import { eq } from 'drizzle-orm';
+import { eq, and, desc } from 'drizzle-orm';
 
 /**
  * GET /api/dossier/[id]/getuigen
@@ -34,6 +34,7 @@ export async function GET(
       );
     }
 
+    // Verify ownership
     if (dossierRecord.createdBy !== userId) {
       return NextResponse.json(
         { success: false, error: 'Geen toegang tot dit dossier' },
@@ -106,6 +107,7 @@ export async function POST(
       );
     }
 
+    // Verify ownership
     if (dossierRecord.createdBy !== userId) {
       return NextResponse.json(
         { success: false, error: 'Geen toegang tot dit dossier' },
@@ -180,6 +182,7 @@ export async function DELETE(
       );
     }
 
+    // Verify ownership
     if (dossierRecord.createdBy !== userId) {
       return NextResponse.json(
         { success: false, error: 'Geen toegang tot dit dossier' },

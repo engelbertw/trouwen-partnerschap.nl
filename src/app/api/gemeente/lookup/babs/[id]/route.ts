@@ -141,9 +141,12 @@ export async function PUT(
       await db.insert(babsAuditLog).values(auditEntries);
     }
 
+    // Exclude calendar feed token from response
+    const { calendarFeedToken, ...babsData } = updatedBabs;
+
     return NextResponse.json({
       success: true,
-      data: updatedBabs,
+      data: babsData,
     });
   } catch (error) {
     console.error('Error updating BABS:', error);
