@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db';
 import { typeCeremonie } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-import { getGemeenteContext } from '@/lib/gemeente';
+import { getGemeenteContext, isSystemAdmin } from '@/lib/gemeente';
 
 export async function PUT(
   request: NextRequest,
@@ -14,6 +14,13 @@ export async function PUT(
       return NextResponse.json(
         { success: false, error: context.error },
         { status: 401 }
+      );
+    }
+
+    if (!isSystemAdmin(context.data.rol)) {
+      return NextResponse.json(
+        { success: false, error: 'Alleen systeembeheerders hebben toegang' },
+        { status: 403 }
       );
     }
 
@@ -55,6 +62,13 @@ export async function DELETE(
       return NextResponse.json(
         { success: false, error: context.error },
         { status: 401 }
+      );
+    }
+
+    if (!isSystemAdmin(context.data.rol)) {
+      return NextResponse.json(
+        { success: false, error: 'Alleen systeembeheerders hebben toegang' },
+        { status: 403 }
       );
     }
 

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { db } from '@/db';
 import { getuige, dossier } from '@/db/schema';
-import { eq, and, desc } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 
 /**
  * GET /api/dossier/[id]/getuigen
@@ -31,6 +31,13 @@ export async function GET(
       return NextResponse.json(
         { success: false, error: 'Dossier niet gevonden' },
         { status: 404 }
+      );
+    }
+
+    if (dossierRecord.createdBy !== userId) {
+      return NextResponse.json(
+        { success: false, error: 'Geen toegang tot dit dossier' },
+        { status: 403 }
       );
     }
 
@@ -99,6 +106,13 @@ export async function POST(
       );
     }
 
+    if (dossierRecord.createdBy !== userId) {
+      return NextResponse.json(
+        { success: false, error: 'Geen toegang tot dit dossier' },
+        { status: 403 }
+      );
+    }
+
     // Delete existing witnesses
     await db.delete(getuige).where(eq(getuige.dossierId, dossierId));
 
@@ -163,6 +177,13 @@ export async function DELETE(
       return NextResponse.json(
         { success: false, error: 'Dossier niet gevonden' },
         { status: 404 }
+      );
+    }
+
+    if (dossierRecord.createdBy !== userId) {
+      return NextResponse.json(
+        { success: false, error: 'Geen toegang tot dit dossier' },
+        { status: 403 }
       );
     }
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db';
 import { ceremonie, locatie, dossier } from '@/db/schema';
 import { eq } from 'drizzle-orm';
+import { auth } from '@clerk/nextjs/server';
 
 /**
  * PUT /api/dossier/[id]/ceremonie/locatie
@@ -12,6 +13,14 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json(
+        { success: false, error: 'Niet geautoriseerd' },
+        { status: 401 }
+      );
+    }
+
     const { id: dossierId } = await params;
     const { locatieId } = await request.json();
 
@@ -19,6 +28,30 @@ export async function PUT(
       return NextResponse.json(
         { success: false, error: 'locatieId is verplicht' },
         { status: 400 }
+      );
+    }
+
+    const [dossierRecord] = await db
+      .select({
+        id: dossier.id,
+        createdBy: dossier.createdBy,
+        gemeenteOin: dossier.gemeenteOin,
+      })
+      .from(dossier)
+      .where(eq(dossier.id, dossierId))
+      .limit(1);
+
+    if (!dossierRecord) {
+      return NextResponse.json(
+        { success: false, error: 'Dossier niet gevonden' },
+        { status: 404 }
+      );
+    }
+
+    if (dossierRecord.createdBy !== userId) {
+      return NextResponse.json(
+        { success: false, error: 'Geen toegang tot dit dossier' },
+        { status: 403 }
       );
     }
 
@@ -60,20 +93,6 @@ export async function PUT(
         message: 'Locatie opgeslagen',
       });
     } else {
-      // Get dossier to retrieve gemeenteOin
-      const [dossierData] = await db
-        .select({ gemeenteOin: dossier.gemeenteOin })
-        .from(dossier)
-        .where(eq(dossier.id, dossierId))
-        .limit(1);
-
-      if (!dossierData) {
-        return NextResponse.json(
-          { success: false, error: 'Dossier niet gevonden' },
-          { status: 404 }
-        );
-      }
-
       // Calculate placeholder dates (1 year from now)
       const now = new Date();
       const placeholderDate = new Date(now);
@@ -86,7 +105,7 @@ export async function PUT(
         .insert(ceremonie)
         .values({
           dossierId,
-          gemeenteOin: dossierData.gemeenteOin,
+          gemeenteOin: dossierRecord.gemeenteOin,
           locatieId,
           datum: placeholderDate.toISOString().split('T')[0], // YYYY-MM-DD format
           startTijd: '14:00:00', // Placeholder time
@@ -119,7 +138,35 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json(
+        { success: false, error: 'Niet geautoriseerd' },
+        { status: 401 }
+      );
+    }
+
     const { id: dossierId } = await params;
+
+    const [dossierRecord] = await db
+      .select({ createdBy: dossier.createdBy })
+      .from(dossier)
+      .where(eq(dossier.id, dossierId))
+      .limit(1);
+
+    if (!dossierRecord) {
+      return NextResponse.json(
+        { success: false, error: 'Dossier niet gevonden' },
+        { status: 404 }
+      );
+    }
+
+    if (dossierRecord.createdBy !== userId) {
+      return NextResponse.json(
+        { success: false, error: 'Geen toegang tot dit dossier' },
+        { status: 403 }
+      );
+    }
 
     const [existingCeremonie] = await db
       .select({

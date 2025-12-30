@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db';
 import { locatie } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-import { getGemeenteContext } from '@/lib/gemeente';
+import { getGemeenteContext, isAdmin } from '@/lib/gemeente';
 
 /**
  * GET /api/gemeente/lookup/locaties
@@ -36,7 +36,6 @@ export async function GET(request: NextRequest) {
         beschikbaarTot: locatie.beschikbaarTot,
         opmerkingBeschikbaarheid: locatie.opmerkingBeschikbaarheid,
         email: locatie.email,
-        calendarFeedToken: locatie.calendarFeedToken,
         calendarFeedEnabled: locatie.calendarFeedEnabled,
         createdAt: locatie.createdAt,
         updatedAt: locatie.updatedAt,
@@ -77,6 +76,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { success: false, error: context.error },
         { status: 401 }
+      );
+    }
+
+    if (!isAdmin(context.data.rol)) {
+      return NextResponse.json(
+        { success: false, error: 'Geen toegang' },
+        { status: 403 }
       );
     }
 

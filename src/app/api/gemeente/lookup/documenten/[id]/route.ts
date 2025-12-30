@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db';
 import { documentOptie } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
-import { getGemeenteContext } from '@/lib/gemeente';
+import { getGemeenteContext, isAdmin } from '@/lib/gemeente';
 
 /**
  * PUT /api/gemeente/lookup/documenten/[id]
@@ -18,6 +18,13 @@ export async function PUT(
       return NextResponse.json(
         { success: false, error: gemeenteContext.error },
         { status: 401 }
+      );
+    }
+
+    if (!isAdmin(gemeenteContext.data.rol)) {
+      return NextResponse.json(
+        { success: false, error: 'Geen toegang' },
+        { status: 403 }
       );
     }
 
@@ -97,6 +104,13 @@ export async function DELETE(
       return NextResponse.json(
         { success: false, error: gemeenteContext.error },
         { status: 401 }
+      );
+    }
+
+    if (!isAdmin(gemeenteContext.data.rol)) {
+      return NextResponse.json(
+        { success: false, error: 'Geen toegang' },
+        { status: 403 }
       );
     }
 

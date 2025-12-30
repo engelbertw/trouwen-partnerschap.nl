@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db';
-import { ceremonie, locatie, dossier } from '@/db/schema';
+import { ceremonie, dossier } from '@/db/schema';
 import { eq } from 'drizzle-orm';
+import { auth } from '@clerk/nextjs/server';
 
 /**
  * PUT /api/dossier/[id]/ceremonie/ambtenaar-type
@@ -12,6 +13,14 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json(
+        { success: false, error: 'Niet geautoriseerd' },
+        { status: 401 }
+      );
+    }
+
     const { id: dossierId } = await params;
     const { eigenBabs } = await request.json();
 
@@ -19,6 +28,26 @@ export async function PUT(
       return NextResponse.json(
         { success: false, error: 'eigenBabs moet een boolean zijn' },
         { status: 400 }
+      );
+    }
+
+    const [dossierRecord] = await db
+      .select({ createdBy: dossier.createdBy })
+      .from(dossier)
+      .where(eq(dossier.id, dossierId))
+      .limit(1);
+
+    if (!dossierRecord) {
+      return NextResponse.json(
+        { success: false, error: 'Dossier niet gevonden' },
+        { status: 404 }
+      );
+    }
+
+    if (dossierRecord.createdBy !== userId) {
+      return NextResponse.json(
+        { success: false, error: 'Geen toegang tot dit dossier' },
+        { status: 403 }
       );
     }
 
@@ -71,7 +100,35 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json(
+        { success: false, error: 'Niet geautoriseerd' },
+        { status: 401 }
+      );
+    }
+
     const { id: dossierId } = await params;
+
+    const [dossierRecord] = await db
+      .select({ createdBy: dossier.createdBy })
+      .from(dossier)
+      .where(eq(dossier.id, dossierId))
+      .limit(1);
+
+    if (!dossierRecord) {
+      return NextResponse.json(
+        { success: false, error: 'Dossier niet gevonden' },
+        { status: 404 }
+      );
+    }
+
+    if (dossierRecord.createdBy !== userId) {
+      return NextResponse.json(
+        { success: false, error: 'Geen toegang tot dit dossier' },
+        { status: 403 }
+      );
+    }
 
     const [existingCeremonie] = await db
       .select({

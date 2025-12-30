@@ -1,13 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db';
 import { ceremonie, dossier, locatie } from '@/db/schema';
-import { eq, and } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
+import { auth } from '@clerk/nextjs/server';
 
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json(
+        { success: false, error: 'Niet geautoriseerd' },
+        { status: 401 }
+      );
+    }
+
     const { id: dossierId } = await params;
     const body = await request.json();
     const { taal } = body;
@@ -16,6 +25,24 @@ export async function PUT(
       return NextResponse.json(
         { success: false, error: 'Taal is verplicht' },
         { status: 400 }
+      );
+    }
+
+    const dossierRecord = await db.query.dossier.findFirst({
+      where: eq(dossier.id, dossierId),
+    });
+
+    if (!dossierRecord) {
+      return NextResponse.json(
+        { success: false, error: 'Dossier niet gevonden' },
+        { status: 404 }
+      );
+    }
+
+    if (dossierRecord.createdBy !== userId) {
+      return NextResponse.json(
+        { success: false, error: 'Geen toegang tot dit dossier' },
+        { status: 403 }
       );
     }
 
@@ -49,18 +76,6 @@ export async function PUT(
         );
       }
 
-      // Get gemeente from dossier
-      const dossierData = await db.query.dossier.findFirst({
-        where: eq(dossier.id, dossierId),
-      });
-
-      if (!dossierData) {
-        return NextResponse.json(
-          { success: false, error: 'Dossier niet gevonden' },
-          { status: 404 }
-        );
-      }
-
       // Calculate placeholder dates (1 year from now)
       const now = new Date();
       const placeholderDate = new Date(now);
@@ -72,7 +87,7 @@ export async function PUT(
         .insert(ceremonie)
         .values({
           dossierId,
-          gemeenteOin: dossierData.gemeenteOin,
+          gemeenteOin: dossierRecord.gemeenteOin,
           locatieId: firstLocatie.id,
           taal,
           datum: placeholderDate.toISOString().split('T')[0], // YYYY-MM-DD format
@@ -98,7 +113,33 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json(
+        { success: false, error: 'Niet geautoriseerd' },
+        { status: 401 }
+      );
+    }
+
     const { id: dossierId } = await params;
+
+    const dossierRecord = await db.query.dossier.findFirst({
+      where: eq(dossier.id, dossierId),
+    });
+
+    if (!dossierRecord) {
+      return NextResponse.json(
+        { success: false, error: 'Dossier niet gevonden' },
+        { status: 404 }
+      );
+    }
+
+    if (dossierRecord.createdBy !== userId) {
+      return NextResponse.json(
+        { success: false, error: 'Geen toegang tot dit dossier' },
+        { status: 403 }
+      );
+    }
 
     const existingCeremonie = await db.query.ceremonie.findFirst({
       where: eq(ceremonie.dossierId, dossierId),

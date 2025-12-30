@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db';
 import { typeCeremonie } from '@/db/schema';
 import { asc, eq } from 'drizzle-orm';
-import { getGemeenteContext } from '@/lib/gemeente';
+import { getGemeenteContext, isSystemAdmin } from '@/lib/gemeente';
 
 /**
  * GET /api/gemeente/lookup/type-ceremonie
@@ -50,6 +50,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { success: false, error: context.error },
         { status: 401 }
+      );
+    }
+
+    if (!isSystemAdmin(context.data.rol)) {
+      return NextResponse.json(
+        { success: false, error: 'Alleen systeembeheerders hebben toegang' },
+        { status: 403 }
       );
     }
 

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db';
-import { ceremonie, ceremonieWensSelectie, ceremonieCustomWens } from '@/db/schema';
-import { eq, and } from 'drizzle-orm';
+import { ceremonie, ceremonieWensSelectie, ceremonieCustomWens, dossier } from '@/db/schema';
+import { eq } from 'drizzle-orm';
 import { auth } from '@clerk/nextjs/server';
 
 /**
@@ -22,6 +22,26 @@ export async function GET(
     }
 
     const { id: dossierId } = await params;
+
+    const [dossierRecord] = await db
+      .select({ createdBy: dossier.createdBy })
+      .from(dossier)
+      .where(eq(dossier.id, dossierId))
+      .limit(1);
+
+    if (!dossierRecord) {
+      return NextResponse.json(
+        { success: false, error: 'Dossier niet gevonden' },
+        { status: 404 }
+      );
+    }
+
+    if (dossierRecord.createdBy !== userId) {
+      return NextResponse.json(
+        { success: false, error: 'Geen toegang tot dit dossier' },
+        { status: 403 }
+      );
+    }
 
     // Get ceremonie for this dossier
     const [ceremonieData] = await db
@@ -89,6 +109,26 @@ export async function PUT(
     const { id: dossierId } = await params;
     const body = await request.json();
     const { selectedWishes = [], customWishes = '' } = body;
+
+    const [dossierRecord] = await db
+      .select({ createdBy: dossier.createdBy })
+      .from(dossier)
+      .where(eq(dossier.id, dossierId))
+      .limit(1);
+
+    if (!dossierRecord) {
+      return NextResponse.json(
+        { success: false, error: 'Dossier niet gevonden' },
+        { status: 404 }
+      );
+    }
+
+    if (dossierRecord.createdBy !== userId) {
+      return NextResponse.json(
+        { success: false, error: 'Geen toegang tot dit dossier' },
+        { status: 403 }
+      );
+    }
 
     // Get or create ceremonie for this dossier
     let [ceremonieData] = await db
