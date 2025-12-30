@@ -815,17 +815,23 @@ export default function HuwelijksdossierPage(): JSX.Element {
                   <tr className="border-b border-gray-200">
                     <td className="font-sans text-base text-gray-700 px-6 py-4">Ceremonie</td>
                     <td className="font-sans text-base text-gray-700 px-6 py-4 text-right">
-                      {(dossier.kosten?.ceremonieKostenCents ?? 0) > 0 
-                        ? formatPrice(dossier.kosten.ceremonieKostenCents)
-                        : dossier.ceremonie ? 'Gratis' : 'Wordt nog bepaald'}
+                      {(() => {
+                        const ceremonieKosten = dossier.kosten?.ceremonieKostenCents ?? 0;
+                        return ceremonieKosten > 0 
+                          ? formatPrice(ceremonieKosten)
+                          : dossier.ceremonie ? 'Gratis' : 'Wordt nog bepaald';
+                      })()}
                     </td>
                   </tr>
                   <tr className="border-b border-gray-200">
                     <td className="font-sans text-base text-gray-700 px-6 py-4">Documenten</td>
                     <td className="font-sans text-base text-gray-700 px-6 py-4 text-right">
-                      {(dossier.kosten?.documentenKostenCents ?? 0) > 0 
-                        ? formatPrice(dossier.kosten.documentenKostenCents)
-                        : dossier.documenten.length > 0 ? 'Gratis' : 'Wordt nog bepaald'}
+                      {(() => {
+                        const documentenKosten = dossier.kosten?.documentenKostenCents ?? 0;
+                        return documentenKosten > 0 
+                          ? formatPrice(documentenKosten)
+                          : dossier.documenten.length > 0 ? 'Gratis' : 'Wordt nog bepaald';
+                      })()}
                     </td>
                   </tr>
                   <tr className="border-b border-gray-200 bg-gray-50">
