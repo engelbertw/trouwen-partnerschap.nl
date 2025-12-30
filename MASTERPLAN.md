@@ -1,6 +1,6 @@
 # Huwelijk Applicatie - Masterplan
 
-> **Laatste update**: 28 december 2024  
+> **Laatste update**: 28 december 2025  
 > **Status**: Actieve ontwikkeling
 
 ## 📋 Inhoudsopgave
