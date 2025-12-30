@@ -1,5 +1,6 @@
 'use client';
 
+import type { JSX } from 'react';
 import { SignInButton, SignUpButton, UserButton, SignedIn, SignedOut } from '@clerk/nextjs';
 import { Button } from '@utrecht/component-library-react';
 import { usePathname } from 'next/navigation';
