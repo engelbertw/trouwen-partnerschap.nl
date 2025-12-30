@@ -230,7 +230,7 @@ SELECT * FROM ihw.dossier_block ORDER BY created_at DESC LIMIT 5;
 ### 3. Error Handling Testen
 
 **Test zonder gemeente:**
-Als er geen gemeente record is, krijg je een foreign key error.
+Als de `gemeente_oin` uit Clerk niet bestaat in `ihw.gemeente`, krijg je een 400 response: "Gemeente niet gevonden".
 
 **Oplossing:**
 ```sql
@@ -272,22 +272,25 @@ VALUES ('00000001002564440000', 'Amsterdam', '0363', true);
 ## ⚠️ Belangrijke Notes
 
 ### Gemeente OIN
-Op dit moment is de gemeente OIN hardcoded:
+De API haalt `gemeente_oin` op via `getGemeenteContext()` (Clerk publicMetadata) en koppelt het aan `ihw.gemeente`.
 ```typescript
-const gemeenteOin = '00000001002564440000'; // Amsterdam
+const context = await getGemeenteContext();
+if (!context.success) {
+  return NextResponse.json({ success: false, error: context.error }, { status: 401 });
+}
+const { gemeenteOin } = context.data;
 ```
 
 **Voor productie:**
-- Haal OIN uit Clerk user metadata
-- Of uit gemeente selectie tijdens onboarding
-- Of uit environment variable
+- Zorg dat elke gebruiker `gemeente_oin` in Clerk publicMetadata heeft
+- Zorg dat `ihw.gemeente` een record bevat met dezelfde OIN + `gemeente_code`
 
 ### Authenticatie
-De API route vereist Clerk authenticatie:
+De API route vereist Clerk authenticatie + gemeente context:
 ```typescript
-const { userId } = await auth();
-if (!userId) {
-  return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+const context = await getGemeenteContext();
+if (!context.success) {
+  return NextResponse.json({ success: false, error: context.error }, { status: 401 });
 }
 ```
 

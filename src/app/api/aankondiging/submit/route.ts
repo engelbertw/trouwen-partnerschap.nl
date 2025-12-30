@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
-import { db } from '@/db';
-import { dossier, partner, aankondiging, dossierBlock, kind } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
+import { db } from '@/db';
+import { dossier, partner, aankondiging, dossierBlock, kind, gemeente } from '@/db/schema';
 import type { AankondigingData } from '@/lib/aankondiging-storage';
+import { getGemeenteContext } from '@/lib/gemeente';
 
 /**
  * POST /api/aankondiging/submit
@@ -14,13 +14,15 @@ import type { AankondigingData } from '@/lib/aankondiging-storage';
 export async function POST(request: NextRequest) {
   try {
     // 1. Check authentication
-    const { userId } = await auth();
-    if (!userId) {
+    const context = await getGemeenteContext();
+    if (!context.success) {
       return NextResponse.json(
-        { success: false, error: 'Niet geautoriseerd' },
+        { success: false, error: context.error },
         { status: 401 }
       );
     }
+
+    const { userId, gemeenteOin } = context.data;
 
     // 2. Get form data from request body
     const body = await request.json();
@@ -45,8 +47,23 @@ export async function POST(request: NextRequest) {
     const partner1 = formData.partner1;
     const partner2 = formData.partner2;
 
-    // 4. Get gemeente OIN (hardcoded voor nu, later uit Clerk metadata of user settings)
-    const gemeenteOin = '00000001002564440000'; // Voorbeeld OIN voor Amsterdam
+    // 4. Resolve municipality code for this gemeente
+    const [gemeenteRecord] = await db
+      .select({ gemeenteCode: gemeente.gemeenteCode })
+      .from(gemeente)
+      .where(eq(gemeente.oin, gemeenteOin))
+      .limit(1);
+
+    if (!gemeenteRecord) {
+      return NextResponse.json(
+        { success: false, error: 'Gemeente niet gevonden. Controleer de configuratie.' },
+        { status: 400 }
+      );
+    }
+
+    const municipalityCode = gemeenteRecord.gemeenteCode.startsWith('NL.IMBAG.Gemeente.')
+      ? gemeenteRecord.gemeenteCode
+      : `NL.IMBAG.Gemeente.${gemeenteRecord.gemeenteCode}`;
 
     // Helper function to convert DD-MM-YYYY to YYYY-MM-DD (ISO format for PostgreSQL)
     const convertDateFormat = (dateStr: string): string => {
@@ -82,7 +99,7 @@ export async function POST(request: NextRequest) {
         gemeenteOin,
         status: 'draft',
         createdBy: userId,
-        municipalityCode: 'NL.IMBAG.Gemeente.0363',
+        municipalityCode,
         isTest: process.env.NODE_ENV !== 'production',
       }).returning();
 
