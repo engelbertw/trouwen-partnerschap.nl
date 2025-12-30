@@ -1,7 +1,7 @@
 'use client';
 
 import type { JSX } from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -9,7 +9,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
  * Aankondiging type selectie pagina
  * Gebruiker kiest tussen Huwelijk of Partnerschap
  */
-export default function AankondigingTypePage(): JSX.Element {
+function AankondigingTypeContent(): JSX.Element {
   const router = useRouter();
   const searchParams = useSearchParams();
   const existingDossierId = searchParams.get('dossierId');
@@ -253,6 +253,26 @@ export default function AankondigingTypePage(): JSX.Element {
         </article>
       </main>
     </div>
+  );
+}
+
+/**
+ * Page wrapper with Suspense boundary for useSearchParams
+ */
+export default function AankondigingTypePage(): JSX.Element {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Laden...</p>
+          </div>
+        </div>
+      }
+    >
+      <AankondigingTypeContent />
+    </Suspense>
   );
 }
 
