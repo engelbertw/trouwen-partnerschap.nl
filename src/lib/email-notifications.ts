@@ -1,9 +1,18 @@
 import { Resend } from 'resend';
 
-// Initialize Resend client
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const EMAIL_FROM = process.env.EMAIL_FROM || 'noreply@huwelijk.gemeente.nl';
+
+/**
+ * Get Resend client instance (lazy initialization)
+ * Only creates instance when API key is available
+ */
+function getResendClient(): Resend | null {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    return null;
+  }
+  return new Resend(apiKey);
+}
 
 /**
  * Send email notification to BABS when assigned to a new ceremony
@@ -16,7 +25,8 @@ export async function notifyBabsNewCeremony(
   location: string
 ): Promise<{ success: boolean; error?: string }> {
   // Skip if no API key configured (development mode)
-  if (!process.env.RESEND_API_KEY) {
+  const resend = getResendClient();
+  if (!resend) {
     console.log('Email notification skipped (RESEND_API_KEY not configured):', {
       babsEmail,
       ceremonyDate,
