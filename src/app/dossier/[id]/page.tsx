@@ -815,7 +815,7 @@ export default function HuwelijksdossierPage(): JSX.Element {
                   <tr className="border-b border-gray-200">
                     <td className="font-sans text-base text-gray-700 px-6 py-4">Ceremonie</td>
                     <td className="font-sans text-base text-gray-700 px-6 py-4 text-right">
-                      {dossier.kosten?.ceremonieKostenCents > 0 
+                      {(dossier.kosten?.ceremonieKostenCents ?? 0) > 0 
                         ? formatPrice(dossier.kosten.ceremonieKostenCents)
                         : dossier.ceremonie ? 'Gratis' : 'Wordt nog bepaald'}
                     </td>
@@ -823,7 +823,7 @@ export default function HuwelijksdossierPage(): JSX.Element {
                   <tr className="border-b border-gray-200">
                     <td className="font-sans text-base text-gray-700 px-6 py-4">Documenten</td>
                     <td className="font-sans text-base text-gray-700 px-6 py-4 text-right">
-                      {dossier.kosten?.documentenKostenCents > 0 
+                      {(dossier.kosten?.documentenKostenCents ?? 0) > 0 
                         ? formatPrice(dossier.kosten.documentenKostenCents)
                         : dossier.documenten.length > 0 ? 'Gratis' : 'Wordt nog bepaald'}
                     </td>
