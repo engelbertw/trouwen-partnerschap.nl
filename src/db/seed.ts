@@ -1,37 +1,21 @@
 import 'dotenv/config';
-import { db } from './index';
-import { usersTable } from './schema';
-import { eq } from 'drizzle-orm';
 
+/**
+ * Database seeding script
+ * 
+ * Note: Actual seeding is done via SQL files:
+ * - sql/060_seeds.sql - Configuration data (ceremony types, locations, BABS)
+ * - sql/080_validation_seeds.sql - Validation rules
+ * 
+ * To seed the database, run the SQL files directly:
+ * psql $DATABASE_URL -f sql/060_seeds.sql
+ * psql $DATABASE_URL -f sql/080_validation_seeds.sql
+ */
 async function main() {
-  console.log('🌱 Seeding database...');
-
-  // Create a test user
-  const user: typeof usersTable.$inferInsert = {
-    name: 'John Doe',
-    age: 30,
-    email: 'john@example.com',
-  };
-
-  await db.insert(usersTable).values(user);
-  console.log('✅ New user created!');
-
-  // Get all users
-  const users = await db.select().from(usersTable);
-  console.log('📋 All users:', users);
-
-  // Update user
-  await db
-    .update(usersTable)
-    .set({ age: 31 })
-    .where(eq(usersTable.email, user.email));
-  console.log('✅ User info updated!');
-
-  // Delete user
-  await db.delete(usersTable).where(eq(usersTable.email, user.email));
-  console.log('✅ User deleted!');
-
-  console.log('🎉 Seeding complete!');
+  console.log('🌱 Database seeding...');
+  console.log('ℹ️  Note: Seeding is done via SQL files, not this TypeScript script.');
+  console.log('ℹ️  Run: psql $DATABASE_URL -f sql/060_seeds.sql');
+  console.log('🎉 Seeding script complete!');
 }
 
 main()
