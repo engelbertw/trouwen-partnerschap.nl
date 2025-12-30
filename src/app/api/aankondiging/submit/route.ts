@@ -4,6 +4,7 @@ import { db } from '@/db';
 import { dossier, partner, aankondiging, dossierBlock, kind } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
 import type { AankondigingData } from '@/lib/aankondiging-storage';
+import { getGemeenteContext } from '@/lib/gemeente';
 
 /**
  * POST /api/aankondiging/submit
@@ -45,8 +46,15 @@ export async function POST(request: NextRequest) {
     const partner1 = formData.partner1;
     const partner2 = formData.partner2;
 
-    // 4. Get gemeente OIN (hardcoded voor nu, later uit Clerk metadata of user settings)
-    const gemeenteOin = '00000001002564440000'; // Voorbeeld OIN voor Amsterdam
+    // 4. Get gemeente context
+    const context = await getGemeenteContext();
+    if (!context.success) {
+      return NextResponse.json(
+        { success: false, error: context.error },
+        { status: 403 }
+      );
+    }
+    const { gemeenteOin } = context.data;
 
     // Helper function to convert DD-MM-YYYY to YYYY-MM-DD (ISO format for PostgreSQL)
     const convertDateFormat = (dateStr: string): string => {

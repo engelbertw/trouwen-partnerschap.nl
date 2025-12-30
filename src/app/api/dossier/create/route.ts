@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { db } from '@/db';
 import { dossier, dossierBlock } from '@/db/schema';
+import { getGemeenteContext } from '@/lib/gemeente';
 
 /**
  * POST /api/dossier/create
@@ -24,8 +25,15 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { type } = body; // 'huwelijk' or 'partnerschap'
 
-    // 3. Get gemeente OIN (from user settings or hardcoded)
-    const gemeenteOin = '00000001002564440000'; // Example OIN
+    // 3. Get gemeente context
+    const context = await getGemeenteContext();
+    if (!context.success) {
+      return NextResponse.json(
+        { success: false, error: context.error },
+        { status: 403 }
+      );
+    }
+    const { gemeenteOin } = context.data;
 
     // 4. Create dossier in transaction
     const result = await db.transaction(async (tx) => {
