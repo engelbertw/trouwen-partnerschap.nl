@@ -30,11 +30,11 @@ export interface AankondigingData {
     voornamen: string;
     achternaam: string;
     geboortedatum: string;
-    adres: string;
-    postcode: string;
-    plaats: string;
-    burgerlijkeStaat: string;
-    ouders: string[];
+    adres?: string;
+    postcode?: string;
+    plaats?: string;
+    burgerlijkeStaat?: string;
+    ouders?: string[];
     email?: string;
   };
   
@@ -43,11 +43,11 @@ export interface AankondigingData {
     voornamen: string;
     achternaam: string;
     geboortedatum: string;
-    adres: string;
-    postcode: string;
-    plaats: string;
-    burgerlijkeStaat: string;
-    ouders: string[];
+    adres?: string;
+    postcode?: string;
+    plaats?: string;
+    burgerlijkeStaat?: string;
+    ouders?: string[];
     email?: string;
   };
   
