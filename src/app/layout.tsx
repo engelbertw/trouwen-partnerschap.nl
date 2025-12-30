@@ -34,8 +34,23 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Check for Clerk publishable key during build
+  const clerkPublishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+  
+  if (!clerkPublishableKey) {
+    // During build, provide helpful error message
+    if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+      throw new Error(
+        'NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY is missing. ' +
+        'Please configure it in Vercel Environment Variables. ' +
+        'See docs/deployment/VERCEL-DEPLOYMENT.md for instructions.'
+      );
+    }
+  }
+
   return (
     <ClerkProvider
+      publishableKey={clerkPublishableKey}
       localization={nlNL}
       appearance={{
         baseTheme: dark,

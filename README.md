@@ -63,12 +63,22 @@ Een moderne, toegankelijke trouwapplicatie gebouwd met Next.js 15 en het NL Desi
    http://localhost:3000
    ```
 
+## 🚀 Deployment
+
+Voor deployment naar Vercel, zie de [Vercel Deployment Guide](./docs/deployment/VERCEL-DEPLOYMENT.md).
+
+**Belangrijk**: Configureer alle environment variables in Vercel **voordat** je de eerste build start, inclusief:
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` (verplicht)
+- `CLERK_SECRET_KEY` (verplicht)
+- `DATABASE_URL` (verplicht)
+
 ## 📚 Documentatie
 
 Volledige documentatie is beschikbaar in de [`docs/`](./docs/) directory:
 
 - [Setup Guide](./docs/SETUP-GUIDE.md) - Uitgebreide installatie instructies
 - [Quick Start](./docs/QUICK-START.md) - Snel aan de slag
+- [Vercel Deployment](./docs/deployment/VERCEL-DEPLOYMENT.md) - Deployment naar Vercel
 - [Architecture](./docs/architecture/README.md) - Architectuur documentatie
 - [Features](./docs/features/README.md) - Feature documentatie
 - [API Documentation](./docs/architecture/api/README.md) - API endpoints
