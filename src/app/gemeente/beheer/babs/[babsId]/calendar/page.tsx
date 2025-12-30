@@ -102,6 +102,24 @@ export default function BabsCalendarPage({ params }: { params: Promise<{ babsId:
     fetchData();
   }, [resolvedParams.babsId]);
 
+  // Helper function to safely parse JSON response
+  const parseJsonResponse = async (response: Response, endpoint: string) => {
+    const contentType = response.headers.get('content-type');
+    
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      console.error(`[ERROR] ${endpoint} returned non-JSON response:`, {
+        status: response.status,
+        statusText: response.statusText,
+        contentType,
+        preview: text.substring(0, 200),
+      });
+      throw new Error(`${endpoint} returned HTML instead of JSON (status: ${response.status})`);
+    }
+    
+    return response.json();
+  };
+
   const fetchData = async () => {
     setIsLoading(true);
     setError(null);
@@ -109,56 +127,92 @@ export default function BabsCalendarPage({ params }: { params: Promise<{ babsId:
     try {
       // Fetch BABS data
       const babsRes = await fetch(`/api/gemeente/lookup/babs`);
-      const babsData = await babsRes.json();
-      
-      if (babsData.success) {
-        const currentBabs = babsData.data.find((b: BabsData) => b.id === resolvedParams.babsId);
-        if (currentBabs) {
-          setBabs(currentBabs);
-        } else {
-          setError('BABS niet gevonden');
-          return;
-        }
+      if (!babsRes.ok) {
+        throw new Error(`BABS lookup failed: ${babsRes.status} ${babsRes.statusText}`);
       }
+      const babsData = await parseJsonResponse(babsRes, '/api/gemeente/lookup/babs');
+      
+      if (!babsData.success) {
+        setError(babsData.error || 'Kon BABS gegevens niet ophalen');
+        return;
+      }
+      
+      const currentBabs = babsData.data.find((b: BabsData) => b.id === resolvedParams.babsId);
+      if (!currentBabs) {
+        setError('BABS niet gevonden');
+        return;
+      }
+      setBabs(currentBabs);
 
       // Fetch recurring rules
       const rulesRes = await fetch(`/api/gemeente/babs/${resolvedParams.babsId}/recurring-rules`);
-      const rulesData = await rulesRes.json();
-      if (rulesData.success) {
-        setRules(rulesData.data);
+      if (!rulesRes.ok) {
+        throw new Error(`Recurring rules failed: ${rulesRes.status} ${rulesRes.statusText}`);
       }
+      const rulesData = await parseJsonResponse(rulesRes, '/api/gemeente/babs/[babsId]/recurring-rules');
+      if (!rulesData.success) {
+        console.error('[ERROR] Failed to load recurring rules:', rulesData.error);
+        setError(rulesData.error || 'Kon terugkerende regels niet ophalen');
+        return;
+      }
+      setRules(rulesData.data || []);
 
       // Fetch blocked dates
       const blockedRes = await fetch(`/api/gemeente/babs/${resolvedParams.babsId}/blocked-dates`);
-      const blockedData = await blockedRes.json();
-      if (blockedData.success) {
-        setBlockedDates(blockedData.data);
+      if (!blockedRes.ok) {
+        throw new Error(`Blocked dates failed: ${blockedRes.status} ${blockedRes.statusText}`);
       }
+      const blockedData = await parseJsonResponse(blockedRes, '/api/gemeente/babs/[babsId]/blocked-dates');
+      if (!blockedData.success) {
+        console.error('[ERROR] Failed to load blocked dates:', blockedData.error);
+        setError(blockedData.error || 'Kon geblokkeerde datums niet ophalen');
+        return;
+      }
+      setBlockedDates(blockedData.data || []);
 
       // Fetch audit log
       const auditRes = await fetch(`/api/gemeente/babs/${resolvedParams.babsId}/audit-log`);
-      const auditData = await auditRes.json();
-      if (auditData.success) {
-        setAuditLog(auditData.data);
+      if (auditRes.ok) {
+        const auditData = await parseJsonResponse(auditRes, '/api/gemeente/babs/[babsId]/audit-log');
+        if (auditData.success) {
+          setAuditLog(auditData.data || []);
+        } else {
+          console.error('[ERROR] Failed to load audit log:', auditData.error);
+          // Audit log is not critical, continue without it
+        }
+      } else {
+        console.warn('[WARN] Audit log endpoint returned error:', auditRes.status);
+        // Audit log is not critical, continue without it
       }
 
       // Fetch ceremonies (geboekte ceremonies) for this BABS
+      let ceremoniesList: any[] = [];
       const ceremoniesRes = await fetch(`/api/gemeente/babs/${resolvedParams.babsId}/ceremonies`);
-      const ceremoniesData = await ceremoniesRes.json();
-      console.log('[DEBUG] Ceremonies data:', ceremoniesData);
-      if (ceremoniesData.success) {
-        setCeremonies(ceremoniesData.data);
-        console.log('[DEBUG] Ceremonies loaded:', ceremoniesData.data.length);
+      if (ceremoniesRes.ok) {
+        const ceremoniesData = await parseJsonResponse(ceremoniesRes, '/api/gemeente/babs/[babsId]/ceremonies');
+        console.log('[DEBUG] Ceremonies data:', ceremoniesData);
+        if (ceremoniesData.success) {
+          ceremoniesList = ceremoniesData.data || [];
+          setCeremonies(ceremoniesList);
+          console.log('[DEBUG] Ceremonies loaded:', ceremoniesList.length);
+        } else {
+          console.error('[ERROR] Failed to load ceremonies:', ceremoniesData.error);
+          // Ceremonies are not critical for calendar display, continue without them
+          setCeremonies([]);
+        }
       } else {
-        console.error('[ERROR] Failed to load ceremonies:', ceremoniesData.error);
+        console.warn('[WARN] Ceremonies endpoint returned error:', ceremoniesRes.status);
+        // Ceremonies are not critical for calendar display, continue without them
+        setCeremonies([]);
       }
 
       // Build calendar events
-      buildCalendarEvents(rulesData.data || [], blockedData.data || [], ceremoniesData.data || []);
+      buildCalendarEvents(rulesData.data || [], blockedData.data || [], ceremoniesList);
       
     } catch (err) {
       console.error('Error fetching data:', err);
-      setError('Er ging iets mis bij het ophalen van gegevens');
+      const errorMessage = err instanceof Error ? err.message : 'Onbekende fout';
+      setError(`Er ging iets mis bij het ophalen van gegevens: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }

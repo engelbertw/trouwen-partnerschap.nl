@@ -59,25 +59,80 @@ function Partner1GegevensContent(): JSX.Element {
     plaats: '',
   });
 
-  // Auto-fill from Clerk user data when available
+  // Generate test data for prototype
+  const generateTestData = () => {
+    const testNames = [
+      { voornamen: 'Jan', geslachtsnaam: 'Jansen' },
+      { voornamen: 'Maria', geslachtsnaam: 'de Vries' },
+      { voornamen: 'Pieter', geslachtsnaam: 'Bakker' },
+      { voornamen: 'Anna', geslachtsnaam: 'Visser' },
+      { voornamen: 'Tom', geslachtsnaam: 'Smit' },
+    ];
+    const testPlaces = ['Amsterdam', 'Rotterdam', 'Den Haag', 'Utrecht', 'Eindhoven'];
+    const testStreets = ['Hoofdstraat', 'Kerkstraat', 'Dorpsstraat', 'Parklaan', 'Schoolstraat'];
+    
+    const randomName = testNames[Math.floor(Math.random() * testNames.length)];
+    const randomPlace = testPlaces[Math.floor(Math.random() * testPlaces.length)];
+    const randomStreet = testStreets[Math.floor(Math.random() * testStreets.length)];
+    
+    // Generate random date between 18 and 65 years ago
+    const today = new Date();
+    const minAge = 18;
+    const maxAge = 65;
+    const randomAge = minAge + Math.floor(Math.random() * (maxAge - minAge));
+    const birthYear = today.getFullYear() - randomAge;
+    const birthMonth = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
+    const birthDay = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0');
+    
+    const houseNumber = Math.floor(Math.random() * 200) + 1;
+    const postcode = `${Math.floor(Math.random() * 9000) + 1000}${String.fromCharCode(65 + Math.floor(Math.random() * 26))}${String.fromCharCode(65 + Math.floor(Math.random() * 26))}`;
+    
+    return {
+      voornamen: randomName.voornamen,
+      geslachtsnaam: randomName.geslachtsnaam,
+      geboortedatum: `${birthYear}-${birthMonth}-${birthDay}`,
+      geboorteplaats: randomPlace,
+      geboorteland: 'Nederland',
+      email: `${randomName.voornamen.toLowerCase()}.${randomName.geslachtsnaam.toLowerCase().replace(' ', '')}@example.com`,
+      telefoon: `06${Math.floor(Math.random() * 90000000) + 10000000}`,
+      adres: `${randomStreet} ${houseNumber}`,
+      postcode: postcode,
+      plaats: randomPlace,
+    };
+  };
+
+  // Auto-fill from Clerk user data when available, otherwise use test data
   useEffect(() => {
-    if (userLoaded && user) {
-      // Auto-fill voornamen from firstName
-      if (user.firstName && !formData.voornamen) {
-        setFormData(prev => ({ ...prev, voornamen: user.firstName || '' }));
-      }
+    if (userLoaded) {
+      const hasData = formData.voornamen || formData.geslachtsnaam;
       
-      // Auto-fill geslachtsnaam from lastName
-      if (user.lastName && !formData.geslachtsnaam) {
-        setFormData(prev => ({ ...prev, geslachtsnaam: user.lastName || '' }));
-      }
-      
-      // Auto-fill email from primary email address
-      if (user.emailAddresses && user.emailAddresses.length > 0 && !formData.email) {
-        const primaryEmail = user.emailAddresses.find(e => e.id === user.primaryEmailAddressId) || user.emailAddresses[0];
-        if (primaryEmail) {
-          setFormData(prev => ({ ...prev, email: primaryEmail.emailAddress }));
+      if (user && !hasData) {
+        // Try to fill from Clerk first
+        const clerkData: Partial<typeof formData> = {};
+        
+        if (user.firstName) {
+          clerkData.voornamen = user.firstName;
         }
+        if (user.lastName) {
+          clerkData.geslachtsnaam = user.lastName;
+        }
+        if (user.emailAddresses && user.emailAddresses.length > 0) {
+          const primaryEmail = user.emailAddresses.find(e => e.id === user.primaryEmailAddressId) || user.emailAddresses[0];
+          if (primaryEmail) {
+            clerkData.email = primaryEmail.emailAddress;
+          }
+        }
+        
+        // If we got some Clerk data, use it, otherwise use test data
+        if (Object.keys(clerkData).length > 0) {
+          setFormData(prev => ({ ...prev, ...clerkData }));
+        } else {
+          // No Clerk data and no existing data - use test data for prototype
+          setFormData(generateTestData());
+        }
+      } else if (!hasData) {
+        // No user and no data - use test data for prototype
+        setFormData(generateTestData());
       }
     }
   }, [userLoaded, user]);
@@ -113,10 +168,20 @@ function Partner1GegevensContent(): JSX.Element {
             postcode: partner1.postcode || '',
             plaats: partner1.plaats || '',
           });
+        } else {
+          // No existing data - auto-fill with test data for prototype
+          const hasAnyData = formData.voornamen || formData.geslachtsnaam;
+          if (!hasAnyData) {
+            setFormData(generateTestData());
+          }
         }
       } catch (err) {
         console.error('Error loading partner data:', err);
-        // Don't show error, just continue with empty form
+        // On error, auto-fill with test data for prototype
+        const hasAnyData = formData.voornamen || formData.geslachtsnaam;
+        if (!hasAnyData) {
+          setFormData(generateTestData());
+        }
       }
     }
 
@@ -248,7 +313,16 @@ function Partner1GegevensContent(): JSX.Element {
       const result = await response.json();
       
       if (!result.success) {
-        setError(result.error || 'Fout bij opslaan van gegevens');
+        // Show validation errors if available
+        if (result.validationErrors && Array.isArray(result.validationErrors)) {
+          setError(result.validationErrors.join('. ') || result.error || 'Fout bij opslaan van gegevens');
+        } else {
+          // Show detailed error in development, generic in production
+          const errorMessage = result.error || 'Fout bij opslaan van gegevens';
+          const details = result.details ? ` (${result.details})` : '';
+          setError(errorMessage + details);
+        }
+        console.error('Save error:', result);
         return;
       }
 
@@ -259,7 +333,8 @@ function Partner1GegevensContent(): JSX.Element {
       }, 500);
     } catch (err) {
       console.error('Error saving partner data:', err);
-      setError('Er ging iets mis bij het opslaan');
+      const errorMessage = err instanceof Error ? err.message : 'Er ging iets mis bij het opslaan';
+      setError(`Fout: ${errorMessage}. Controleer de console voor meer details.`);
     } finally {
       setIsSaving(false);
     }

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 import { eq, and } from 'drizzle-orm';
 import { db } from '@/db';
 import { dossier, partner, aankondiging, dossierBlock, kind, gemeente } from '@/db/schema';
@@ -14,15 +15,13 @@ import { getGemeenteContext } from '@/lib/gemeente';
 export async function POST(request: NextRequest) {
   try {
     // 1. Check authentication
-    const context = await getGemeenteContext();
-    if (!context.success) {
+    const { userId } = await auth();
+    if (!userId) {
       return NextResponse.json(
-        { success: false, error: context.error },
+        { success: false, error: 'Niet geautoriseerd' },
         { status: 401 }
       );
     }
-
-    const { userId, gemeenteOin } = context.data;
 
     // 2. Get form data from request body
     const body = await request.json();
@@ -47,7 +46,17 @@ export async function POST(request: NextRequest) {
     const partner1 = formData.partner1;
     const partner2 = formData.partner2;
 
-    // 4. Resolve municipality code for this gemeente
+    // 4. Get gemeente context
+    const context = await getGemeenteContext();
+    if (!context.success) {
+      return NextResponse.json(
+        { success: false, error: context.error },
+        { status: 403 }
+      );
+    }
+    const { gemeenteOin } = context.data;
+
+    // 5. Resolve municipality code for this gemeente
     const [gemeenteRecord] = await db
       .select({ gemeenteCode: gemeente.gemeenteCode })
       .from(gemeente)
@@ -92,7 +101,7 @@ export async function POST(request: NextRequest) {
       throw new Error(`Invalid date format: ${dateStr}`);
     };
 
-    // 5. Create dossier and related records in transaction
+    // 6. Create dossier and related records in transaction
     const result = await db.transaction(async (tx) => {
       // Create main dossier
       const [newDossier] = await tx.insert(dossier).values({
@@ -251,7 +260,7 @@ export async function POST(request: NextRequest) {
       return newDossier;
     });
 
-    // 6. Return success response
+    // 7. Return success response
     return NextResponse.json({
       success: true,
       dossierId: result.id,

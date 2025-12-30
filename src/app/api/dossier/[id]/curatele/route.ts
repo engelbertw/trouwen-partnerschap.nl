@@ -59,17 +59,38 @@ export async function PUT(
       );
     }
 
-    // Update partner records (curatele info stored in partner table)
-    // Note: In a full implementation, you might have a separate curatele table
-    // For now, we'll store this as metadata or in a separate field if added to schema
-    
-    // TODO: Add curatele fields to partner schema if needed
-    // For now, just return success as the data structure needs to be defined
+    // Update partner records with curatele information
+    const partner1 = partners.find(p => p.sequence === 1);
+    const partner2 = partners.find(p => p.sequence === 2);
+
+    if (!partner1 || !partner2) {
+      return NextResponse.json(
+        { success: false, error: 'Partners niet correct gevonden' },
+        { status: 400 }
+      );
+    }
+
+    // Update partner 1
+    await db
+      .update(partner)
+      .set({
+        onderCuratele: partner1UnderGuardianship || false,
+        updatedAt: new Date(),
+      })
+      .where(eq(partner.id, partner1.id));
+
+    // Update partner 2
+    await db
+      .update(partner)
+      .set({
+        onderCuratele: partner2UnderGuardianship || false,
+        updatedAt: new Date(),
+      })
+      .where(eq(partner.id, partner2.id));
 
     return NextResponse.json({
       success: true,
       message: 'Curatele informatie opgeslagen',
-      note: 'Curatele schema update required for full implementation',
     });
 
   } catch (error) {
@@ -118,12 +139,24 @@ export async function GET(
       );
     }
 
-    // TODO: Fetch actual curatele data when schema is updated
+    // Fetch partners with curatele information
+    const partners = await db
+      .select({
+        sequence: partner.sequence,
+        onderCuratele: partner.onderCuratele,
+      })
+      .from(partner)
+      .where(eq(partner.dossierId, dossierId))
+      .orderBy(partner.sequence);
+
+    const partner1 = partners.find(p => p.sequence === 1);
+    const partner2 = partners.find(p => p.sequence === 2);
+
     return NextResponse.json({
       success: true,
       data: {
-        partner1UnderGuardianship: false,
-        partner2UnderGuardianship: false,
+        partner1UnderGuardianship: partner1?.onderCuratele || false,
+        partner2UnderGuardianship: partner2?.onderCuratele || false,
       },
     });
 

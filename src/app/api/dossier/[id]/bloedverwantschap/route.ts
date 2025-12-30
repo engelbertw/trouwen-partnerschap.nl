@@ -57,13 +57,10 @@ export async function PUT(
     }
 
     // Update bloedverwantschap field
-    // Note: Check if bloedverwantschap field exists in aankondiging schema
-    // For now, we'll store in valid field or add new field
     await db
       .update(aankondiging)
       .set({
-        // TODO: Add bloedverwantschap field to aankondiging schema
-        // bloedverwantschap: areBloodRelatives,
+        bloedverwantschap: areBloodRelatives || false,
         updatedAt: new Date(),
       })
       .where(eq(aankondiging.dossierId, dossierId));
@@ -71,7 +68,6 @@ export async function PUT(
     return NextResponse.json({
       success: true,
       message: 'Bloedverwantschap opgeslagen',
-      note: 'Schema update may be required for dedicated bloedverwantschap field',
     });
 
   } catch (error) {
@@ -120,17 +116,26 @@ export async function GET(
       );
     }
 
-    // Get aankondiging
+    // Get aankondiging with bloedverwantschap
     const [result] = await db
-      .select()
+      .select({
+        bloedverwantschap: aankondiging.bloedverwantschap,
+      })
       .from(aankondiging)
       .where(eq(aankondiging.dossierId, dossierId))
       .limit(1);
 
+    if (!result) {
+      return NextResponse.json(
+        { success: false, error: 'Aankondiging niet gevonden' },
+        { status: 404 }
+      );
+    }
+
     return NextResponse.json({
       success: true,
       data: {
-        areBloodRelatives: false, // TODO: Get from actual field when schema updated
+        areBloodRelatives: result.bloedverwantschap || false,
       },
     });
 

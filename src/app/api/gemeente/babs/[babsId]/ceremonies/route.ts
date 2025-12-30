@@ -23,10 +23,16 @@ export async function GET(
       );
     }
 
-    // Only gemeente admins can access this
-    if (!isAdmin(context.data.rol)) {
+    // Check authorization:
+    // - Admins can view all ceremonies
+    // - BABS admins can only view their own ceremonies
+    const canView = 
+      isAdmin(context.data.rol) || 
+      (context.data.rol === 'babs_admin' && context.data.babsId === babsId);
+    
+    if (!canView) {
       return NextResponse.json(
-        { success: false, error: 'Geen toegang. Alleen gemeente beheerders kunnen ceremonies bekijken.' },
+        { success: false, error: 'Geen toegang. U kunt alleen uw eigen ceremonies bekijken.' },
         { status: 403 }
       );
     }

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 import { eq } from 'drizzle-orm';
 import { db } from '@/db';
 import { dossier, dossierBlock, gemeente } from '@/db/schema';
@@ -13,21 +14,29 @@ import { getGemeenteContext } from '@/lib/gemeente';
 export async function POST(request: NextRequest) {
   try {
     // 1. Check authentication
-    const context = await getGemeenteContext();
-    if (!context.success) {
+    const { userId } = await auth();
+    if (!userId) {
       return NextResponse.json(
-        { success: false, error: context.error },
+        { success: false, error: 'Niet geautoriseerd' },
         { status: 401 }
       );
     }
-
-    const { userId, gemeenteOin } = context.data;
 
     // 2. Get request data (optional initial data)
     const body = await request.json();
     const { type } = body; // 'huwelijk' or 'partnerschap'
 
-    // 3. Resolve municipality code for this gemeente
+    // 3. Get gemeente context
+    const context = await getGemeenteContext();
+    if (!context.success) {
+      return NextResponse.json(
+        { success: false, error: context.error },
+        { status: 403 }
+      );
+    }
+    const { gemeenteOin } = context.data;
+
+    // 4. Resolve municipality code for this gemeente
     const [gemeenteRecord] = await db
       .select({ gemeenteCode: gemeente.gemeenteCode })
       .from(gemeente)
@@ -45,7 +54,7 @@ export async function POST(request: NextRequest) {
       ? gemeenteRecord.gemeenteCode
       : `NL.IMBAG.Gemeente.${gemeenteRecord.gemeenteCode}`;
 
-    // 4. Create dossier in transaction
+    // 5. Create dossier in transaction
     const result = await db.transaction(async (tx) => {
       // Create main dossier
       const [newDossier] = await tx.insert(dossier).values({
@@ -78,7 +87,7 @@ export async function POST(request: NextRequest) {
       return newDossier;
     });
 
-    // 5. Return dossier ID
+    // 6. Return dossier ID
     return NextResponse.json({
       success: true,
       dossierId: result.id,

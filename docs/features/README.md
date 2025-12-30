@@ -1,6 +1,6 @@
 # Features Documentatie
 
-**Laatst bijgewerkt:** 28 december 2024
+**Laatst bijgewerkt:** 28 december 2025
 
 ## Overzicht
 

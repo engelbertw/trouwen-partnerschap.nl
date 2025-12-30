@@ -12,7 +12,23 @@ import { useRouter, useSearchParams } from 'next/navigation';
 function CurateleContent(): JSX.Element | null {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const dossierId = searchParams.get('dossierId');
+  const dossierIdFromQuery = searchParams.get('dossierId');
+  
+  // Get dossierId from query params or sessionStorage as fallback
+  const [dossierId, setDossierId] = useState<string | null>(() => {
+    if (dossierIdFromQuery) {
+      // Store in sessionStorage for fallback
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('dossierId', dossierIdFromQuery);
+      }
+      return dossierIdFromQuery;
+    }
+    // Fallback to sessionStorage
+    if (typeof window !== 'undefined') {
+      return sessionStorage.getItem('dossierId');
+    }
+    return null;
+  });
   
   const [partner1UnderGuardianship, setPartner1UnderGuardianship] = useState<boolean | null>(null);
   const [partner2UnderGuardianship, setPartner2UnderGuardianship] = useState<boolean | null>(null);
@@ -24,9 +40,29 @@ function CurateleContent(): JSX.Element | null {
   const [partner1Name, setPartner1Name] = useState<string>('');
   const [partner2Name, setPartner2Name] = useState<string>('');
 
+  // Update dossierId when query param changes
+  useEffect(() => {
+    if (dossierIdFromQuery) {
+      setDossierId(dossierIdFromQuery);
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('dossierId', dossierIdFromQuery);
+      }
+    }
+  }, [dossierIdFromQuery]);
+
   // Load existing data from database on mount
   useEffect(() => {
-    if (!dossierId) {
+    // Final check: if still no dossierId, try sessionStorage one more time
+    let finalDossierId = dossierId;
+    if (!finalDossierId && typeof window !== 'undefined') {
+      const storedId = sessionStorage.getItem('dossierId');
+      if (storedId) {
+        finalDossierId = storedId;
+        setDossierId(storedId);
+      }
+    }
+    
+    if (!finalDossierId) {
       setError('Geen dossier ID gevonden. Start opnieuw.');
       setIsLoaded(true);
       return;
@@ -35,7 +71,7 @@ function CurateleContent(): JSX.Element | null {
     async function loadData() {
       try {
         // Load curatele data
-        const curateleResponse = await fetch(`/api/dossier/${dossierId}/curatele`);
+        const curateleResponse = await fetch(`/api/dossier/${finalDossierId}/curatele`);
         const curateleResult = await curateleResponse.json();
         
         if (curateleResult.success && curateleResult.data) {
@@ -44,7 +80,7 @@ function CurateleContent(): JSX.Element | null {
         }
         
         // Load partner names
-        const partnersResponse = await fetch(`/api/dossier/${dossierId}/partners`);
+        const partnersResponse = await fetch(`/api/dossier/${finalDossierId}/partners`);
         const partnersResult = await partnersResponse.json();
         
         if (partnersResult.success && partnersResult.data) {
@@ -147,6 +183,11 @@ function CurateleContent(): JSX.Element | null {
         return;
       }
 
+      // Store dossierId in sessionStorage before navigation
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('dossierId', dossierId);
+      }
+      
       // Navigate to next step
       router.push(`/000-aankondiging/050-kinderen?dossierId=${dossierId}`);
     } catch (err) {
@@ -189,7 +230,10 @@ function CurateleContent(): JSX.Element | null {
 
           {/* Previous step link */}
           <Link
-            href={dossierId ? `/000-aankondiging/031-partner2-gegevens?dossierId=${dossierId}` : '/000-aankondiging/031-partner2-gegevens'}
+            href={(() => {
+              const id = dossierId || (typeof window !== 'undefined' ? sessionStorage.getItem('dossierId') : null);
+              return id ? `/000-aankondiging/031-partner2-gegevens?dossierId=${id}` : '/000-aankondiging/031-partner2-gegevens';
+            })()}
             className="inline-flex items-center gap-2 text-[#154273] hover:text-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 mb-6 transition-colors"
           >
             <svg 

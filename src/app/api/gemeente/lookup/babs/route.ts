@@ -24,60 +24,110 @@ export async function GET(request: NextRequest) {
     // Include ceremony statistics
     const currentYear = new Date().getFullYear();
     
-    const babsList = await db
-      .select({
-        id: babs.id,
-        code: babs.code,
-        naam: babs.naam,
-        voornaam: babs.voornaam,
-        tussenvoegsel: babs.tussenvoegsel,
-        achternaam: babs.achternaam,
-        status: babs.status,
-        beedigdVanaf: babs.beeddigdVanaf,  // Rename voor consistentie met formulier
-        beedigdTot: babs.beeddigdTot,      // Rename voor consistentie met formulier
-        aanvraagDatum: babs.aanvraagDatum,
-        opmerkingen: babs.opmerkingen,
-        beschikbaarheid: babs.beschikbaarheid,
-        beschikbaarVanaf: babs.beschikbaarVanaf,
-        beschikbaarTot: babs.beschikbaarTot,
-        opmerkingBeschikbaarheid: babs.opmerkingBeschikbaarheid,
-        calendarFeedEnabled: babs.calendarFeedEnabled,
-        email: babs.email,
-        actief: babs.actief,
-        createdAt: babs.createdAt,
-        updatedAt: babs.updatedAt,
-        // Include link info from junction table
-        babsGemeenteActief: babsGemeente.actief,
-        babsGemeenteVanaf: babsGemeente.actiefVanaf,
-        babsGemeenteTot: babsGemeente.actiefTot,
-        // Ceremony statistics for current year
-        // Include all ceremonies except those with cancelled dossiers
-        ceremoniesTotNu: sql<number>`(
-          SELECT COALESCE(COUNT(*), 0)::int
-          FROM ${ceremonie} c
-          INNER JOIN ${dossier} d ON d.id = c.dossier_id
-          WHERE c.babs_id = ${babs.id}
-            AND EXTRACT(YEAR FROM c.datum) = ${currentYear}
-            AND d.status != 'cancelled'
-        )`,
-        targetCeremonies: sql<number>`(
-          SELECT COALESCE(${babsGemeenteTarget.targetCeremonies}, 0)::int
-          FROM ${babsGemeenteTarget}
-          WHERE ${babsGemeenteTarget.babsId} = ${babs.id}
-            AND ${babsGemeenteTarget.gemeenteOin} = ${context.data.gemeenteOin}
-            AND ${babsGemeenteTarget.jaar} = ${currentYear}
-          LIMIT 1
-        )`,
-      })
-      .from(babs)
-      .innerJoin(babsGemeente, eq(babs.id, babsGemeente.babsId))
-      .where(
-        and(
-          eq(babsGemeente.gemeenteOin, context.data.gemeenteOin),
-          eq(babsGemeente.actief, true)
+    // For babs_admin users, only return their own BABS
+    // For admins, return all BABS linked to their gemeente
+    let babsList;
+    
+    if (context.data.rol === 'babs_admin' && context.data.babsId) {
+      // BABS admin: only return their own BABS
+      babsList = await db
+        .select({
+          id: babs.id,
+          code: babs.code,
+          naam: babs.naam,
+          voornaam: babs.voornaam,
+          tussenvoegsel: babs.tussenvoegsel,
+          achternaam: babs.achternaam,
+          status: babs.status,
+          beedigdVanaf: babs.beeddigdVanaf,
+          beedigdTot: babs.beeddigdTot,
+          aanvraagDatum: babs.aanvraagDatum,
+          opmerkingen: babs.opmerkingen,
+          beschikbaarheid: babs.beschikbaarheid,
+          beschikbaarVanaf: babs.beschikbaarVanaf,
+          beschikbaarTot: babs.beschikbaarTot,
+          opmerkingBeschikbaarheid: babs.opmerkingBeschikbaarheid,
+          calendarFeedEnabled: babs.calendarFeedEnabled,
+          email: babs.email,
+          actief: babs.actief,
+          createdAt: babs.createdAt,
+          updatedAt: babs.updatedAt,
+          // Include link info from junction table
+          babsGemeenteActief: babsGemeente.actief,
+          babsGemeenteVanaf: babsGemeente.actiefVanaf,
+          babsGemeenteTot: babsGemeente.actiefTot,
+          // Ceremony statistics for current year
+          ceremoniesTotNu: sql<number>`(
+            SELECT COALESCE(COUNT(*), 0)::int
+            FROM ${ceremonie} c
+            INNER JOIN ${dossier} d ON d.id = c.dossier_id
+            WHERE c.babs_id = ${babs.id}
+              AND EXTRACT(YEAR FROM c.datum) = ${currentYear}
+              AND d.status != 'cancelled'
+          )`,
+          targetCeremonies: sql<number>`0`, // BABS admins don't see targets
+        })
+        .from(babs)
+        .leftJoin(babsGemeente, eq(babs.id, babsGemeente.babsId))
+        .where(eq(babs.id, context.data.babsId))
+        .orderBy(babs.achternaam, babs.voornaam);
+    } else {
+      // Admin users: return all BABS linked to their gemeente
+      babsList = await db
+        .select({
+          id: babs.id,
+          code: babs.code,
+          naam: babs.naam,
+          voornaam: babs.voornaam,
+          tussenvoegsel: babs.tussenvoegsel,
+          achternaam: babs.achternaam,
+          status: babs.status,
+          beedigdVanaf: babs.beeddigdVanaf,  // Rename voor consistentie met formulier
+          beedigdTot: babs.beeddigdTot,      // Rename voor consistentie met formulier
+          aanvraagDatum: babs.aanvraagDatum,
+          opmerkingen: babs.opmerkingen,
+          beschikbaarheid: babs.beschikbaarheid,
+          beschikbaarVanaf: babs.beschikbaarVanaf,
+          beschikbaarTot: babs.beschikbaarTot,
+          opmerkingBeschikbaarheid: babs.opmerkingBeschikbaarheid,
+          calendarFeedEnabled: babs.calendarFeedEnabled,
+          email: babs.email,
+          actief: babs.actief,
+          createdAt: babs.createdAt,
+          updatedAt: babs.updatedAt,
+          // Include link info from junction table
+          babsGemeenteActief: babsGemeente.actief,
+          babsGemeenteVanaf: babsGemeente.actiefVanaf,
+          babsGemeenteTot: babsGemeente.actiefTot,
+          // Ceremony statistics for current year
+          // Include all ceremonies except those with cancelled dossiers
+          ceremoniesTotNu: sql<number>`(
+            SELECT COALESCE(COUNT(*), 0)::int
+            FROM ${ceremonie} c
+            INNER JOIN ${dossier} d ON d.id = c.dossier_id
+            WHERE c.babs_id = ${babs.id}
+              AND EXTRACT(YEAR FROM c.datum) = ${currentYear}
+              AND d.status != 'cancelled'
+          )`,
+          targetCeremonies: sql<number>`(
+            SELECT COALESCE(${babsGemeenteTarget.targetCeremonies}, 0)::int
+            FROM ${babsGemeenteTarget}
+            WHERE ${babsGemeenteTarget.babsId} = ${babs.id}
+              AND ${babsGemeenteTarget.gemeenteOin} = ${context.data.gemeenteOin}
+              AND ${babsGemeenteTarget.jaar} = ${currentYear}
+            LIMIT 1
+          )`,
+        })
+        .from(babs)
+        .innerJoin(babsGemeente, eq(babs.id, babsGemeente.babsId))
+        .where(
+          and(
+            eq(babsGemeente.gemeenteOin, context.data.gemeenteOin),
+            eq(babsGemeente.actief, true)
+          )
         )
-      )
-      .orderBy(babs.achternaam, babs.voornaam);
+        .orderBy(babs.achternaam, babs.voornaam);
+    }
 
     // Calculate percentage for each BABS
     const enrichedBabsList = babsList.map((b) => ({

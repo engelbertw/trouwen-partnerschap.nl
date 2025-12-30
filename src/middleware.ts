@@ -19,32 +19,68 @@ const isBlockedRouteForBabsAdmin = createRouteMatcher([
   '/', // Home page
 ]);
 
+// Helper function to check if path is a BABS calendar route or allowed API
+function isBabsCalendarRoute(pathname: string): boolean {
+  // Match /gemeente/beheer/babs/[babsId]/calendar
+  const calendarPattern = /^\/gemeente\/beheer\/babs\/[^/]+\/calendar/;
+  if (calendarPattern.test(pathname)) {
+    return true;
+  }
+  
+  // Match API routes for BABS calendar
+  const apiPattern = /^\/api\/gemeente\/babs\/[^/]+\/(recurring-rules|blocked-dates|audit-log|ceremonies)/;
+  if (apiPattern.test(pathname)) {
+    return true;
+  }
+  
+  // Match lookup/babs API (needed for babs_admin to get their own BABS data)
+  if (pathname === '/api/gemeente/lookup/babs') {
+    return true;
+  }
+  
+  return false;
+}
+
 export default clerkMiddleware(async (auth, req) => {
   // Protect all routes except public ones
   if (!isPublicRoute(req)) {
     await auth.protect();
   }
   
-  // Block babs_admin from accessing certain routes
-  if (isBlockedRouteForBabsAdmin(req)) {
-    const { userId } = await auth();
-    
-    // Only check role if user is authenticated
-    if (userId) {
-      try {
-        const client = await clerkClient();
-        const user = await client.users.getUser(userId);
-        const publicMetadata = user.publicMetadata || {};
-        const rol = (publicMetadata.rol as string) || '';
-        
-        // If user is babs_admin, redirect to /babs
+  const { userId } = await auth();
+  
+  // Only check user if authenticated
+  if (userId) {
+    try {
+      const client = await clerkClient();
+      const user = await client.users.getUser(userId);
+      const publicMetadata = user.publicMetadata || {};
+      const rol = (publicMetadata.rol as string) || '';
+      
+      // Redirect hb_admin users to gemeente beheer
+      if (rol === 'hb_admin') {
+        // If on root or dashboard, redirect to gemeente beheer
+        if (req.nextUrl.pathname === '/' || req.nextUrl.pathname === '/dashboard') {
+          return Response.redirect(new URL('/gemeente/beheer', req.url));
+        }
+      }
+      
+      // Block babs_admin from accessing certain routes (unless it's an allowed exception)
+      if (isBlockedRouteForBabsAdmin(req)) {
+        // If user is babs_admin, check if this is an allowed route
         if (rol === 'babs_admin') {
+          // Allow access to BABS calendar routes
+          if (isBabsCalendarRoute(req.nextUrl.pathname)) {
+            // Allow through - this is an exception
+            return;
+          }
+          // Otherwise, redirect to /babs
           return Response.redirect(new URL('/babs', req.url));
         }
-      } catch (error) {
-        console.error('Error checking user role in middleware:', error);
-        // On error, allow through (will be checked in page/API route)
       }
+    } catch (error) {
+      console.error('Error checking user role in middleware:', error);
+      // On error, allow through (will be checked in page/API route)
     }
   }
 });
