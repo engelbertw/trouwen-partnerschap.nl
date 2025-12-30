@@ -1,7 +1,7 @@
 'use client';
 
 import type { JSX } from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getAankondigingData } from '@/lib/aankondiging-storage';
@@ -12,7 +12,7 @@ import { GemeenteLogoCompact } from '@/components/GemeenteLogo';
  * Ondertekenen page - Both partners sign the announcement
  * Shows declaration points and signing status for each partner
  */
-export default function OndertekenenPage(): JSX.Element {
+function OndertekenenContent(): JSX.Element {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dossierId = searchParams.get('dossierId');
@@ -316,6 +316,26 @@ export default function OndertekenenPage(): JSX.Element {
         </article>
       </main>
     </div>
+  );
+}
+
+/**
+ * Page wrapper with Suspense boundary for useSearchParams
+ */
+export default function OndertekenenPage(): JSX.Element {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Laden...</p>
+          </div>
+        </div>
+      }
+    >
+      <OndertekenenContent />
+    </Suspense>
   );
 }
 

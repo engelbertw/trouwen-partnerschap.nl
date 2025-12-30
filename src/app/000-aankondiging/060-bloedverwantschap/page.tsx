@@ -1,12 +1,12 @@
 'use client';
 
 import type { JSX } from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { GemeenteLogoCompact } from '@/components/GemeenteLogo';
 
-export default function BloedverwantschapPage(): JSX.Element | null {
+function BloedverwantschapContent(): JSX.Element | null {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dossierId = searchParams.get('dossierId');
@@ -285,6 +285,26 @@ export default function BloedverwantschapPage(): JSX.Element | null {
         </article>
       </main>
     </div>
+  );
+}
+
+/**
+ * Page wrapper with Suspense boundary for useSearchParams
+ */
+export default function BloedverwantschapPage(): JSX.Element {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Laden...</p>
+          </div>
+        </div>
+      }
+    >
+      <BloedverwantschapContent />
+    </Suspense>
   );
 }
 

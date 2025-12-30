@@ -1,7 +1,7 @@
 'use client';
 
 import type { JSX } from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { GemeenteLogoCompact } from '@/components/GemeenteLogo';
 import { generateAndDownloadAankondigingPDF } from '@/lib/pdf-generator';
@@ -10,7 +10,7 @@ import { generateAndDownloadAankondigingPDF } from '@/lib/pdf-generator';
  * Bevestiging page - Success confirmation after announcement is sent
  * Shows confirmation that the announcement has been saved to the database
  */
-export default function BevestigingPage(): JSX.Element {
+function BevestigingContent(): JSX.Element {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dossierIdFromUrl = searchParams.get('dossierId');
@@ -366,6 +366,26 @@ export default function BevestigingPage(): JSX.Element {
         </article>
       </main>
     </div>
+  );
+}
+
+/**
+ * Page wrapper with Suspense boundary for useSearchParams
+ */
+export default function BevestigingPage(): JSX.Element {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Laden...</p>
+          </div>
+        </div>
+      }
+    >
+      <BevestigingContent />
+    </Suspense>
   );
 }
 

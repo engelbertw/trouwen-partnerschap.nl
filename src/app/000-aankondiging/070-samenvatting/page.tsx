@@ -1,7 +1,7 @@
 'use client';
 
 import type { JSX } from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { generateAndDownloadAankondigingPDF } from '@/lib/pdf-generator';
@@ -57,7 +57,7 @@ interface SamenvattingData {
  * Samenvatting page - Summary of all collected data
  * Shows all information before signing
  */
-export default function SamenvattingPage(): JSX.Element {
+function SamenvattingContent(): JSX.Element {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dossierId = searchParams.get('dossierId');
@@ -578,6 +578,26 @@ export default function SamenvattingPage(): JSX.Element {
         </article>
       </main>
     </div>
+  );
+}
+
+/**
+ * Page wrapper with Suspense boundary for useSearchParams
+ */
+export default function SamenvattingPage(): JSX.Element {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Laden...</p>
+          </div>
+        </div>
+      }
+    >
+      <SamenvattingContent />
+    </Suspense>
   );
 }
 
