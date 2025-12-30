@@ -1,6 +1,7 @@
 'use client';
 
 import type { JSX } from 'react';
+import { Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
@@ -11,7 +12,7 @@ import { useSearchParams } from 'next/navigation';
  * Note: For now, this is a mock page that simulates authentication.
  * In production, integrate with actual DigiD/eIDAS via Clerk OIDC.
  */
-export default function Partner2LoginPage(): JSX.Element {
+function Partner2LoginContent(): JSX.Element {
   const searchParams = useSearchParams();
   const dossierId = searchParams.get('dossierId');
   const handleSaveForLater = () => {
@@ -168,6 +169,21 @@ export default function Partner2LoginPage(): JSX.Element {
         </article>
       </main>
     </div>
+  );
+}
+
+export default function Partner2LoginPage(): JSX.Element {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#154273] mx-auto mb-4"></div>
+          <p className="text-gray-700">Laden...</p>
+        </div>
+      </div>
+    }>
+      <Partner2LoginContent />
+    </Suspense>
   );
 }
 
