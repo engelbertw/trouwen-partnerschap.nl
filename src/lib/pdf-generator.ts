@@ -360,7 +360,7 @@ export function generateAankondigingPDF(
     addSection('Bloedverwantschap');
     addField(
       'Zijn de partners bloedverwanten van elkaar?',
-      data.bloedverwantschap === true || data.bloedverwantschap === 'ja' || data.bloedverwantschap.areBloodRelatives ? 'Ja' : 'Nee'
+      data.bloedverwantschap.areBloodRelatives ? 'Ja' : 'Nee'
     );
     closeSection();
   }
