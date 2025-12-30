@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import type { JSX } from 'react';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
