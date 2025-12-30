@@ -35,6 +35,7 @@ export interface AankondigingData {
     plaats: string;
     burgerlijkeStaat: string;
     ouders: string[];
+    email?: string;
   };
   
   // Step 030-031: Partner 2 (from DigiD/eIDAS)
@@ -47,6 +48,7 @@ export interface AankondigingData {
     plaats: string;
     burgerlijkeStaat: string;
     ouders: string[];
+    email?: string;
   };
   
   // Step 040: Curatele
