@@ -63,6 +63,12 @@ export default function DossierSamenvattingPage(): JSX.Element {
   }, [dossierId]);
 
   const handleDownloadPDF = () => {
+    if (!data) {
+      console.error('Cannot generate PDF: data is not available');
+      alert('Gegevens zijn niet beschikbaar. Probeer de pagina te vernieuwen.');
+      return;
+    }
+
     try {
       // Convert dossier data to AankondigingData format for PDF generator
       const aankondigingData: AankondigingData = {
