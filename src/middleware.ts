@@ -25,26 +25,34 @@ export default clerkMiddleware(async (auth, req) => {
     await auth.protect();
   }
   
-  // Block babs_admin from accessing certain routes
-  if (isBlockedRouteForBabsAdmin(req)) {
-    const { userId } = await auth();
-    
-    // Only check role if user is authenticated
-    if (userId) {
-      try {
-        const client = await clerkClient();
-        const user = await client.users.getUser(userId);
-        const publicMetadata = user.publicMetadata || {};
-        const rol = (publicMetadata.rol as string) || '';
-        
+  const { userId } = await auth();
+  
+  // Only check user if authenticated
+  if (userId) {
+    try {
+      const client = await clerkClient();
+      const user = await client.users.getUser(userId);
+      const publicMetadata = user.publicMetadata || {};
+      const rol = (publicMetadata.rol as string) || '';
+      
+      // Redirect hb_admin users to gemeente beheer
+      if (rol === 'hb_admin') {
+        // If on root or dashboard, redirect to gemeente beheer
+        if (req.nextUrl.pathname === '/' || req.nextUrl.pathname === '/dashboard') {
+          return Response.redirect(new URL('/gemeente/beheer', req.url));
+        }
+      }
+      
+      // Block babs_admin from accessing certain routes
+      if (isBlockedRouteForBabsAdmin(req)) {
         // If user is babs_admin, redirect to /babs
         if (rol === 'babs_admin') {
           return Response.redirect(new URL('/babs', req.url));
         }
-      } catch (error) {
-        console.error('Error checking user role in middleware:', error);
-        // On error, allow through (will be checked in page/API route)
       }
+    } catch (error) {
+      console.error('Error checking user role in middleware:', error);
+      // On error, allow through (will be checked in page/API route)
     }
   }
 });
