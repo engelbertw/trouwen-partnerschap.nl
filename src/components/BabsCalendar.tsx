@@ -1,10 +1,20 @@
 'use client';
 
-import { Calendar, dateFnsLocalizer, View, Event } from 'react-big-calendar';
+import { Calendar, dateFnsLocalizer, View } from 'react-big-calendar';
 import { format, parse, startOfWeek, getDay, addMonths, subMonths } from 'date-fns';
 import { nl } from 'date-fns/locale';
 import { useState, useCallback, useMemo } from 'react';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+
+// Type compatible with react-big-calendar's Event type
+type RBCEvent = {
+  title?: string;
+  start: Date;
+  end: Date;
+  allDay?: boolean;
+  resource?: any;
+  [key: string]: any;
+};
 
 const locales = {
   nl: nl,
@@ -47,7 +57,7 @@ export function BabsCalendar({
 
   // Event styling based on type
   const eventStyleGetter = useCallback(
-    (event: Event) => {
+    (event: RBCEvent) => {
       const calendarEvent = event as CalendarEvent;
       let backgroundColor = '#3b82f6'; // blue-600 default
       let color = 'white';
@@ -181,7 +191,7 @@ export function BabsCalendar({
 
       <Calendar
         localizer={localizer}
-        events={events as Event[]}
+        events={events as RBCEvent[]}
         startAccessor="start"
         endAccessor="end"
         style={{ height: '100%' }}
@@ -190,7 +200,7 @@ export function BabsCalendar({
         date={date}
         onNavigate={handleNavigate}
         onSelectSlot={onSelectSlot}
-        onSelectEvent={(event: Event) => onSelectEvent(event as CalendarEvent)}
+        onSelectEvent={(event: RBCEvent) => onSelectEvent(event as CalendarEvent)}
         eventPropGetter={eventStyleGetter}
         selectable
         popup
