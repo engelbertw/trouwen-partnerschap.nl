@@ -14,7 +14,7 @@ export const createPartnerSchema = z.object({
   geboorteland: z.string().max(255).default('Nederland'),
   nationaliteit: z.string().max(100).optional(),
   geslacht: z.enum(['m', 'v', 'x'], {
-    errorMap: () => ({ message: 'Ongeldig geslacht' }),
+    message: 'Ongeldig geslacht',
   }).optional(),
   bsn: z
     .string()
@@ -28,7 +28,7 @@ export const createPartnerSchema = z.object({
   oudersOnbekend: z.boolean().default(false),
   naamgebruikKeuze: z
     .enum(['eigen', 'partner', 'eigen_partner', 'partner_eigen'], {
-      errorMap: () => ({ message: 'Ongeldige naamgebruik keuze' }),
+      message: 'Ongeldige naamgebruik keuze',
     })
     .optional(),
 });

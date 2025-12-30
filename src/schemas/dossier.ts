@@ -19,7 +19,7 @@ export type CreateDossierInput = z.infer<typeof createDossierSchema>;
 export const updateDossierSchema = z.object({
   id: z.string().uuid('Ongeldig dossier ID'),
   status: z.enum(['draft', 'in_review', 'ready_for_payment', 'locked'], {
-    errorMap: () => ({ message: 'Ongeldige status' }),
+    message: 'Ongeldige status',
   }).optional(),
   typeCeremonieId: z.string().uuid('Ongeldig ceremonie type').optional(),
   lockAt: z.string().datetime('Ongeldige datum/tijd').optional(),
@@ -33,7 +33,7 @@ export type UpdateDossierInput = z.infer<typeof updateDossierSchema>;
 export const updateDossierBlockSchema = z.object({
   dossierId: z.string().uuid('Ongeldig dossier ID'),
   blockCode: z.enum(['aankondiging', 'ceremonie', 'getuigen', 'papieren', 'betaling'], {
-    errorMap: () => ({ message: 'Ongeldig blok type' }),
+    message: 'Ongeldig blok type',
   }),
   complete: z.boolean(),
 });

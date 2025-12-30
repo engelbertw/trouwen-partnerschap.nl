@@ -5,7 +5,7 @@ import { z } from 'zod';
  */
 export const ceremonieWensenSchema = z.object({
   taal: z.enum(['nl', 'en', 'fr', 'de', 'es'], {
-    errorMap: () => ({ message: 'Ongeldige taal' }),
+    message: 'Ongeldige taal',
   }).default('nl'),
   trouwboekje: z.boolean().default(false),
   speech: z.boolean().default(true),
