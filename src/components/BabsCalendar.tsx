@@ -1,6 +1,6 @@
 'use client';
 
-import { Calendar, dateFnsLocalizer, View } from 'react-big-calendar';
+import { Calendar, dateFnsLocalizer, View, Event } from 'react-big-calendar';
 import { format, parse, startOfWeek, getDay, addMonths, subMonths } from 'date-fns';
 import { nl } from 'date-fns/locale';
 import { useState, useCallback, useMemo } from 'react';
@@ -47,11 +47,12 @@ export function BabsCalendar({
 
   // Event styling based on type
   const eventStyleGetter = useCallback(
-    (event: CalendarEvent) => {
+    (event: Event) => {
+      const calendarEvent = event as CalendarEvent;
       let backgroundColor = '#3b82f6'; // blue-600 default
       let color = 'white';
 
-      switch (event.type) {
+      switch (calendarEvent.type) {
         case 'available':
           backgroundColor = '#10b981'; // green-500
           break;
@@ -180,7 +181,7 @@ export function BabsCalendar({
 
       <Calendar
         localizer={localizer}
-        events={events}
+        events={events as Event[]}
         startAccessor="start"
         endAccessor="end"
         style={{ height: '100%' }}
@@ -189,7 +190,7 @@ export function BabsCalendar({
         date={date}
         onNavigate={handleNavigate}
         onSelectSlot={onSelectSlot}
-        onSelectEvent={onSelectEvent}
+        onSelectEvent={(event: Event) => onSelectEvent(event as CalendarEvent)}
         eventPropGetter={eventStyleGetter}
         selectable
         popup
