@@ -19,7 +19,7 @@ const isBlockedRouteForBabsAdmin = createRouteMatcher([
   '/', // Home page
 ]);
 
-// Helper function to check if path is a BABS calendar route
+// Helper function to check if path is a BABS calendar route or allowed API
 function isBabsCalendarRoute(pathname: string): boolean {
   // Match /gemeente/beheer/babs/[babsId]/calendar
   const calendarPattern = /^\/gemeente\/beheer\/babs\/[^/]+\/calendar/;
@@ -29,7 +29,16 @@ function isBabsCalendarRoute(pathname: string): boolean {
   
   // Match API routes for BABS calendar
   const apiPattern = /^\/api\/gemeente\/babs\/[^/]+\/(recurring-rules|blocked-dates|audit-log|ceremonies)/;
-  return apiPattern.test(pathname);
+  if (apiPattern.test(pathname)) {
+    return true;
+  }
+  
+  // Match lookup/babs API (needed for babs_admin to get their own BABS data)
+  if (pathname === '/api/gemeente/lookup/babs') {
+    return true;
+  }
+  
+  return false;
 }
 
 export default clerkMiddleware(async (auth, req) => {
