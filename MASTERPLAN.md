@@ -56,7 +56,7 @@
 
 ### Wembv Compliance Requirements
 
-**Wet modernisering elektronisch bestuurlijk verkeer** (in werking sinds 2024):
+**Wet modernisering elektronisch bestuurlijk verkeer** (in werking sinds 2025):
 - **Elektronische communicatie is verplicht**: Standaard optie, fysieke post alleen op expliciete aanvraag
 - **Toegankelijkheid verplicht**: Alle elektronische communicatie moet WCAG 2.2 Level AA compliant zijn
 - **Veilige identificatie**: DigiD/eIDAS vereist voor officiële communicatie
@@ -151,10 +151,10 @@
 #### ✅ Ceremonie Planning - COMPLEET
 **7-stappen workflow**:
 1. **Keuze** - Wel/geen ceremonie
-2. **Soort** - Gratis/Flash/Budget/Premium (✅ Dynamisch uit database sinds 29-12-2024)
+2. **Soort** - Gratis/Flash/Budget/Premium (✅ Dynamisch uit database sinds 29-12-2025)
 3. **Datum** - Datum selectie
 4. **Locatie** - Locatie selectie met afbeeldingen
-5. **Ambtenaar** - BABS selectie (✅ Met beschikbaarheidscontrole sinds 29-12-2024)
+5. **Ambtenaar** - BABS selectie (✅ Met beschikbaarheidscontrole sinds 29-12-2025)
 6. **Wensen** - Extra wensen
 7. **Samenvatting** - Ceremonie overzicht
 
@@ -162,7 +162,7 @@
 - `ceremonie` - Ceremonie details
 - `locatie` - Trouwlocaties met afbeeldingen en capaciteit
 - `babs` - BABS medewerkers
-- `type_ceremonie` - Ceremonie types (configurabel, ✅ Dynamisch geladen sinds 29-12-2024)
+- `type_ceremonie` - Ceremonie types (configurabel, ✅ Dynamisch geladen sinds 29-12-2025)
 
 **Nieuwe Features (29-12-2024)**:
 - ✅ **Soort Ceremonie**: Dynamisch uit database, geen hardcoded data meer
@@ -211,7 +211,7 @@
 - Query filtering: Alle queries filteren op gemeente_oin
 - 20 Gemeenten geseeded (G4 + G40)
 
-#### ✅ BABS Calendar Feed & Agenda Integratie - COMPLEET (28-12-2024)
+#### ✅ BABS Calendar Feed & Agenda Integratie - COMPLEET (28-12-2025)
 **Functionaliteit**:
 - Persoonlijke iCal feed URL voor elke BABS (token-based authenticatie)
 - Automatische synchronisatie met Gmail, Outlook, Apple Calendar
@@ -700,7 +700,7 @@ CREATE TABLE issued_credentials (
 - Legal framework voor credential issuance
 
 **Risks**:
-- Standaarden evolueren nog (EUDI ARF 1.4 uit 2024, kan veranderen)
+- Standaarden evolueren nog (EUDI ARF 1.4 uit 2025, kan veranderen)
 - Beperkte wallet adoptie door burgers (2025-2027 rollout)
 - Technische complexiteit hoog
 - Gemeente PKI integratie kan complex zijn
@@ -1231,7 +1231,7 @@ CREATE INDEX idx_audit_log_action ON ihw.audit_log(action);
 
 ## 📦 Archief - Voltooid
 
-### December 2024
+### December 2025
 
 #### ✅ Ceremonie Soort Dynamic Loading & BABS Beschikbaarheidscontrole (29-12-2024)
 **Geïmplementeerd**:
@@ -1287,7 +1287,7 @@ CREATE INDEX idx_audit_log_action ON ihw.audit_log(action);
 
 ### December 2025
 
-#### ✅ UI Cleanup: Dubbele Logo's Verwijderd (28-12-2024)
+#### ✅ UI Cleanup: Dubbele Logo's Verwijderd (28-12-2025)
 **Geïmplementeerd**:
 - Header met logo verwijderd van lookup beheer pagina
 - Header met logo verwijderd van BABS kalender pagina
@@ -1328,7 +1328,7 @@ CREATE INDEX idx_audit_log_action ON ihw.audit_log(action);
 
 ---
 
-#### ✅ Tab Navigatie met URL Parameters (28-12-2024)
+#### ✅ Tab Navigatie met URL Parameters (28-12-2025)
 **Geïmplementeerd**:
 - Lookup beheer pagina ondersteunt URL query parameters voor tab selectie
 - "Terug naar BABS overzicht" link bevat `?tab=babs` parameter
@@ -1411,7 +1411,7 @@ CREATE INDEX idx_audit_log_action ON ihw.audit_log(action);
 
 ---
 
-#### ✅ BABS Audit Trail & Configureerbaar Beschikbaarheidsbeheer (28-12-2024)
+#### ✅ BABS Audit Trail & Configureerbaar Beschikbaarheidsbeheer (28-12-2025)
 **Geïmplementeerd**:
 - Volledige audit trail voor BABS wijzigingen
 - Database: `babs_audit_log` table met user + IP tracking
