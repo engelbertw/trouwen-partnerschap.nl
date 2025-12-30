@@ -258,7 +258,7 @@ export function generateAankondigingPDF(
   if (data.curatele) {
     addSection('Curatele');
     
-    const partner1Status = data.curatele.partner1UnderCuratele || data.curatele.partner1UnderGuardianship
+    const partner1Status = data.curatele.partner1UnderGuardianship
       ? 'Ja' 
       : 'Nee';
     addField(
@@ -273,7 +273,7 @@ export function generateAankondigingPDF(
       addField('Toestemmingsformulier van de curator', docName);
     }
     
-    const partner2Status = data.curatele.partner2UnderCuratele || data.curatele.partner2UnderGuardianship
+    const partner2Status = data.curatele.partner2UnderGuardianship
       ? 'Ja' 
       : 'Nee';
     addField(
