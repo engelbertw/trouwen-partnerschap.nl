@@ -19,6 +19,15 @@ const isBlockedRouteForBabsAdmin = createRouteMatcher([
   '/', // Home page
 ]);
 
+// Define routes that babs_admin CAN access (exceptions to blocked routes)
+const isAllowedRouteForBabsAdmin = createRouteMatcher([
+  '/gemeente/beheer/babs/*/calendar(.*)', // BABS calendar page
+  '/api/gemeente/babs/*/recurring-rules(.*)', // Recurring rules API
+  '/api/gemeente/babs/*/blocked-dates(.*)', // Blocked dates API
+  '/api/gemeente/babs/*/audit-log(.*)', // Audit log API
+  '/api/gemeente/babs/*/ceremonies(.*)', // Ceremonies API
+]);
+
 export default clerkMiddleware(async (auth, req) => {
   // Protect all routes except public ones
   if (!isPublicRoute(req)) {
@@ -43,8 +52,8 @@ export default clerkMiddleware(async (auth, req) => {
         }
       }
       
-      // Block babs_admin from accessing certain routes
-      if (isBlockedRouteForBabsAdmin(req)) {
+      // Block babs_admin from accessing certain routes (unless it's an allowed exception)
+      if (isBlockedRouteForBabsAdmin(req) && !isAllowedRouteForBabsAdmin(req)) {
         // If user is babs_admin, redirect to /babs
         if (rol === 'babs_admin') {
           return Response.redirect(new URL('/babs', req.url));
