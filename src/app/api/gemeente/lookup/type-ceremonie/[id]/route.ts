@@ -30,6 +30,27 @@ export async function PUT(
 
     // Remove fields that shouldn't be updated
     const { id: _id, createdAt, updatedAt, ...updateData } = body;
+    
+    // Validatie: gratis ceremonies moeten prijs 0 hebben
+    if (updateData.gratis && updateData.prijsCents !== undefined && updateData.prijsCents !== 0) {
+      return NextResponse.json(
+        { success: false, error: 'Gratis ceremonies moeten prijs 0 hebben' },
+        { status: 400 }
+      );
+    }
+    
+    // Als gratis wordt aangezet, zet prijs automatisch op 0
+    if (updateData.gratis) {
+      updateData.prijsCents = 0;
+    }
+    
+    // Validatie: niet-gratis ceremonies moeten een prijs hebben
+    if (updateData.gratis === false && (!updateData.prijsCents || updateData.prijsCents < 0)) {
+      return NextResponse.json(
+        { success: false, error: 'Niet-gratis ceremonies moeten een prijs hebben (>= 0)' },
+        { status: 400 }
+      );
+    }
 
     const [updated] = await db
       .update(typeCeremonie)

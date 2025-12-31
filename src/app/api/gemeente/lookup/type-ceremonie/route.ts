@@ -20,8 +20,29 @@ export async function GET(request: NextRequest) {
 
     // Type ceremonie is shared across all gemeenten, not per-gemeente
     // Only return active types
+    // Explicitly select all fields including prijsCents
     const types = await db
-      .select()
+      .select({
+        id: typeCeremonie.id,
+        code: typeCeremonie.code,
+        naam: typeCeremonie.naam,
+        omschrijving: typeCeremonie.omschrijving,
+        uitgebreideOmschrijving: typeCeremonie.uitgebreideOmschrijving,
+        eigenBabsToegestaan: typeCeremonie.eigenBabsToegestaan,
+        gratis: typeCeremonie.gratis,
+        budget: typeCeremonie.budget,
+        prijsCents: typeCeremonie.prijsCents,
+        openstellingWeken: typeCeremonie.openstellingWeken,
+        leadTimeDays: typeCeremonie.leadTimeDays,
+        wijzigbaarTotDays: typeCeremonie.wijzigbaarTotDays,
+        maxGetuigen: typeCeremonie.maxGetuigen,
+        duurMinuten: typeCeremonie.duurMinuten,
+        talen: typeCeremonie.talen,
+        actief: typeCeremonie.actief,
+        volgorde: typeCeremonie.volgorde,
+        createdAt: typeCeremonie.createdAt,
+        updatedAt: typeCeremonie.updatedAt,
+      })
       .from(typeCeremonie)
       .where(eq(typeCeremonie.actief, true))
       .orderBy(asc(typeCeremonie.volgorde), asc(typeCeremonie.naam));
@@ -62,7 +83,23 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { code, naam, omschrijving, uitgebreideOmschrijving, eigenBabsToegestaan, gratis, budget, openstellingWeken, leadTimeDays, wijzigbaarTotDays, maxGetuigen, duurMinuten, talen, actief, volgorde } = body;
+    const { code, naam, omschrijving, uitgebreideOmschrijving, eigenBabsToegestaan, gratis, budget, prijsCents, openstellingWeken, leadTimeDays, wijzigbaarTotDays, maxGetuigen, duurMinuten, talen, actief, volgorde } = body;
+    
+    // Validatie: gratis ceremonies moeten prijs 0 hebben
+    if (gratis && prijsCents !== undefined && prijsCents !== 0) {
+      return NextResponse.json(
+        { success: false, error: 'Gratis ceremonies moeten prijs 0 hebben' },
+        { status: 400 }
+      );
+    }
+    
+    // Validatie: niet-gratis ceremonies moeten een prijs hebben
+    if (!gratis && (!prijsCents || prijsCents < 0)) {
+      return NextResponse.json(
+        { success: false, error: 'Niet-gratis ceremonies moeten een prijs hebben (>= 0)' },
+        { status: 400 }
+      );
+    }
 
     if (!code || !naam) {
       return NextResponse.json(
@@ -90,6 +127,7 @@ export async function POST(request: NextRequest) {
         eigenBabsToegestaan: eigenBabsToegestaan || false,
         gratis: gratis || false,
         budget: budget || false,
+        prijsCents: gratis ? 0 : (prijsCents || 0),
         openstellingWeken: openstellingWeken || 6,
         leadTimeDays: leadTimeDays || 14,
         wijzigbaarTotDays: wijzigbaarTotDays || 7,

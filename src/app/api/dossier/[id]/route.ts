@@ -54,9 +54,21 @@ export async function GET(
       return NextResponse.json({ error: 'Onvolledige dossiergegevens' }, { status: 404 });
     }
 
-    // 6. Fetch type ceremonie from dossier
+    // 6. Fetch type ceremonie from dossier (include prijsCents)
     const typeCeremonieData = currentDossier.typeCeremonieId ? await db
-      .select()
+      .select({
+        id: typeCeremonie.id,
+        code: typeCeremonie.code,
+        naam: typeCeremonie.naam,
+        omschrijving: typeCeremonie.omschrijving,
+        uitgebreideOmschrijving: typeCeremonie.uitgebreideOmschrijving,
+        eigenBabsToegestaan: typeCeremonie.eigenBabsToegestaan,
+        gratis: typeCeremonie.gratis,
+        budget: typeCeremonie.budget,
+        prijsCents: typeCeremonie.prijsCents,
+        duurMinuten: typeCeremonie.duurMinuten,
+        talen: typeCeremonie.talen,
+      })
       .from(typeCeremonie)
       .where(eq(typeCeremonie.id, currentDossier.typeCeremonieId))
       .limit(1) : [];
@@ -153,9 +165,18 @@ export async function GET(
     const geldigTot = formatDateForDisplay(validityDate.toISOString().split('T')[0]);
 
     // 13. Format ceremonie data if exists
-    const ceremonieKostenCents = ceremonieData.length > 0 && ceremonieData[0].locatie 
-      ? (ceremonieData[0].locatie.prijsCents || 0) 
-      : 0;
+    // Calculate costs: type ceremonie price + locatie price
+    let ceremonieKostenCents = 0;
+    if (ceremonieData.length > 0 && ceremonieData[0].ceremonie) {
+      // Add type ceremonie price
+      if (typeCeremonieData.length > 0 && typeCeremonieData[0].prijsCents) {
+        ceremonieKostenCents += typeCeremonieData[0].prijsCents;
+      }
+      // Add locatie price (if any)
+      if (ceremonieData[0].locatie?.prijsCents) {
+        ceremonieKostenCents += ceremonieData[0].locatie.prijsCents;
+      }
+    }
 
     const formattedCeremonie = ceremonieData.length > 0 && ceremonieData[0].ceremonie ? {
       datum: formatDateForDisplay(ceremonieData[0].ceremonie.datum),
@@ -174,6 +195,7 @@ export async function GET(
         code: typeCeremonieData[0].code,
         duurMinuten: typeCeremonieData[0].duurMinuten,
         eigenBabsToegestaan: typeCeremonieData[0].eigenBabsToegestaan,
+        prijsCents: typeCeremonieData[0].prijsCents || 0,
       } : null,
       wijzigbaarTot: ceremonieData[0].ceremonie.wijzigbaarTot ? formatDateForDisplay(ceremonieData[0].ceremonie.wijzigbaarTot.toISOString().split('T')[0]) : null,
     } : null;

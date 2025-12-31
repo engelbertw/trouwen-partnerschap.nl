@@ -184,6 +184,7 @@ export const typeCeremonieInIhw = ihw.table("type_ceremonie", {
 	eigenBabsToegestaan: boolean("eigen_babs_toegestaan").default(false).notNull(),
 	gratis: boolean().default(false).notNull(),
 	budget: boolean().default(false).notNull(),
+	prijsCents: integer("prijs_cents").default(0).notNull(),
 	openstellingWeken: integer("openstelling_weken").default(6).notNull(),
 	leadTimeDays: integer("lead_time_days").default(14).notNull(),
 	wijzigbaarTotDays: integer("wijzigbaar_tot_days").default(7).notNull(),
@@ -200,6 +201,7 @@ export const typeCeremonieInIhw = ihw.table("type_ceremonie", {
 	check("chk_lead_time_days", sql`lead_time_days >= 0`),
 	check("chk_wijzigbaar_tot_days", sql`wijzigbaar_tot_days >= 0`),
 	check("chk_max_getuigen", sql`(max_getuigen >= 2) AND (max_getuigen <= 10)`),
+	check("chk_prijs_gratis", sql`(gratis = true AND prijs_cents = 0) OR (gratis = false AND prijs_cents >= 0)`),
 ]);
 
 export const dossierInIhw = ihw.table("dossier", {

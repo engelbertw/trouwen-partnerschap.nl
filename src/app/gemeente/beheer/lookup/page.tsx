@@ -171,6 +171,19 @@ export default function LookupBeheerPage(): JSX.Element {
       }
     }
     
+    // Ensure prijsCents is a number (for type-ceremonie)
+    if (activeTab === 'type-ceremonie') {
+      if (normalizedData.prijsCents === null || normalizedData.prijsCents === undefined) {
+        normalizedData.prijsCents = normalizedData.gratis ? 0 : 0;
+      } else {
+        normalizedData.prijsCents = Number(normalizedData.prijsCents) || 0;
+      }
+      // If gratis is true, ensure prijsCents is 0
+      if (normalizedData.gratis) {
+        normalizedData.prijsCents = 0;
+      }
+    }
+    
     setEditingItem(item);
     setFormData(normalizedData);
     setShowAddForm(true);
@@ -198,6 +211,16 @@ export default function LookupBeheerPage(): JSX.Element {
     if (activeTab === 'babs' && formData.status === 'beedigd') {
       if (!formData.beedigdVanaf || !formData.beedigdTot) {
         alert('⚠️ Bij status "Beedigd" zijn beide beëdiging datums (vanaf en tot) verplicht.');
+        return;
+      }
+    }
+    
+    // Validatie voor type-ceremonie: gratis ceremonies moeten prijs 0 hebben
+    if (activeTab === 'type-ceremonie') {
+      if (formData.gratis) {
+        formData.prijsCents = 0;
+      } else if (!formData.prijsCents || formData.prijsCents < 0) {
+        alert('⚠️ Prijs is verplicht voor niet-gratis ceremonies.');
         return;
       }
     }
@@ -1083,7 +1106,14 @@ export default function LookupBeheerPage(): JSX.Element {
                       <input
                         type="checkbox"
                         checked={formData.gratis || false}
-                        onChange={(e) => setFormData({ ...formData, gratis: e.target.checked })}
+                        onChange={(e) => {
+                          const isGratis = e.target.checked;
+                          setFormData({ 
+                            ...formData, 
+                            gratis: isGratis,
+                            prijsCents: isGratis ? 0 : (formData.prijsCents || 0)
+                          });
+                        }}
                         className="mr-2"
                       />
                       <span className="text-sm text-gray-700">Gratis</span>
@@ -1115,6 +1145,49 @@ export default function LookupBeheerPage(): JSX.Element {
                       />
                       <span className="text-sm text-gray-700">Actief</span>
                     </label>
+                  </div>
+                  {/* Prijs veld */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Prijs (in euro's) {!formData.gratis && <span className="text-red-600">*</span>}
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <span className="text-gray-500">€</span>
+                      <input
+                        type="number"
+                        required={!formData.gratis}
+                        min="0"
+                        step="0.01"
+                        disabled={formData.gratis}
+                        value={
+                          formData.gratis 
+                            ? '0.00' 
+                            : (() => {
+                                const cents = Number(formData.prijsCents) || 0;
+                                return (cents / 100).toFixed(2);
+                              })()
+                        }
+                        onChange={(e) => {
+                          const euroValue = parseFloat(e.target.value) || 0;
+                          const cents = Math.round(euroValue * 100);
+                          setFormData({ ...formData, prijsCents: cents });
+                        }}
+                        className={`w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-600 ${
+                          formData.gratis ? 'bg-gray-100 cursor-not-allowed' : ''
+                        }`}
+                        placeholder="0.00"
+                      />
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {formData.gratis 
+                        ? 'Gratis ceremonies hebben automatisch prijs € 0,00' 
+                        : `Prijs in euro's (wordt opgeslagen als ${Number(formData.prijsCents) || 0} centen)`}
+                    </p>
+                    {formData.gratis && Number(formData.prijsCents) !== 0 && (
+                      <p className="text-xs text-amber-600 mt-1 font-medium">
+                        ⚠️ Let op: Gratis ceremonies moeten prijs 0 hebben. Prijs wordt automatisch op 0 gezet.
+                      </p>
+                    )}
                   </div>
                 </>
               )}
@@ -1186,6 +1259,7 @@ export default function LookupBeheerPage(): JSX.Element {
                       <>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Code</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Naam</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Prijs</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actief</th>
                         <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Acties</th>
                       </>
@@ -1321,6 +1395,13 @@ export default function LookupBeheerPage(): JSX.Element {
                         <>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.code}</td>
                           <td className="px-6 py-4 text-sm text-gray-900">{item.naam}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {item.gratis ? (
+                              <span className="text-gray-500">Gratis</span>
+                            ) : (
+                              `€ ${((Number(item.prijsCents) || 0) / 100).toFixed(2).replace('.', ',')}`
+                            )}
+                          </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             {item.actief ? (
                               <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">

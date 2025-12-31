@@ -100,6 +100,7 @@ export const typeCeremonie = ihw.table('type_ceremonie', {
   eigenBabsToegestaan: boolean('eigen_babs_toegestaan').notNull().default(false),
   gratis: boolean('gratis').notNull().default(false),
   budget: boolean('budget').notNull().default(false),
+  prijsCents: integer('prijs_cents').notNull().default(0),
   openstellingWeken: integer('openstelling_weken').notNull().default(6),
   leadTimeDays: integer('lead_time_days').notNull().default(14),
   wijzigbaarTotDays: integer('wijzigbaar_tot_days').notNull().default(7),
