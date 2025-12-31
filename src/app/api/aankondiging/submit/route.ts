@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import { db } from '@/db';
-import { dossier, partner, aankondiging, dossierBlock, kind } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
+import { db } from '@/db';
+import { dossier, partner, aankondiging, dossierBlock, kind, gemeente } from '@/db/schema';
 import type { AankondigingData } from '@/lib/aankondiging-storage';
 import { getGemeenteContext } from '@/lib/gemeente';
 
@@ -56,6 +56,24 @@ export async function POST(request: NextRequest) {
     }
     const { gemeenteOin } = context.data;
 
+    // 5. Resolve municipality code for this gemeente
+    const [gemeenteRecord] = await db
+      .select({ gemeenteCode: gemeente.gemeenteCode })
+      .from(gemeente)
+      .where(eq(gemeente.oin, gemeenteOin))
+      .limit(1);
+
+    if (!gemeenteRecord) {
+      return NextResponse.json(
+        { success: false, error: 'Gemeente niet gevonden. Controleer de configuratie.' },
+        { status: 400 }
+      );
+    }
+
+    const municipalityCode = gemeenteRecord.gemeenteCode.startsWith('NL.IMBAG.Gemeente.')
+      ? gemeenteRecord.gemeenteCode
+      : `NL.IMBAG.Gemeente.${gemeenteRecord.gemeenteCode}`;
+
     // Helper function to convert DD-MM-YYYY to YYYY-MM-DD (ISO format for PostgreSQL)
     const convertDateFormat = (dateStr: string): string => {
       if (!dateStr) return '';
@@ -83,14 +101,14 @@ export async function POST(request: NextRequest) {
       throw new Error(`Invalid date format: ${dateStr}`);
     };
 
-    // 5. Create dossier and related records in transaction
+    // 6. Create dossier and related records in transaction
     const result = await db.transaction(async (tx) => {
       // Create main dossier
       const [newDossier] = await tx.insert(dossier).values({
         gemeenteOin,
         status: 'draft',
         createdBy: userId,
-        municipalityCode: 'NL.IMBAG.Gemeente.0363',
+        municipalityCode,
         isTest: process.env.NODE_ENV !== 'production',
       }).returning();
 
@@ -242,7 +260,7 @@ export async function POST(request: NextRequest) {
       return newDossier;
     });
 
-    // 6. Return success response
+    // 7. Return success response
     return NextResponse.json({
       success: true,
       dossierId: result.id,

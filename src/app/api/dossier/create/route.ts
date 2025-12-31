@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
+import { eq } from 'drizzle-orm';
 import { db } from '@/db';
-import { dossier, dossierBlock } from '@/db/schema';
+import { dossier, dossierBlock, gemeente } from '@/db/schema';
 import { getGemeenteContext } from '@/lib/gemeente';
 
 /**
@@ -35,14 +36,32 @@ export async function POST(request: NextRequest) {
     }
     const { gemeenteOin } = context.data;
 
-    // 4. Create dossier in transaction
+    // 4. Resolve municipality code for this gemeente
+    const [gemeenteRecord] = await db
+      .select({ gemeenteCode: gemeente.gemeenteCode })
+      .from(gemeente)
+      .where(eq(gemeente.oin, gemeenteOin))
+      .limit(1);
+
+    if (!gemeenteRecord) {
+      return NextResponse.json(
+        { success: false, error: 'Gemeente niet gevonden. Controleer de configuratie.' },
+        { status: 400 }
+      );
+    }
+
+    const municipalityCode = gemeenteRecord.gemeenteCode.startsWith('NL.IMBAG.Gemeente.')
+      ? gemeenteRecord.gemeenteCode
+      : `NL.IMBAG.Gemeente.${gemeenteRecord.gemeenteCode}`;
+
+    // 5. Create dossier in transaction
     const result = await db.transaction(async (tx) => {
       // Create main dossier
       const [newDossier] = await tx.insert(dossier).values({
         gemeenteOin,
         status: 'draft',
         createdBy: userId,
-        municipalityCode: 'NL.IMBAG.Gemeente.0363',
+        municipalityCode,
         isTest: process.env.NODE_ENV !== 'production',
       }).returning();
 
@@ -68,7 +87,7 @@ export async function POST(request: NextRequest) {
       return newDossier;
     });
 
-    // 5. Return dossier ID
+    // 6. Return dossier ID
     return NextResponse.json({
       success: true,
       dossierId: result.id,
