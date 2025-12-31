@@ -164,7 +164,7 @@
 - `babs` - BABS medewerkers
 - `type_ceremonie` - Ceremonie types (configurabel, ✅ Dynamisch geladen sinds 29-12-2025)
 
-**Nieuwe Features (29-12-2024)**:
+**Nieuwe Features (29-12-2025)**:
 - ✅ **Soort Ceremonie**: Dynamisch uit database, geen hardcoded data meer
 - ✅ **BABS Beschikbaarheidscontrole**: Alleen beschikbare BABS worden getoond
 - ✅ **API Endpoint**: `/api/ceremonie/beschikbare-babs` voor beschikbaarheidscheck
@@ -498,7 +498,7 @@ CREATE TABLE mijnservices_notifications (
 **Complexity**: Hoog
 **Zie**: `docs/MIJNSERVICES-INTEGRATION.md` voor implementatie details
 
-#### ✅ Ceremonie Soort Dynamic Loading - VOLTOOID (29-12-2024)
+#### ✅ Ceremonie Soort Dynamic Loading - VOLTOOID (29-12-2025)
 **Status**: ✅ Geïmplementeerd - Data wordt nu dynamisch uit database gehaald
 
 **Geïmplementeerd**:
@@ -799,7 +799,7 @@ CREATE TABLE issued_credentials (
 #### 🔍 Applicatiebreed Audit Systeem
 **Status**: ✅ Deels geïmplementeerd / ⏳ In ontwikkeling
 
-**✅ Geïmplementeerd (28-12-2024):**
+**✅ Geïmplementeerd (28-12-2025):**
 
 **BABS Audit Trail** - Volledig werkend:
 - Database: `babs_audit_log` table met complete tracking
@@ -1233,7 +1233,7 @@ CREATE INDEX idx_audit_log_action ON ihw.audit_log(action);
 
 ### December 2025
 
-#### ✅ Ceremonie Soort Dynamic Loading & BABS Beschikbaarheidscontrole (29-12-2024)
+#### ✅ Ceremonie Soort Dynamic Loading & BABS Beschikbaarheidscontrole (29-12-2025)
 **Geïmplementeerd**:
 
 **1. Ceremonie Soort Dynamic Loading**:
@@ -1304,7 +1304,7 @@ CREATE INDEX idx_audit_log_action ON ihw.audit_log(action);
 
 ---
 
-#### ✅ BABS Beschikbaarheid Geïntegreerd met Kalender (28-12-2024)
+#### ✅ BABS Beschikbaarheid Geïntegreerd met Kalender (28-12-2025)
 **Geïmplementeerd**:
 - `/babs/beschikbaarheid` pagina volledig herzien
 - Van formulier met checkboxes → welkomstpagina met link naar kalender
@@ -1349,7 +1349,7 @@ CREATE INDEX idx_audit_log_action ON ihw.audit_log(action);
 
 ---
 
-#### ✅ BABS Calendar Feed & Agenda Integratie (28-12-2024)
+#### ✅ BABS Calendar Feed & Agenda Integratie (28-12-2025)
 **Geïmplementeerd**:
 - Persoonlijke iCal feed URL voor elke BABS (token-based authenticatie)
 - Automatische synchronisatie met Gmail, Outlook, Apple Calendar
@@ -1473,7 +1473,7 @@ CREATE INDEX idx_audit_log_action ON ihw.audit_log(action);
 - BABS medewerker selectie
 - Ceremonie cost calculation
 
-**Updates (29-12-2024)**:
+**Updates (29-12-2025)**:
 - ✅ **Soort Ceremonie**: Dynamisch uit database (geen hardcoded data meer)
 - ✅ **BABS Beschikbaarheidscontrole**: Alleen beschikbare BABS worden getoond
 
