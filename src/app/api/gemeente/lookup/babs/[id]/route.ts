@@ -72,11 +72,12 @@ export async function PUT(
       : user.emailAddresses[0]?.emailAddress || 'Onbekend';
 
     // Track fields that need audit logging
+    // Note: field names must match the chk_field_name constraint in babs_audit_log table
     const auditFields = [
       { name: 'status', oldValue: currentBabs.status, newValue: status },
       { name: 'actief', oldValue: String(currentBabs.actief), newValue: String(actief) },
-      { name: 'beeddigdVanaf', oldValue: currentBabs.beeddigdVanaf, newValue: beeddigdVanaf },
-      { name: 'beeddigdTot', oldValue: currentBabs.beeddigdTot, newValue: beeddigdTot },
+      { name: 'beedigdVanaf', oldValue: currentBabs.beeddigdVanaf, newValue: beeddigdVanaf },
+      { name: 'beedigdTot', oldValue: currentBabs.beeddigdTot, newValue: beeddigdTot },
       { name: 'beschikbaarVanaf', oldValue: currentBabs.beschikbaarVanaf, newValue: beschikbaarVanaf },
       { name: 'beschikbaarTot', oldValue: currentBabs.beschikbaarTot, newValue: beschikbaarTot },
       { name: 'opmerkingBeschikbaarheid', oldValue: currentBabs.opmerkingBeschikbaarheid, newValue: opmerkingBeschikbaarheid },
@@ -95,6 +96,36 @@ export async function PUT(
       }
     }
 
+    // Determine final status (use provided status or keep current)
+    const finalStatus = status !== undefined ? status : currentBabs.status;
+    
+    // Validate: if status is 'beedigd', both beedigd_vanaf and beedigd_tot are required
+    if (finalStatus === 'beedigd') {
+      const finalBeedigdVanaf = beeddigdVanaf !== undefined ? beeddigdVanaf : currentBabs.beeddigdVanaf;
+      const finalBeedigdTot = beeddigdTot !== undefined ? beeddigdTot : currentBabs.beeddigdTot;
+      
+      if (!finalBeedigdVanaf || !finalBeedigdTot) {
+        return NextResponse.json(
+          { 
+            success: false, 
+            error: 'Bij status "Beedigd" zijn beide beëdiging datums (vanaf en tot) verplicht' 
+          },
+          { status: 400 }
+        );
+      }
+      
+      // Validate date order: beedigd_vanaf must be before beedigd_tot
+      if (new Date(finalBeedigdVanaf) >= new Date(finalBeedigdTot)) {
+        return NextResponse.json(
+          { 
+            success: false, 
+            error: 'Beëdiging vanaf datum moet voor de beëdiging tot datum liggen' 
+          },
+          { status: 400 }
+        );
+      }
+    }
+
     // Update BABS
     const [updatedBabs] = await db
       .update(babs)
@@ -104,9 +135,9 @@ export async function PUT(
         voornaam: voornaam || null,
         tussenvoegsel: tussenvoegsel || null,
         achternaam,
-        status: status || 'in_aanvraag',
-        beeddigdVanaf: beeddigdVanaf || null,
-        beeddigdTot: beeddigdTot || null,
+        status: finalStatus,
+        beeddigdVanaf: beeddigdVanaf !== undefined ? (beeddigdVanaf || null) : currentBabs.beeddigdVanaf,
+        beeddigdTot: beeddigdTot !== undefined ? (beeddigdTot || null) : currentBabs.beeddigdTot,
         aanvraagDatum: aanvraagDatum || null,
         opmerkingen: opmerkingen || null,
         beschikbaarVanaf: beschikbaarVanaf || null,

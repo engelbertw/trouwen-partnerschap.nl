@@ -25,6 +25,8 @@ export default function AmbtenaarKiezenPage(): JSX.Element {
   const [datum, setDatum] = useState<string>('');
   const [tijd, setTijd] = useState<string>('');
   const [taal, setTaal] = useState<string>('');
+  const [typeCeremonieId, setTypeCeremonieId] = useState<string | null>(null);
+  const [requiredTalen, setRequiredTalen] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
 
   // Load saved BABS selection on mount
@@ -96,6 +98,16 @@ export default function AmbtenaarKiezenPage(): JSX.Element {
             setTaal(data.data.taal);
           }
         }
+
+        // Fetch typeCeremonieId from dossier
+        const typeResponse = await fetch(`/api/dossier/${dossierId}/ceremonie/type`);
+        if (typeResponse.ok) {
+          const typeData = await typeResponse.json();
+          if (typeData.success && typeData.data && typeData.data.typeCeremonieId) {
+            setTypeCeremonieId(typeData.data.typeCeremonieId);
+            console.log('✅ Type ceremonie ID opgehaald:', typeData.data.typeCeremonieId);
+          }
+        }
       } catch (err) {
         console.error('Error fetching ceremony data from API:', err);
         
@@ -144,6 +156,12 @@ export default function AmbtenaarKiezenPage(): JSX.Element {
           console.log('⚠️ GEEN taal parameter - alle BABS worden getoond!');
         }
 
+        // Add typeCeremonieId if available (for language matching from type ceremonie)
+        if (typeCeremonieId) {
+          params.append('typeCeremonieId', typeCeremonieId);
+          console.log('✅ Type ceremonie ID toegevoegd aan API call:', typeCeremonieId);
+        }
+
         console.log('📞 API Call:', `/api/ceremonie/beschikbare-babs?${params.toString()}`);
 
         const response = await fetch(`/api/ceremonie/beschikbare-babs?${params}`);
@@ -173,12 +191,74 @@ export default function AmbtenaarKiezenPage(): JSX.Element {
     }
 
     fetchBeschikbareBabs();
-  }, [datum, tijd, taal]);
+  }, [datum, tijd, taal, typeCeremonieId]);
+
+  // Determine required languages from taal or typeCeremonieId
+  useEffect(() => {
+    async function determineRequiredTalen() {
+      let talenArray: string[] = [];
+      
+      // Priority 1: Direct taal from ceremonie
+      if (taal) {
+        talenArray = [taal];
+        setRequiredTalen(talenArray);
+        return;
+      }
+      
+      // Priority 2: Talen from type ceremonie
+      if (typeCeremonieId) {
+        try {
+          const typeResponse = await fetch(`/api/gemeente/lookup/type-ceremonie`);
+          if (typeResponse.ok) {
+            const typeData = await typeResponse.json();
+            if (typeData.success && typeData.data) {
+              const typeCeremonie = typeData.data.find((t: any) => t.id === typeCeremonieId);
+              if (typeCeremonie && typeCeremonie.talen) {
+                talenArray = Array.isArray(typeCeremonie.talen) ? typeCeremonie.talen : ['nl'];
+                setRequiredTalen(talenArray);
+              }
+            }
+          }
+        } catch (err) {
+          console.error('Error fetching type ceremonie languages:', err);
+        }
+      }
+    }
+
+    determineRequiredTalen();
+  }, [taal, typeCeremonieId]);
 
   const handleContinue = async () => {
     if (!selectedAmbtenaar) {
       alert('Selecteer eerst een ambtenaar');
       return;
+    }
+
+    // Validate selected BABS against language requirements
+    if (requiredTalen.length > 0) {
+      const selectedBabs = babsList.find(b => b.id === selectedAmbtenaar);
+      if (selectedBabs) {
+        const babsTalen = Array.isArray(selectedBabs.talen) ? selectedBabs.talen : ['nl'];
+        const hasMatchingLanguage = requiredTalen.some((taal: string) => babsTalen.includes(taal));
+        
+        if (!hasMatchingLanguage) {
+          const taalNamen: Record<string, string> = {
+            nl: 'Nederlands',
+            en: 'Engels',
+            de: 'Duits',
+            fr: 'Frans',
+            es: 'Spaans',
+          };
+          const requiredTalenNamen = requiredTalen.map(t => taalNamen[t] || t).join(', ');
+          const babsTalenNamen = babsTalen.map(t => taalNamen[t] || t).join(', ');
+          
+          const confirmMessage = `⚠️ Let op: De geselecteerde ambtenaar spreekt ${babsTalenNamen}, maar voor dit ceremonie type is ${requiredTalenNamen} vereist.\n\nDeze ambtenaar is mogelijk niet beschikbaar voor uw ceremonie.\n\nWilt u toch doorgaan?`;
+          
+          if (!confirm(confirmMessage)) {
+            return;
+          }
+        }
+      }
     }
 
     setSaving(true);
@@ -319,34 +399,81 @@ export default function AmbtenaarKiezenPage(): JSX.Element {
           </p>
 
           {/* Previously selected BABS indicator */}
-          {previouslySelectedBabs && (
-            <div className="bg-blue-50 border-l-4 border-blue-600 p-4 mb-6 rounded-r">
-              <div className="flex items-start gap-3">
-                <svg
-                  className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <div className="flex-1">
-                  <p className="text-sm font-semibold text-blue-900 mb-1">
-                    U heeft eerder een voorkeur aangegeven
-                  </p>
-                  <p className="text-sm text-blue-800">
-                    Gekozen ambtenaar: <strong>{previouslySelectedBabs.volledigeNaam}</strong>
-                  </p>
-                  <p className="text-xs text-blue-700 mt-2">
-                    U kunt hieronder een andere ambtenaar selecteren of uw huidige keuze behouden.
-                  </p>
+          {previouslySelectedBabs && (() => {
+            // Check if BABS matches language requirements
+            const babsTalen = Array.isArray(previouslySelectedBabs.talen) ? previouslySelectedBabs.talen : ['nl'];
+            const hasMatchingLanguage = requiredTalen.length === 0 || requiredTalen.some((taal: string) => babsTalen.includes(taal));
+            const taalNamen: Record<string, string> = {
+              nl: 'Nederlands',
+              en: 'Engels',
+              de: 'Duits',
+              fr: 'Frans',
+              es: 'Spaans',
+            };
+            const requiredTalenNamen = requiredTalen.map(t => taalNamen[t] || t).join(', ');
+            const babsTalenNamen = babsTalen.map(t => taalNamen[t] || t).join(', ');
+
+            return (
+              <div className={`border-l-4 p-4 mb-6 rounded-r ${
+                hasMatchingLanguage 
+                  ? 'bg-blue-50 border-blue-600' 
+                  : 'bg-yellow-50 border-yellow-600'
+              }`}>
+                <div className="flex items-start gap-3">
+                  {hasMatchingLanguage ? (
+                    <svg
+                      className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  )}
+                  <div className="flex-1">
+                    <p className={`text-sm font-semibold mb-1 ${
+                      hasMatchingLanguage ? 'text-blue-900' : 'text-yellow-900'
+                    }`}>
+                      U heeft eerder een voorkeur aangegeven
+                    </p>
+                    <p className={`text-sm ${
+                      hasMatchingLanguage ? 'text-blue-800' : 'text-yellow-800'
+                    }`}>
+                      Gekozen ambtenaar: <strong>{previouslySelectedBabs.volledigeNaam}</strong>
+                    </p>
+                    {!hasMatchingLanguage && requiredTalen.length > 0 && (
+                      <div className="mt-2 p-2 bg-yellow-100 rounded text-xs text-yellow-900">
+                        <p className="font-semibold mb-1">⚠️ Let op: Taalvereiste niet voldaan</p>
+                        <p>Deze ambtenaar spreekt: <strong>{babsTalenNamen}</strong></p>
+                        <p>Voor dit ceremonie type is vereist: <strong>{requiredTalenNamen}</strong></p>
+                        <p className="mt-1">Deze ambtenaar is mogelijk niet beschikbaar voor uw ceremonie. Selecteer een andere ambtenaar die de vereiste taal spreekt.</p>
+                      </div>
+                    )}
+                    <p className={`text-xs mt-2 ${
+                      hasMatchingLanguage ? 'text-blue-700' : 'text-yellow-700'
+                    }`}>
+                      U kunt hieronder een andere ambtenaar selecteren of uw huidige keuze behouden.
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
 
           {/* Search */}
           <div className="mb-6">
