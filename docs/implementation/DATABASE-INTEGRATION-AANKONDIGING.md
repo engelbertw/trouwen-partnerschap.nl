@@ -276,7 +276,7 @@ De API haalt `gemeente_oin` op via `getGemeenteContext()` (Clerk publicMetadata)
 ```typescript
 const context = await getGemeenteContext();
 if (!context.success) {
-  return NextResponse.json({ success: false, error: context.error }, { status: 401 });
+  return NextResponse.json({ success: false, error: context.error }, { status: 403 });
 }
 const { gemeenteOin } = context.data;
 ```
@@ -288,13 +288,18 @@ const { gemeenteOin } = context.data;
 ### Authenticatie
 De API route vereist Clerk authenticatie + gemeente context:
 ```typescript
+const { userId } = await auth();
+if (!userId) {
+  return NextResponse.json({ success: false, error: 'Niet geautoriseerd' }, { status: 401 });
+}
+
 const context = await getGemeenteContext();
 if (!context.success) {
-  return NextResponse.json({ success: false, error: context.error }, { status: 401 });
+  return NextResponse.json({ success: false, error: context.error }, { status: 403 });
 }
 ```
 
-Dit betekent dat gebruikers ingelogd moeten zijn.
+Dit betekent dat gebruikers ingelogd moeten zijn en een gemeente toegewezen moeten hebben.
 
 ### Transactions
 Alle database writes gebeuren in een transaction:
