@@ -1,6 +1,6 @@
 # Huwelijk Applicatie - Masterplan
 
-> **Laatste update**: 28 december 2025  
+> **Laatste update**: 30 december 2025  
 > **Status**: Actieve ontwikkeling
 
 ## 📋 Inhoudsopgave
@@ -602,7 +602,8 @@ CREATE TABLE mijnservices_notifications (
 **Ondersteunde Standaarden**:
 - **EUDI Wallet** (EU Digital Identity Wallet) - ARF 1.4 specificatie
 - **EDI Wallet** (Europese Digitale Identiteit) - Nederlandse implementatie
-- **Verifiable Credentials** (W3C standaard)
+- **Yivi Wallet** - Nederlandse SSI-implementatie (zie "Yivi Authenticatie Integratie" sectie)
+- **Verifiable Credentials** (W3C standaard) - Basis voor Self-Sovereign Identity (SSI)
 - **ISO/IEC 18013-5** (mobile driving license standaard, toepasbaar op identiteitsdocumenten)
 
 **Use Cases**:
@@ -770,6 +771,163 @@ CREATE TABLE issued_credentials (
 **Notities**: Vereist DigiD koppeling (6+ maanden aanvraagproces)  
 **Complexiteit**: Zeer hoog  
 **Prioriteit**: Normaal (vereist voor echte productie gebruik)
+
+#### Yivi Authenticatie Integratie
+**Status**: Not implemented - Future-proofing voor privacyvriendelijke authenticatie
+
+**Overzicht**:
+Yivi is een privacyvriendelijk en open-source inlogmiddel dat burgers in staat stelt om veilig en betrouwbaar online in te loggen. Yivi is gebaseerd op **Self-Sovereign Identity (SSI)** principes, wat betekent dat gebruikers volledige controle hebben over hun digitale identiteit en persoonlijke gegevens. Yivi bereidt zich voor op eIDAS 2.0 en de EUDI-wallet standaard, wat betekent dat een implementatie toekomstbestendig is en voldoet aan Europese regelgeving.
+
+**Self-Sovereign Identity (SSI) Principes**:
+- **Gebruikerscontrole**: Burgers hebben volledige controle over welke gegevens ze delen en met wie
+- **Minimale data-uitwisseling**: Alleen de benodigde attributen worden gedeeld (selective disclosure)
+- **Decentrale opslag**: Identiteitsgegevens worden lokaal opgeslagen in de wallet van de gebruiker
+- **Verifiable Credentials**: Cryptografisch verifieerbare credentials zonder centrale autoriteit
+- **Privacy by Design**: Privacy is ingebouwd in het systeem, niet als add-on
+- **Interoperabiliteit**: Werkt met verschillende wallet providers en systemen
+
+**Architectuur Opties**:
+
+**Optie 1: Via Keycloak (Aanbevolen)** 🎯
+- **Architectuur**: Yivi (OIDC/SSI) → Keycloak (Identity Broker) → Clerk (OIDC)
+- **Voordelen**:
+  - Consistent met bestaande DigiD setup
+  - Centrale identity broker (Keycloak)
+  - Beide methoden (DigiD en Yivi) naast elkaar mogelijk
+  - Flexibel voor toekomstige IdP's
+  - Hergebruik bestaande Keycloak infrastructuur
+  - **SSI-voordelen**: Gebruikers behouden controle over hun identiteit via Yivi wallet
+- **Implementatie**:
+  - Yivi OIDC Identity Provider toevoegen aan Keycloak
+  - Nieuwe Clerk Custom OIDC Provider: `keycloak-yivi`
+  - Discovery Endpoint: `https://auth.huwelijk.nl/realms/nl-huwelijk/.well-known/openid-configuration`
+  - Attribute mapping: BSN, naam, geboortedatum, LoA
+- **Complexiteit**: Hoog (2-3 weken)
+- **Dependencies**: 
+  - Yivi developer account en client credentials
+  - Keycloak met OIDC IdP ondersteuning
+  - Clerk Enterprise plan
+
+**Optie 2: Directe Yivi Integratie via Clerk**
+- **Architectuur**: Yivi (OIDC) → Clerk (Custom OIDC)
+- **Voordelen**: Eenvoudiger (geen Keycloak laag), minder infrastructuur
+- **Nadelen**: Aparte configuratie naast DigiD, minder flexibel
+- **Complexiteit**: Middel (1-2 weken)
+- **Dependencies**: Yivi OIDC ondersteuning, Clerk Enterprise
+
+**Optie 3: Hybride Aanpak (Aanbevolen voor Productie)**
+- Beide methoden (DigiD en Yivi) naast elkaar aanbieden
+- Gebruikers kiezen hun voorkeur
+- Fallback naar DigiD indien Yivi niet beschikbaar
+
+**Functionaliteit**:
+- [ ] Yivi OIDC Identity Provider configureren in Keycloak
+- [ ] Clerk Custom OIDC Provider: `keycloak-yivi` aanmaken
+- [ ] YiviSignInButton component ontwikkelen
+- [ ] Login pagina uitbreiden met beide opties (DigiD + Yivi)
+- [ ] Attribute mapping configureren (BSN, naam, geboortedatum, LoA)
+- [ ] SSO callback handler voor Yivi
+- [ ] User metadata opslag in Clerk (public_metadata)
+- [ ] Error handling en fallback mechanismen
+- [ ] Test met Yivi test accounts
+- [ ] Productie Yivi koppeling aanvragen
+
+**Technical Requirements**:
+- **Yivi Developer Account**: Aanmelden bij Yivi voor ontwikkelaars
+- **Client Credentials**: Client ID en Secret aanvragen
+- **Redirect URIs**: 
+  - `https://auth.huwelijk.nl/realms/nl-huwelijk/broker/yivi/endpoint`
+  - `https://app.huwelijk.nl/sso-callback`
+- **Keycloak Configuration**: 
+  - OIDC Identity Provider toevoegen
+  - Attribute mappers configureren
+  - Protocol mappers voor token claims
+- **Clerk Configuration**:
+  - Custom OIDC Provider aanmaken
+  - Discovery endpoint configureren
+  - Attribute mapping instellen
+
+**Database Schema**:
+```sql
+-- Geen nieuwe tabellen nodig (gebruikt bestaande Clerk user metadata)
+-- BSN wordt opgeslagen in Clerk public_metadata (geencrypteerd, AVG compliant)
+-- Audit logging via bestaande audit_log table
+```
+
+**Files to Create/Update**:
+- New: `infrastructure/keycloak/scripts/configure-yivi-idp.sh` - Yivi IdP configuratie
+- New: `src/components/auth/YiviSignInButton.tsx` - Yivi login button
+- Update: `src/app/sign-in/page.tsx` - Beide opties tonen
+- Update: `docs/clerk-oidc-setup.md` - Yivi configuratie toevoegen
+- New: `docs/YIVI-INTEGRATION.md` - Volledige implementatie guide
+
+**Security & Privacy Considerations**:
+- **BSN Handling**: Zelfde regels als DigiD (bijzonder persoonsgegeven, encryptie, audit logging)
+- **Privacy**: Yivi is privacyvriendelijk (minimale data-uitwisseling via SSI-principes)
+- **Self-Sovereign Identity (SSI)**: 
+  - Gebruikers hebben volledige controle over hun identiteitsgegevens
+  - Selective disclosure: alleen benodigde attributen worden gedeeld
+  - Decentrale opslag: gegevens blijven in gebruikerswallet, niet op centrale servers
+  - Verifiable Credentials: cryptografisch verifieerbaar zonder centrale autoriteit
+  - Privacy by Design: privacy is ingebouwd, niet als add-on
+- **AVG Compliance**: 
+  - Audit logging voor toegang tot persoonsgegevens
+  - Data minimalisatie (SSI-principe)
+  - Recht op vergetelheid (gebruikers kunnen credentials intrekken)
+- **eIDAS 2.0**: Yivi bereidt voor op EUDI-wallet (toekomstbestendig, SSI-compliant)
+
+**User Experience**:
+- Duidelijke keuze tussen DigiD en Yivi op login pagina
+- Instructies voor gebruikers zonder Yivi-app
+- Fallback naar DigiD indien Yivi niet beschikbaar
+- Consistente user flow (zelfde als DigiD)
+
+**Testing Requirements**:
+- [ ] End-to-end test flow (App → Clerk → Keycloak → Yivi → terug)
+- [ ] Attribute mapping verificatie
+- [ ] Error scenarios (cancelled login, expired session)
+- [ ] Mobile testing (Yivi app integratie)
+- [ ] Browser compatibility (Chrome, Firefox, Safari)
+- [ ] Load testing (als verwacht wordt dat veel gebruikers Yivi kiezen)
+
+**Dependencies**:
+- Keycloak met OIDC IdP ondersteuning (✅ al beschikbaar voor DigiD)
+- Clerk Enterprise plan (✅ vereist voor Custom OIDC)
+- Yivi developer account (⏳ nog aan te vragen)
+- Yivi client credentials (⏳ nog aan te vragen)
+
+**Risks & Mitigations**:
+- **Risico**: Yivi adoptie door burgers kan laag zijn
+  - **Mitigatie**: Bied beide opties aan, DigiD blijft beschikbaar
+- **Risico**: Yivi API wijzigingen tijdens implementatie
+  - **Mitigatie**: Monitor Yivi updates, abstract interface
+- **Risico**: Extra complexiteit in authenticatie flow
+  - **Mitigatie**: Hergebruik bestaande Keycloak/Clerk setup, consistent patroon
+
+**Timeline**:
+- **Phase 1 - Setup (Week 1-2)**: Yivi account, Keycloak configuratie, Clerk setup
+- **Phase 2 - Development (Week 3-4)**: Componenten, UI, integratie
+- **Phase 3 - Testing (Week 5)**: End-to-end tests, user acceptance
+- **Phase 4 - Production (Week 6)**: Deployment, monitoring
+
+**Priority**: 🟡 Normaal (future-proofing, niet kritisch voor launch)
+**Timeline**: Q2-Q3 2026 (parallel met DigiD implementatie)
+**Complexity**: Hoog (2-3 weken implementatie)
+**Relatie met Wallet Integratie**:
+Yivi is gebaseerd op SSI-principes en kan fungeren als wallet voor Verifiable Credentials. De Yivi-integratie vormt de basis voor de toekomstige wallet-integratie (zie "Digital Identity Wallet Preparation" sectie). Yivi-gebruikers kunnen later ook huwelijksaktes ontvangen als Verifiable Credentials in hun Yivi-wallet.
+
+**Zie**: 
+- `.cursor/rules/keycloak-digid-clerk-integration.mdc` - Bestaande DigiD setup
+- `docs/clerk-oidc-setup.md` - Clerk OIDC configuratie
+- `docs/YIVI-INTEGRATION.md` - Volledige implementatie guide (te maken)
+- "Digital Identity Wallet Preparation" sectie (hierboven) - Gerelateerde wallet-integratie
+- Yivi documentatie: https://yivi.app
+- Yivi OIDC specs: https://yivi.app/docs
+- **SSI Resources**:
+  - Self-Sovereign Identity Foundation: https://ssi-foundation.org
+  - W3C Verifiable Credentials: https://www.w3.org/TR/vc-data-model/
+  - Sovrin Foundation: https://sovrin.org (SSI standaarden)
+  - eIDAS 2.0 & EUDI Wallet: https://digital-strategy.ec.europa.eu/en/policies/eidas-regulation
 
 #### Performance Optimalisatie
 **Status**: Basic setup, veel ruimte voor verbetering
@@ -1740,11 +1898,12 @@ CREATE INDEX idx_audit_log_action ON ihw.audit_log(action);
 #### **Q4 2026** - Enhancement
 **Focus**: User experience en internationale ondersteuning
 1. DigiD/eHerkenning integration 🟡
-2. Multi-language support 🟢
-3. Mobile PWA 🟢
-4. Advanced reporting 🟢
+2. Yivi authenticatie integratie 🟡
+3. Multi-language support 🟢
+4. Mobile PWA 🟢
+5. Advanced reporting 🟢
 
-**Deliverable**: Enterprise-ready met internationale ondersteuning
+**Deliverable**: Enterprise-ready met internationale ondersteuning en privacyvriendelijke authenticatie opties
 
 ### Sprint Planning
 
@@ -2150,6 +2309,7 @@ jobs:
 - **Monitoring**: Sentry (errors), Vercel Analytics
 - **BRP**: Government API
 - **DigiD**: Government auth
+- **Yivi**: Privacyvriendelijke digitale identiteit (OIDC)
 - **iBurgerzaken**: Government export
 - **MijnServices**: Government service integration (Wembv requirement)
 - **EUDI/EDI Wallet**: Digital identity wallet infrastructure
@@ -2373,7 +2533,7 @@ Gebruik dit template bij het toevoegen van nieuwe features:
 |----------|-------|----------|--------|
 | 🔴 **Kritisch** | GEMMA UI, File upload, Payment, Testing | Q1 2026 | Blokkeert go-live |
 | 🔴 **Hoog** | Email, BRP export, Search, Docs | Q1-Q2 2026 | Essentieel voor adoptie |
-| 🟡 **Normaal** | Communication, Agenda, Performance, BRP integratie | Q2-Q3 2026 | Verbetert UX significant |
+| 🟡 **Normaal** | Communication, Agenda, Performance, BRP integratie, Yivi authenticatie | Q2-Q3 2026 | Verbetert UX significant |
 | 🟢 **Laag** | Multi-language, PWA, Analytics, AI features | Q3-Q4 2026 | Nice-to-have |
 | 🔧 **Tech Debt** | Tests, types, refactoring, monitoring | Continuous | Maintainability |
 
@@ -2429,6 +2589,7 @@ Gebruik dit template bij het toevoegen van nieuwe features:
 - ⏳ MijnServices registration completed
 - ⏳ Accessible PDF generation (PDF-UA compliance)
 - ⏳ Wallet integration roadmap documented
+- ⏳ Yivi authenticatie integratie (Q2-Q3 2026)
 
 **Non-functional Requirements**:
 - ⏳ Performance: <2s page load, <200ms API
@@ -2447,9 +2608,9 @@ Gebruik dit template bij het toevoegen van nieuwe features:
 
 ---
 
-**Laatste update**: 28 december 2025  
+**Laatste update**: 30 december 2025  
 **Volgende review**: 4 januari 2026 (Sprint Planning Week 1)  
-**Document versie**: 2.0  
+**Document versie**: 2.1  
 **Eigenaar**: Development Team  
 **Status**: **Actieve ontwikkeling - MVP fase**
 
