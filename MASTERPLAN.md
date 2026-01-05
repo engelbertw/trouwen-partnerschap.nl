@@ -1,6 +1,6 @@
 # Huwelijk Applicatie - Masterplan
 
-> **Laatste update**: 30 december 2025  
+> **Laatste update**: 31 december 2025  
 > **Status**: Actieve ontwikkeling
 
 ## 📋 Inhoudsopgave
@@ -1313,6 +1313,170 @@ CREATE INDEX idx_audit_log_action ON ihw.audit_log(action);
 
 **Prioriteit**: Laag (huidige architectuur werkt, refactor later)
 
+#### Data Flow Architecture Refactoring 🔴 **KRITIEK**
+**Status**: ⚠️ 15% compliant - Kritieke refactor nodig  
+**Huidige situatie**: 0 Server Actions, 55+ API routes voor mutations, 46 Client Components fetchen data
+
+**Problemen**:
+- ❌ Alle mutations via API routes (55+ routes) in plaats van Server Actions
+- ❌ 46 Client Components fetchen data via `fetch()` in plaats van Server Components
+- ❌ Zod schemas bestaan maar worden niet gebruikt in API routes (0% gebruik)
+- ❌ Handmatige validatie in plaats van Zod validatie
+- ❌ Geen `revalidatePath()` voor cache invalidation
+- ❌ Geen end-to-end type safety tussen Client en Server
+
+**Impact**:
+- Performance: Onnodige client-side fetches, extra round-trips
+- Type Safety: Geen compile-time type checking
+- Bundle Size: API route code naar client (20-30% groter)
+- Maintainability: Dubbele validatie logica
+
+**Fase 1: Quick Wins** (1-2 dagen)
+- [ ] Integreer Zod schemas in top 10 API routes (zonder refactor)
+- [ ] Voeg `revalidatePath()` toe aan alle POST/PUT/DELETE routes
+- [ ] Maak `src/app/actions/` directory structuur
+- [ ] Documenteer migratie strategie
+
+**Fase 2: Server Actions Migratie** (1-2 weken)
+**Prioriteit 1: Dossier Mutations** (5 routes)
+- [ ] `POST /api/dossier/create` → `createDossier()` Server Action
+- [ ] `PUT /api/dossier/[id]/partners` → `updatePartner()` Server Action
+- [ ] `POST /api/aankondiging/submit` → `submitAankondiging()` Server Action
+- [ ] `PUT /api/dossier/[id]/ceremonie/type` → `updateCeremonieType()` Server Action
+- [ ] `POST /api/dossier/[id]/getuigen` → `addGetuige()` Server Action
+
+**Prioriteit 2: Ceremonie Mutations** (7 routes)
+- [ ] `PUT /api/dossier/[id]/ceremonie/locatie` → `updateCeremonieLocatie()` Server Action
+- [ ] `PUT /api/dossier/[id]/ceremonie/babs` → `updateCeremonieBabs()` Server Action
+- [ ] `PUT /api/dossier/[id]/ceremonie/datum-tijd` → `updateCeremonieDatumTijd()` Server Action
+- [ ] `PUT /api/dossier/[id]/ceremonie/taal` → `updateCeremonieTaal()` Server Action
+- [ ] `PUT /api/dossier/[id]/ceremonie/wensen` → `updateCeremonieWensen()` Server Action
+- [ ] `PUT /api/dossier/[id]/ceremonie/ambtenaar-type` → `updateCeremonieAmbtenaarType()` Server Action
+- [ ] `PUT /api/dossier/[id]/ceremonie/type` → `updateCeremonieType()` Server Action
+
+**Prioriteit 3: Overige Mutations** (43 routes)
+- [ ] Gemeente beheer routes (20+ routes)
+- [ ] Admin routes (3 routes)
+- [ ] BABS routes (10+ routes)
+- [ ] Documenten routes (5+ routes)
+- [ ] Overige dossier routes (5+ routes)
+
+**Fase 3: Server Components Migratie** (1-2 weken)
+**Prioriteit 1: Top 10 Client Components** (data fetching)
+- [ ] `src/app/babs/page.tsx` → Server Component + Client Component split
+- [ ] `src/app/dossier/[id]/page.tsx` → Server Component + Client Component split
+- [ ] `src/app/dossier/[id]/samenvatting/page.tsx` → Server Component
+- [ ] `src/app/babs/ceremonies/page.tsx` → Server Component
+- [ ] `src/app/babs/beschikbaarheid/page.tsx` → Server Component
+- [ ] `src/app/gemeente/beheer/page.tsx` → Server Component
+- [ ] `src/app/admin/gebruikers/page.tsx` → Server Component
+- [ ] `src/app/dossier/[id]/getuigen/page.tsx` → Server Component
+- [ ] `src/app/dossier/[id]/documenten/page.tsx` → Server Component
+- [ ] `src/app/dossier/[id]/naamgebruik/*/page.tsx` → Server Component
+
+**Prioriteit 2: Overige Client Components** (36 routes)
+- [ ] Converteer alle overige Client Components die data fetchen
+- [ ] Test elke conversie end-to-end
+- [ ] Update documentatie
+
+**Success Metrics**:
+- ✅ 55+ Server Actions (nu: 0)
+- ✅ 0 Client Components fetchen data (nu: 46)
+- ✅ 100% Zod schema gebruik (nu: 0%)
+- ✅ Bundle size reductie: 20-30%
+- ✅ TTFB verbetering: -30%
+- ✅ FCP verbetering: -20%
+
+**Timeline**:
+- Week 1: Fase 1 (Quick Wins) + Eerste 5 Server Actions
+- Week 2: Fase 2 Prioriteit 1 & 2 (12 routes)
+- Week 3-4: Fase 3 Prioriteit 1 (10 Client Components)
+- Week 5-6: Fase 2 Prioriteit 3 + Fase 3 Prioriteit 2
+
+**Risico's & Mitigatie**:
+- Breaking changes: Parallel run (API routes blijven werken tijdens migratie)
+- Performance regressie: Monitoring + performance tests
+- Type errors: Geleidelijke migratie + TypeScript strict mode
+
+**Prioriteit**: 🔴 **KRITIEK** (breekt Next.js 15 best practices, impact op performance en maintainability)
+
+#### Drizzle ORM Compliance & Best Practices 🔧
+**Status**: ✅ 85% compliant - Verbeteringen mogelijk  
+**Huidige situatie**: Drizzle ORM wordt gebruikt, maar niet altijd volgens best practices
+
+**Wat goed gaat**:
+- ✅ Alle database operaties gebruiken Drizzle ORM (geen raw SQL in applicatie code)
+- ✅ TypeScript types worden gebruikt (NewDossier, Dossier, etc.)
+- ✅ Transactions worden gebruikt voor multi-step operaties (4 routes)
+- ✅ Schema imports zijn correct (`@/db` en `@/db/schema`)
+
+**Verbeterpunten**:
+- ⚠️ Relational queries (`db.query.*`) worden weinig gebruikt (slechts 4 matches)
+- ⚠️ TypeScript types (NewDossier, Dossier) worden niet overal gebruikt voor type safety
+- ⚠️ Error handling kan verbeterd worden (niet alle operaties hebben try-catch)
+- ⚠️ Pagination ontbreekt op veel queries
+- ⚠️ Performance optimalisaties (indexes, relation limiting) kunnen beter
+
+**Acties**:
+
+**Fase 1: Type Safety Verbetering** (1 week)
+- [ ] Audit alle database operaties op gebruik van TypeScript types
+- [ ] Voeg `NewDossier`, `NewPartner`, `NewCeremonie` types toe aan alle inserts
+- [ ] Voeg `Dossier`, `Partner`, `Ceremonie` types toe aan alle selects
+- [ ] Documenteer type usage patterns
+
+**Fase 2: Relational Queries Migratie** (1-2 weken)
+- [ ] Identificeer queries die nested data fetchen
+- [ ] Converteer naar relational queries (`db.query.*`) waar mogelijk
+- [ ] Voeg `with` clauses toe voor type-safe nested data
+- [ ] Test performance impact
+
+**Prioriteit 1: Dossier queries** (10 routes)
+- [ ] `GET /api/dossier/[id]` → gebruik `db.query.dossier.findFirst` met `with`
+- [ ] `GET /api/dossier/[id]/partners` → gebruik relational query
+- [ ] `GET /api/dossier/[id]/samenvatting` → gebruik relational query
+- [ ] `GET /api/dossier/[id]/ceremonie/*` → gebruik relational query
+- [ ] Overige dossier GET routes
+
+**Prioriteit 2: Overige queries** (30+ routes)
+- [ ] Gemeente lookup routes
+- [ ] BABS routes
+- [ ] Ceremonie routes
+
+**Fase 3: Error Handling** (3-5 dagen)
+- [ ] Audit alle database operaties op try-catch
+- [ ] Voeg error handling toe aan routes zonder try-catch
+- [ ] Standaardiseer error response format
+- [ ] Voeg logging toe voor database errors
+
+**Fase 4: Performance Optimalisatie** (1 week)
+- [ ] Audit queries op gebruik van indexes
+- [ ] Voeg pagination toe aan list queries
+- [ ] Limiteer relations in queries (alleen wat nodig is)
+- [ ] Review slow queries en optimaliseer
+
+**Fase 5: Code Quality** (2-3 dagen)
+- [ ] Review `scripts/deploy-database.js` - gebruikt direct `pg` Client (OK voor scripts, maar documenteer)
+- [ ] Controleer op string concatenation in queries (SQL injection risico)
+- [ ] Voeg JSDoc comments toe aan complexe queries
+- [ ] Documenteer query patterns
+
+**Success Metrics**:
+- ✅ 100% TypeScript type usage voor database operaties
+- ✅ 50%+ queries gebruiken relational queries waar mogelijk
+- ✅ 100% error handling coverage
+- ✅ Pagination op alle list endpoints
+- ✅ Performance: <200ms voor alle queries
+
+**Timeline**:
+- Week 1: Fase 1 (Type Safety)
+- Week 2-3: Fase 2 (Relational Queries)
+- Week 4: Fase 3 (Error Handling)
+- Week 5: Fase 4 (Performance)
+- Week 6: Fase 5 (Code Quality)
+
+**Prioriteit**: Normaal (verbetert type safety, performance en maintainability)
+
 #### Type Safety
 - [ ] Stricter TypeScript config (enable strict mode)
 - [ ] Remove `any` types (replace met proper types)
@@ -2608,9 +2772,9 @@ Gebruik dit template bij het toevoegen van nieuwe features:
 
 ---
 
-**Laatste update**: 30 december 2025  
+**Laatste update**: 31 december 2025  
 **Volgende review**: 4 januari 2026 (Sprint Planning Week 1)  
-**Document versie**: 2.1  
+**Document versie**: 2.2  
 **Eigenaar**: Development Team  
 **Status**: **Actieve ontwikkeling - MVP fase**
 

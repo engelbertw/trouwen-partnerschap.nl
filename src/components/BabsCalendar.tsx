@@ -148,7 +148,7 @@ export function BabsCalendar({
           border: 1px solid #d1d5db;
           background: white;
           color: #374151;
-          border-radius: 0.375rem;
+          border-radius: 0.25rem;
           font-size: 0.875rem;
           cursor: pointer;
           transition: all 0.2s;
