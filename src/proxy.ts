@@ -3,6 +3,7 @@ import { clerkClient } from '@clerk/nextjs/server';
 
 // Define public routes that don't require authentication
 const isPublicRoute = createRouteMatcher([
+  '/',                      // Home page
   '/sign-in(.*)',
   '/sign-up(.*)',
   '/sso-callback(.*)',
@@ -79,7 +80,7 @@ export default clerkMiddleware(async (auth, req) => {
         }
       }
     } catch (error) {
-      console.error('Error checking user role in middleware:', error);
+      console.error('Error checking user role in proxy:', error);
       // On error, allow through (will be checked in page/API route)
     }
   }

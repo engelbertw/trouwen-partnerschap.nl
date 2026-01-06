@@ -1,7 +1,7 @@
 'use client';
 
 import type { JSX } from 'react';
-import { SignInButton, SignUpButton, UserButton, SignedIn, SignedOut } from '@clerk/nextjs';
+import { SignInButton, SignUpButton, UserButton, useAuth } from '@clerk/nextjs';
 import { Button } from '@utrecht/component-library-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -14,12 +14,26 @@ import { GemeenteLogo } from './GemeenteLogo';
  */
 export function Header(): JSX.Element {
   const pathname = usePathname();
+  const { isSignedIn, isLoaded } = useAuth();
   const isFormPage = pathname?.startsWith('/000-aankondiging');
   const isDossierPage = pathname?.startsWith('/dossier/');
   const isGetuigenPage = pathname === '/getuigen';
   
-  // Hide header on pages that have their own custom header
-  const hideHeader = isFormPage || isDossierPage || isGetuigenPage;
+  // Hide header only on pages that have their own custom header (not form pages)
+  const hideHeader = isDossierPage || isGetuigenPage;
+
+  // Debug logging
+  if (typeof window !== 'undefined') {
+    console.log('[Header Debug]', {
+      pathname,
+      isFormPage,
+      isDossierPage,
+      isGetuigenPage,
+      hideHeader,
+      isSignedIn,
+      isLoaded,
+    });
+  }
 
   if (hideHeader) {
     return <></>;
@@ -63,28 +77,36 @@ export function Header(): JSX.Element {
           )}
 
           {/* Authenticatie knoppen */}
-          <SignedOut>
-            <SignInButton mode="modal">
-              <Button appearance="secondary-action-button">
-                Inloggen
-              </Button>
-            </SignInButton>
-            <SignUpButton mode="modal">
-              <Button appearance="primary-action-button">
-                Registreren
-              </Button>
-            </SignUpButton>
-          </SignedOut>
-          <SignedIn>
-            <UserButton 
-              afterSignOutUrl="/"
-              appearance={{
-                elements: {
-                  avatarBox: 'w-10 h-10',
-                },
-              }}
-            />
-          </SignedIn>
+          {isLoaded ? (
+            <>
+              {!isSignedIn ? (
+                <>
+                  <SignInButton mode="modal">
+                    <Button appearance="secondary-action-button">
+                      Inloggen
+                    </Button>
+                  </SignInButton>
+                  <SignUpButton mode="modal">
+                    <Button appearance="primary-action-button">
+                      Registreren
+                    </Button>
+                  </SignUpButton>
+                </>
+              ) : (
+                <UserButton 
+                  afterSignOutUrl="/"
+                  appearance={{
+                    elements: {
+                      avatarBox: 'w-10 h-10',
+                    },
+                  }}
+                />
+              )}
+            </>
+          ) : (
+            // Show loading state or fallback while Clerk is loading
+            <div className="w-10 h-10" />
+          )}
         </nav>
       </div>
     </header>
