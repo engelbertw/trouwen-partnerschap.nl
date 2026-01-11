@@ -55,7 +55,7 @@ export default function RootLayout({
       appearance={{
         baseTheme: dark,
         variables: {
-          colorPrimary: '#154273', // NL Design System primary color
+          colorPrimary: '#2e75d4', // NL Design System primary color
           fontFamily: notoSans.style.fontFamily,
           fontSize: '1rem',
         },

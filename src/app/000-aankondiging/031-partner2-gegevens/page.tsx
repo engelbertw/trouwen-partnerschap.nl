@@ -395,7 +395,7 @@ function Partner2GegevensContent(): JSX.Element {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100">
       {/* Blue header bar */}
-      <div className="bg-[#154273] text-white py-4 px-4 sm:px-6 lg:px-8">
+      <div className="bg-[#004A91] text-white py-4 px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto max-w-4xl">
           <h1 className="font-sans text-xl font-bold">
             Huwelijk of partnerschap aankondigen
@@ -428,7 +428,7 @@ function Partner2GegevensContent(): JSX.Element {
           {/* Previous step link */}
           <Link
             href={dossierId ? `/000-aankondiging/030-partner2-login?dossierId=${dossierId}` : '/000-aankondiging/030-partner2-login'}
-            className="inline-flex items-center gap-2 text-[#154273] hover:text-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 mb-6 transition-colors"
+            className="inline-flex items-center gap-2 text-[#2e75d4] hover:text-[#4d8ada] focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 mb-6 transition-colors"
           >
             <svg 
               className="w-4 h-4" 
@@ -456,7 +456,7 @@ function Partner2GegevensContent(): JSX.Element {
           <div className="mb-8">
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div 
-                className="bg-[#154273] h-2 rounded-full transition-all duration-300"
+                className="bg-[#2e75d4] h-2 rounded-full transition-all duration-300"
                 style={{ width: '50%' }}
                 role="progressbar"
                 aria-valuenow={50}
@@ -489,7 +489,7 @@ function Partner2GegevensContent(): JSX.Element {
                 id="voornamen"
                 value={formData.voornamen}
                 onChange={(e) => handleInputChange('voornamen', e.target.value)}
-                className={`w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 ${
+                className={`w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 ${
                   validationErrors.voornamen ? 'border-red-600' : 'border-gray-300'
                 }`}
                 required
@@ -513,7 +513,7 @@ function Partner2GegevensContent(): JSX.Element {
                 id="geslachtsnaam"
                 value={formData.geslachtsnaam}
                 onChange={(e) => handleInputChange('geslachtsnaam', e.target.value)}
-                className={`w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 ${
+                className={`w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 ${
                   validationErrors.geslachtsnaam ? 'border-red-600' : 'border-gray-300'
                 }`}
                 required
@@ -538,7 +538,7 @@ function Partner2GegevensContent(): JSX.Element {
                 value={formData.geboortedatum}
                 onChange={(e) => handleInputChange('geboortedatum', e.target.value)}
                 max={new Date().toISOString().split('T')[0]} // Cannot select future dates
-                className={`w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 ${
+                className={`w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 ${
                   validationErrors.geboortedatum ? 'border-red-600' : 'border-gray-300'
                 }`}
                 required
@@ -563,7 +563,7 @@ function Partner2GegevensContent(): JSX.Element {
                 id="geboorteplaats"
                 value={formData.geboorteplaats}
                 onChange={(e) => handleInputChange('geboorteplaats', e.target.value)}
-                className={`w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 ${
+                className={`w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 ${
                   validationErrors.geboorteplaats ? 'border-red-600' : 'border-gray-300'
                 }`}
                 required
@@ -587,7 +587,7 @@ function Partner2GegevensContent(): JSX.Element {
                 id="geboorteland"
                 value={formData.geboorteland}
                 onChange={(e) => handleInputChange('geboorteland', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2"
+                className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2"
                 required
               />
             </div>
@@ -602,7 +602,7 @@ function Partner2GegevensContent(): JSX.Element {
                 id="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                className={`w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 ${
+                className={`w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 ${
                   validationErrors.email ? 'border-red-600' : 'border-gray-300'
                 }`}
                 aria-invalid={!!validationErrors.email}
@@ -625,7 +625,7 @@ function Partner2GegevensContent(): JSX.Element {
                 id="telefoon"
                 value={formData.telefoon}
                 onChange={(e) => handleInputChange('telefoon', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2"
+                className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2"
               />
             </div>
 
@@ -641,7 +641,7 @@ function Partner2GegevensContent(): JSX.Element {
                       type="checkbox"
                       checked={usePartner1Address}
                       onChange={(e) => handleUsePartner1AddressChange(e.target.checked)}
-                      className="mt-1 mr-3 w-5 h-5 text-[#154273] border-gray-300 rounded focus:ring-2 focus:ring-[#154273] focus:ring-offset-2"
+                      className="mt-1 mr-3 w-5 h-5 text-[#2e75d4] border-gray-300 rounded focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2"
                     />
                     <div className="flex-1">
                       <span className="block text-sm font-bold text-gray-900 mb-1">
@@ -675,7 +675,7 @@ function Partner2GegevensContent(): JSX.Element {
                   onChange={(e) => handleInputChange('adres', e.target.value)}
                   placeholder="bijv. Kerkstraat 12"
                   disabled={usePartner1Address}
-                  className={`w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 ${
+                  className={`w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 ${
                     usePartner1Address ? 'bg-gray-100 cursor-not-allowed' : ''
                   }`}
                 />
@@ -701,7 +701,7 @@ function Partner2GegevensContent(): JSX.Element {
                   placeholder="1234AB"
                   maxLength={7}
                   disabled={usePartner1Address}
-                  className={`w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 ${
+                  className={`w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 ${
                     validationErrors.postcode ? 'border-red-600' : 'border-gray-300'
                   } ${usePartner1Address ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                   aria-invalid={!!validationErrors.postcode}
@@ -727,7 +727,7 @@ function Partner2GegevensContent(): JSX.Element {
                   onChange={(e) => handleInputChange('plaats', e.target.value)}
                   placeholder="bijv. Amsterdam"
                   disabled={usePartner1Address}
-                  className={`w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 ${
+                  className={`w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 ${
                     usePartner1Address ? 'bg-gray-100 cursor-not-allowed' : ''
                   }`}
                 />
@@ -741,7 +741,7 @@ function Partner2GegevensContent(): JSX.Element {
               type="button"
               onClick={handleSave}
               disabled={isSaving || isSaved}
-              className="inline-flex items-center justify-center gap-2 bg-[#154273] text-white font-sans text-base font-bold px-6 py-3 rounded hover:bg-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center justify-center gap-2 bg-[#2e75d4] text-white font-sans text-base font-bold px-6 py-3 rounded hover:bg-[#4d8ada] focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSaving ? (
                 <>

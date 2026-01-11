@@ -8,7 +8,7 @@ import type { AankondigingData } from './aankondiging-storage';
 
 // NL Design System kleuren
 const COLORS = {
-  primary: '#154273',
+  primary: '#2e75d4',
   text: '#1a1a1a',
   textLight: '#5a5a5a',
   border: '#d4d4d4',

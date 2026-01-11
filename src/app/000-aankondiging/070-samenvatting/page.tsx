@@ -199,7 +199,7 @@ function SamenvattingContent(): JSX.Element {
                   <p className="text-sm text-red-800 mb-4">{error || 'Geen gegevens gevonden'}</p>
                   <button
                     onClick={() => router.push('/000-aankondiging/010-aankondiging')}
-                    className="inline-flex items-center gap-2 bg-[#154273] text-white font-sans text-sm font-bold px-4 py-2 rounded hover:bg-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 transition-colors"
+                    className="inline-flex items-center gap-2 bg-[#2e75d4] text-white font-sans text-sm font-bold px-4 py-2 rounded hover:bg-[#4d8ada] focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 transition-colors"
                   >
                     Start opnieuw
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -246,7 +246,7 @@ function SamenvattingContent(): JSX.Element {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100">
       {/* Header */}
-      <header className="bg-[#154273] text-white py-4 px-4 sm:px-6 lg:px-8">
+      <header className="bg-[#004A91] text-white py-4 px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto max-w-4xl flex items-center justify-between">
           <div className="flex items-center gap-4">
             <GemeenteLogoCompact />
@@ -275,7 +275,7 @@ function SamenvattingContent(): JSX.Element {
       </header>
 
       {/* Blue bar */}
-      <div className="bg-[#154273] text-white py-3 px-4 sm:px-6 lg:px-8 border-t border-white/20">
+      <div className="bg-[#004A91] text-white py-3 px-4 sm:px-6 lg:px-8 border-t border-white/20">
         <div className="container mx-auto max-w-4xl">
           <h1 className="text-lg font-normal">Huwelijk of partnerschap aankondigen</h1>
         </div>
@@ -287,7 +287,7 @@ function SamenvattingContent(): JSX.Element {
           {/* Previous step link */}
           <Link
             href={dossierId ? `/000-aankondiging/060-bloedverwantschap?dossierId=${dossierId}` : '/000-aankondiging/060-bloedverwantschap'}
-            className="inline-flex items-center text-[#154273] hover:text-[#1a5a99] mb-6 text-sm"
+            className="inline-flex items-center text-[#2e75d4] hover:text-[#4d8ada] mb-6 text-sm"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -308,7 +308,7 @@ function SamenvattingContent(): JSX.Element {
           <div className="mb-8">
             <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
               <div
-                className="h-full bg-[#154273] transition-all"
+                className="h-full bg-[#2e75d4] transition-all"
                 style={{ width: '80%' }}
                 role="progressbar"
                 aria-valuenow={80}
@@ -332,7 +332,7 @@ function SamenvattingContent(): JSX.Element {
                 <h3 className="font-bold text-lg">Aankondiging</h3>
                 <button 
                   onClick={() => router.push(dossierId ? `/000-aankondiging/010-aankondiging?dossierId=${dossierId}` : '/000-aankondiging/010-aankondiging')}
-                  className="text-[#154273] hover:text-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 rounded p-1"
+                  className="text-[#2e75d4] hover:text-[#4d8ada] focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 rounded p-1"
                   aria-label="Bewerk aankondiging"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -432,7 +432,7 @@ function SamenvattingContent(): JSX.Element {
                 <h3 className="font-bold text-lg">Curatele</h3>
                 <button 
                   onClick={() => router.push(dossierId ? `/000-aankondiging/040-curatele?dossierId=${dossierId}` : '/000-aankondiging/040-curatele')}
-                  className="text-[#154273] hover:text-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 rounded p-1"
+                  className="text-[#2e75d4] hover:text-[#4d8ada] focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 rounded p-1"
                   aria-label="Bewerk curatele"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -469,7 +469,7 @@ function SamenvattingContent(): JSX.Element {
                 <h3 className="font-bold text-lg">Kinderen uit een ander huwelijk</h3>
                 <button 
                   onClick={() => router.push(dossierId ? `/000-aankondiging/050-kinderen?dossierId=${dossierId}` : '/000-aankondiging/050-kinderen')}
-                  className="text-[#154273] hover:text-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 rounded p-1"
+                  className="text-[#2e75d4] hover:text-[#4d8ada] focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 rounded p-1"
                   aria-label="Bewerk kinderen"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -515,7 +515,7 @@ function SamenvattingContent(): JSX.Element {
                 <h3 className="font-bold text-lg">Bloedverwantschap</h3>
                 <button 
                   onClick={() => router.push(dossierId ? `/000-aankondiging/060-bloedverwantschap?dossierId=${dossierId}` : '/000-aankondiging/060-bloedverwantschap')}
-                  className="text-[#154273] hover:text-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 rounded p-1"
+                  className="text-[#2e75d4] hover:text-[#4d8ada] focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 rounded p-1"
                   aria-label="Bewerk bloedverwantschap"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -537,7 +537,7 @@ function SamenvattingContent(): JSX.Element {
                 type="checkbox"
                 checked={confirmationChecked}
                 onChange={(e) => setConfirmationChecked(e.target.checked)}
-                className="w-5 h-5 text-[#154273] border-gray-300 rounded focus:ring-2 focus:ring-[#154273] mt-0.5"
+                className="w-5 h-5 text-[#2e75d4] border-gray-300 rounded focus:ring-2 focus:ring-[#2e75d4] mt-0.5"
               />
               <span className="text-base text-gray-900">
                 Alle bovenstaande gegevens kloppen.
@@ -550,7 +550,7 @@ function SamenvattingContent(): JSX.Element {
             <button
               onClick={handleContinue}
               disabled={!confirmationChecked}
-              className="inline-flex items-center justify-center gap-2 bg-[#154273] text-white font-sans text-base font-bold px-6 py-3 rounded hover:bg-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center justify-center gap-2 bg-[#2e75d4] text-white font-sans text-base font-bold px-6 py-3 rounded hover:bg-[#4d8ada] focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Ga naar ondertekenen
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -560,7 +560,7 @@ function SamenvattingContent(): JSX.Element {
 
             <button
               onClick={handleDownloadPDF}
-              className="inline-flex items-center gap-2 text-[#154273] hover:text-[#1a5a99] font-medium underline focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2"
+              className="inline-flex items-center gap-2 text-[#2e75d4] hover:text-[#4d8ada] font-medium underline focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -570,7 +570,7 @@ function SamenvattingContent(): JSX.Element {
 
             <button
               onClick={handleSaveForLater}
-              className="text-[#154273] hover:text-[#1a5a99] underline text-sm"
+              className="text-[#2e75d4] hover:text-[#4d8ada] underline text-sm"
             >
               Opslaan en later verder
             </button>

@@ -339,7 +339,7 @@ function KinderenContent(): JSX.Element | null {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100">
       {/* Blue header bar */}
-      <div className="bg-[#154273] text-white py-4 px-4 sm:px-6 lg:px-8">
+      <div className="bg-[#004A91] text-white py-4 px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto max-w-4xl">
           <h1 className="font-sans text-xl font-bold">
             Huwelijk of partnerschap aankondigen
@@ -353,7 +353,7 @@ function KinderenContent(): JSX.Element | null {
           {/* Previous step link */}
           <Link
             href="/000-aankondiging/040-curatele"
-            className="inline-flex items-center gap-2 text-[#154273] hover:text-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 mb-6 transition-colors"
+            className="inline-flex items-center gap-2 text-[#2e75d4] hover:text-[#4d8ada] focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 mb-6 transition-colors"
           >
             <svg 
               className="w-4 h-4" 
@@ -381,7 +381,7 @@ function KinderenContent(): JSX.Element | null {
           <div className="mb-8">
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div 
-                className="bg-[#154273] h-2 rounded-full transition-all duration-300"
+                className="bg-[#2e75d4] h-2 rounded-full transition-all duration-300"
                 style={{ width: '70%' }}
                 role="progressbar"
                 aria-valuenow={70}
@@ -408,7 +408,7 @@ function KinderenContent(): JSX.Element | null {
                   value="ja"
                   checked={partner1HasChildren === true}
                   onChange={() => setPartner1HasChildren(true)}
-                  className="w-5 h-5 text-[#154273] border-gray-300 focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 cursor-pointer"
+                  className="w-5 h-5 text-[#2e75d4] border-gray-300 focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 cursor-pointer"
                 />
                 <label 
                   htmlFor="partner1-children-ja" 
@@ -427,7 +427,7 @@ function KinderenContent(): JSX.Element | null {
                   value="nee"
                   checked={partner1HasChildren === false}
                   onChange={() => setPartner1HasChildren(false)}
-                  className="w-5 h-5 text-[#154273] border-gray-300 focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 cursor-pointer"
+                  className="w-5 h-5 text-[#2e75d4] border-gray-300 focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 cursor-pointer"
                 />
                 <label 
                   htmlFor="partner1-children-nee" 
@@ -530,7 +530,7 @@ function KinderenContent(): JSX.Element | null {
                       type="text"
                       value={child.voornamen}
                       disabled
-                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#154273] bg-gray-50"
+                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#2e75d4] bg-gray-50"
                     />
                   </div>
 
@@ -543,7 +543,7 @@ function KinderenContent(): JSX.Element | null {
                       type="text"
                       value={child.achternaam}
                       disabled
-                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#154273] bg-gray-50"
+                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#2e75d4] bg-gray-50"
                     />
                   </div>
 
@@ -556,7 +556,7 @@ function KinderenContent(): JSX.Element | null {
                       type="text"
                       value={child.geboortedatum}
                       disabled
-                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#154273] bg-gray-50"
+                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#2e75d4] bg-gray-50"
                     />
                   </div>
 
@@ -587,7 +587,7 @@ function KinderenContent(): JSX.Element | null {
                     id="new-voornamen"
                     value={newChild1.voornamen}
                     onChange={(e) => setNewChild1({ ...newChild1, voornamen: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#154273]"
+                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#2e75d4]"
                     placeholder=""
                   />
                 </div>
@@ -602,7 +602,7 @@ function KinderenContent(): JSX.Element | null {
                     id="new-achternaam"
                     value={newChild1.achternaam}
                     onChange={(e) => setNewChild1({ ...newChild1, achternaam: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#154273]"
+                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#2e75d4]"
                     placeholder=""
                   />
                 </div>
@@ -617,7 +617,7 @@ function KinderenContent(): JSX.Element | null {
                     id="new-geboortedatum"
                     value={newChild1.geboortedatum}
                     onChange={(e) => setNewChild1({ ...newChild1, geboortedatum: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#154273]"
+                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#2e75d4]"
                     placeholder="dd-mm-jjjj"
                     required
                     max={new Date().toISOString().split('T')[0]}
@@ -629,7 +629,7 @@ function KinderenContent(): JSX.Element | null {
               <button
                 onClick={addChild1}
                 disabled={!newChild1.voornamen || !newChild1.achternaam || !newChild1.geboortedatum || (child1ValidationResult !== null && !child1ValidationResult.isValid)}
-                className="inline-flex items-center gap-2 bg-white text-[#154273] font-sans text-base font-bold px-5 py-3 rounded border-2 border-[#154273] hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white"
+                className="inline-flex items-center gap-2 bg-white text-[#2e75d4] font-sans text-base font-bold px-5 py-3 rounded border-2 border-[#2e75d4] hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -655,7 +655,7 @@ function KinderenContent(): JSX.Element | null {
                   value="ja"
                   checked={partner2HasChildren === true}
                   onChange={() => setPartner2HasChildren(true)}
-                  className="w-5 h-5 text-[#154273] border-gray-300 focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 cursor-pointer"
+                  className="w-5 h-5 text-[#2e75d4] border-gray-300 focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 cursor-pointer"
                 />
                 <label 
                   htmlFor="partner2-children-ja" 
@@ -674,7 +674,7 @@ function KinderenContent(): JSX.Element | null {
                   value="nee"
                   checked={partner2HasChildren === false}
                   onChange={() => setPartner2HasChildren(false)}
-                  className="w-5 h-5 text-[#154273] border-gray-300 focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 cursor-pointer"
+                  className="w-5 h-5 text-[#2e75d4] border-gray-300 focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 cursor-pointer"
                 />
                 <label 
                   htmlFor="partner2-children-nee" 
@@ -739,7 +739,7 @@ function KinderenContent(): JSX.Element | null {
                       type="text"
                       value={child.voornamen}
                       disabled
-                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#154273] bg-gray-50"
+                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#2e75d4] bg-gray-50"
                     />
                   </div>
 
@@ -752,7 +752,7 @@ function KinderenContent(): JSX.Element | null {
                       type="text"
                       value={child.achternaam}
                       disabled
-                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#154273] bg-gray-50"
+                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#2e75d4] bg-gray-50"
                     />
                   </div>
 
@@ -765,7 +765,7 @@ function KinderenContent(): JSX.Element | null {
                       type="text"
                       value={child.geboortedatum}
                       disabled
-                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#154273] bg-gray-50"
+                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#2e75d4] bg-gray-50"
                     />
                   </div>
 
@@ -796,7 +796,7 @@ function KinderenContent(): JSX.Element | null {
                     id="new-voornamen-p2"
                     value={newChild2.voornamen}
                     onChange={(e) => setNewChild2({ ...newChild2, voornamen: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#154273]"
+                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#2e75d4]"
                     placeholder=""
                   />
                 </div>
@@ -811,7 +811,7 @@ function KinderenContent(): JSX.Element | null {
                     id="new-achternaam-p2"
                     value={newChild2.achternaam}
                     onChange={(e) => setNewChild2({ ...newChild2, achternaam: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#154273]"
+                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#2e75d4]"
                     placeholder=""
                   />
                 </div>
@@ -826,7 +826,7 @@ function KinderenContent(): JSX.Element | null {
                     id="new-geboortedatum-p2"
                     value={newChild2.geboortedatum}
                     onChange={(e) => setNewChild2({ ...newChild2, geboortedatum: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#154273]"
+                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#2e75d4]"
                     placeholder="dd-mm-jjjj"
                     required
                     max={new Date().toISOString().split('T')[0]}
@@ -838,7 +838,7 @@ function KinderenContent(): JSX.Element | null {
               <button
                 onClick={addChild2}
                 disabled={!newChild2.voornamen || !newChild2.achternaam || !newChild2.geboortedatum || (child2ValidationResult !== null && !child2ValidationResult.isValid)}
-                className="inline-flex items-center gap-2 bg-white text-[#154273] font-sans text-base font-bold px-5 py-3 rounded border-2 border-[#154273] hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white"
+                className="inline-flex items-center gap-2 bg-white text-[#2e75d4] font-sans text-base font-bold px-5 py-3 rounded border-2 border-[#2e75d4] hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -872,7 +872,7 @@ function KinderenContent(): JSX.Element | null {
             <button
               onClick={handleContinue}
               disabled={isSaving}
-              className="inline-flex items-center justify-center gap-2 bg-[#154273] text-white font-sans text-base font-bold px-6 py-3 rounded hover:bg-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center justify-center gap-2 bg-[#2e75d4] text-white font-sans text-base font-bold px-6 py-3 rounded hover:bg-[#4d8ada] focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSaving ? 'Opslaan...' : 'Volgende stap'}
               {!isSaving && (

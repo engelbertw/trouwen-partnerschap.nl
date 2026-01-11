@@ -8,3 +8,4 @@ ADD COLUMN IF NOT EXISTS bloedverwantschap boolean NOT NULL DEFAULT false;
 COMMENT ON COLUMN ihw.aankondiging.bloedverwantschap IS 'Indicates if the partners are blood relatives (parents, children, siblings, cousins)';
 
 
+

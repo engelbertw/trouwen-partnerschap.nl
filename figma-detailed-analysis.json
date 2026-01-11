@@ -1,0 +1,378 @@
+{
+  "timestamp": "2026-01-11T07:33:01.711Z",
+  "summary": {
+    "total": 61,
+    "high": 11,
+    "medium": 44,
+    "low": 6,
+    "withUtrecht": 26,
+    "withoutUtrecht": 35
+  },
+  "byCategory": [
+    {
+      "category": "input",
+      "count": 9,
+      "high": 9,
+      "medium": 0,
+      "low": 0
+    },
+    {
+      "category": "icon",
+      "count": 3,
+      "high": 2,
+      "medium": 1,
+      "low": 0
+    },
+    {
+      "category": "button",
+      "count": 1,
+      "high": 0,
+      "medium": 1,
+      "low": 0
+    },
+    {
+      "category": "feedback",
+      "count": 4,
+      "high": 0,
+      "medium": 4,
+      "low": 0
+    },
+    {
+      "category": "other",
+      "count": 41,
+      "high": 0,
+      "medium": 38,
+      "low": 3
+    },
+    {
+      "category": "layout",
+      "count": 3,
+      "high": 0,
+      "medium": 0,
+      "low": 3
+    }
+  ],
+  "highPriority": [
+    {
+      "name": "Selected=False, State=Default",
+      "category": "input",
+      "utrecht": "@utrecht/component-library-react Select",
+      "notes": [
+        "Gebruik: <Textbox> of <Select> van Utrecht",
+        "Check of placeholder en error states nodig zijn"
+      ]
+    },
+    {
+      "name": "Selected=True, State=Default",
+      "category": "input",
+      "utrecht": "@utrecht/component-library-react Select",
+      "notes": [
+        "Gebruik: <Textbox> of <Select> van Utrecht",
+        "Check of placeholder en error states nodig zijn"
+      ]
+    },
+    {
+      "name": "Selected=True, Indeterminate=False, State=Default",
+      "category": "input",
+      "utrecht": "@utrecht/component-library-react Select",
+      "notes": [
+        "Gebruik: <Textbox> of <Select> van Utrecht",
+        "Check of placeholder en error states nodig zijn"
+      ]
+    },
+    {
+      "name": "Selected=False, Indeterminate=False, State=Default",
+      "category": "input",
+      "utrecht": "@utrecht/component-library-react Select",
+      "notes": [
+        "Gebruik: <Textbox> of <Select> van Utrecht",
+        "Check of placeholder en error states nodig zijn"
+      ]
+    },
+    {
+      "name": "State=Selected",
+      "category": "input",
+      "utrecht": "@utrecht/component-library-react Select",
+      "notes": [
+        "Gebruik: <Textbox> of <Select> van Utrecht",
+        "Check of placeholder en error states nodig zijn"
+      ]
+    },
+    {
+      "name": "Selected=True, Indeterminate=False, State=Disabled",
+      "category": "input",
+      "utrecht": "@utrecht/component-library-react Select",
+      "notes": [
+        "Gebruik: <Textbox> of <Select> van Utrecht",
+        "Check of placeholder en error states nodig zijn"
+      ]
+    },
+    {
+      "name": "State=Selected",
+      "category": "input",
+      "utrecht": "@utrecht/component-library-react Select",
+      "notes": [
+        "Gebruik: <Textbox> of <Select> van Utrecht",
+        "Check of placeholder en error states nodig zijn"
+      ]
+    },
+    {
+      "name": "Input validation",
+      "category": "input",
+      "utrecht": "@utrecht/component-library-react Textbox",
+      "notes": [
+        "Gebruik: <Textbox> of <Select> van Utrecht",
+        "Check of placeholder en error states nodig zijn"
+      ]
+    },
+    {
+      "name": "Selected=False, Indeterminate=True, State=Default",
+      "category": "input",
+      "utrecht": "@utrecht/component-library-react Select",
+      "notes": [
+        "Gebruik: <Textbox> of <Select> van Utrecht",
+        "Check of placeholder en error states nodig zijn"
+      ]
+    },
+    {
+      "name": "icon/icon-success",
+      "category": "icon",
+      "utrecht": "@utrecht/component-library-react Icon",
+      "notes": [
+        "Gebruik Utrecht Icon met success variant",
+        "Of gebruik SVG icon met success kleur"
+      ]
+    },
+    {
+      "name": "icon/icon-info",
+      "category": "icon",
+      "utrecht": "@utrecht/component-library-react Icon",
+      "notes": [
+        "Gebruik Utrecht Icon met info variant",
+        "Of gebruik SVG icon met info kleur"
+      ]
+    }
+  ],
+  "mediumPriority": [
+    {
+      "name": "Radio Button List",
+      "category": "button",
+      "utrecht": "@utrecht/component-library-react Button"
+    },
+    {
+      "name": "icon/icon-warning",
+      "category": "icon",
+      "utrecht": "@utrecht/component-library-react Icon"
+    },
+    {
+      "name": "Property 1=Error",
+      "category": "feedback",
+      "utrecht": null
+    },
+    {
+      "name": "Status=Success",
+      "category": "feedback",
+      "utrecht": null
+    },
+    {
+      "name": "Property 1=Success",
+      "category": "feedback",
+      "utrecht": null
+    },
+    {
+      "name": "Status=Idle",
+      "category": "feedback",
+      "utrecht": null
+    },
+    {
+      "name": "Type=Secondary, State=Default",
+      "category": "other",
+      "utrecht": "@utrecht/component-library-react Button"
+    },
+    {
+      "name": "Label type=Info",
+      "category": "other",
+      "utrecht": "@utrecht/component-library-react Label"
+    },
+    {
+      "name": "Type=Primary, State=Default",
+      "category": "other",
+      "utrecht": "@utrecht/component-library-react Button"
+    },
+    {
+      "name": "State=Default",
+      "category": "other",
+      "utrecht": null
+    },
+    {
+      "name": "Type=Primary, State=Disabled",
+      "category": "other",
+      "utrecht": "@utrecht/component-library-react Button"
+    },
+    {
+      "name": "State=Default, Placeholder=False",
+      "category": "other",
+      "utrecht": null
+    },
+    {
+      "name": "State=Default, Placeholder text=False",
+      "category": "other",
+      "utrecht": "@utrecht/component-library-react Paragraph"
+    },
+    {
+      "name": "State=Default, Placeholder=True",
+      "category": "other",
+      "utrecht": null
+    },
+    {
+      "name": "State=Default, Placeholder text=True",
+      "category": "other",
+      "utrecht": "@utrecht/component-library-react Paragraph"
+    },
+    {
+      "name": "State=Disabled",
+      "category": "other",
+      "utrecht": null
+    },
+    {
+      "name": "State=Default, Placeholder text=True",
+      "category": "other",
+      "utrecht": "@utrecht/component-library-react Paragraph"
+    },
+    {
+      "name": "Range=Month",
+      "category": "other",
+      "utrecht": null
+    },
+    {
+      "name": "Property 1=Default",
+      "category": "other",
+      "utrecht": null
+    },
+    {
+      "name": "Property 1=Default",
+      "category": "other",
+      "utrecht": null
+    },
+    {
+      "name": "Property 1=Default",
+      "category": "other",
+      "utrecht": null
+    },
+    {
+      "name": "Offset amount=2 days",
+      "category": "other",
+      "utrecht": null
+    },
+    {
+      "name": "State=Disabled",
+      "category": "other",
+      "utrecht": null
+    },
+    {
+      "name": "State=Default",
+      "category": "other",
+      "utrecht": null
+    },
+    {
+      "name": "Label type=Warning",
+      "category": "other",
+      "utrecht": "@utrecht/component-library-react Label"
+    },
+    {
+      "name": "Open=False, Searchable=False, State=Default, Placeholder text=False",
+      "category": "other",
+      "utrecht": "@utrecht/component-library-react Paragraph"
+    },
+    {
+      "name": "Open=False, Searchable=False, State=Default, Placeholder text=True",
+      "category": "other",
+      "utrecht": "@utrecht/component-library-react Paragraph"
+    },
+    {
+      "name": "Open=True, Searchable=True, State=Focus, Placeholder text=True",
+      "category": "other",
+      "utrecht": "@utrecht/component-library-react Paragraph"
+    },
+    {
+      "name": "Visible=True",
+      "category": "other",
+      "utrecht": null
+    },
+    {
+      "name": "Dropdown list",
+      "category": "other",
+      "utrecht": null
+    },
+    {
+      "name": "State=Default",
+      "category": "other",
+      "utrecht": null
+    },
+    {
+      "name": "Dropdown list scrollbar/10",
+      "category": "other",
+      "utrecht": null
+    },
+    {
+      "name": "State=Focus, Placeholder text=True",
+      "category": "other",
+      "utrecht": "@utrecht/component-library-react Paragraph"
+    },
+    {
+      "name": "Offset amount=1 day",
+      "category": "other",
+      "utrecht": null
+    },
+    {
+      "name": "eidas",
+      "category": "other",
+      "utrecht": null
+    },
+    {
+      "name": "State=Focus, Placeholder=True",
+      "category": "other",
+      "utrecht": null
+    },
+    {
+      "name": "Stepper",
+      "category": "other",
+      "utrecht": null
+    },
+    {
+      "name": "State=Default",
+      "category": "other",
+      "utrecht": null
+    },
+    {
+      "name": "State=Locked",
+      "category": "other",
+      "utrecht": null
+    },
+    {
+      "name": "Open=False, Searchable=False, State=Default, Placeholder text=True",
+      "category": "other",
+      "utrecht": "@utrecht/component-library-react Paragraph"
+    },
+    {
+      "name": "Offset amount=4 days",
+      "category": "other",
+      "utrecht": null
+    },
+    {
+      "name": "State=Current + disabled",
+      "category": "other",
+      "utrecht": null
+    },
+    {
+      "name": "State=Current",
+      "category": "other",
+      "utrecht": null
+    },
+    {
+      "name": "Offset amount=5 days",
+      "category": "other",
+      "utrecht": null
+    }
+  ]
+}

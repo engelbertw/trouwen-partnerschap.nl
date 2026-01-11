@@ -110,7 +110,7 @@ function AankondigingTypeContent(): JSX.Element {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100">
       {/* Blue header bar */}
-      <div className="bg-[#154273] text-white py-4 px-4 sm:px-6 lg:px-8">
+      <div className="bg-[#004A91] text-white py-4 px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto max-w-4xl">
           <h1 className="font-sans text-xl font-bold">
             Huwelijk of partnerschap aankondigen
@@ -124,7 +124,7 @@ function AankondigingTypeContent(): JSX.Element {
           {/* Previous step link */}
           <Link
             href="/000-aankondiging/000-inleiding"
-            className="inline-flex items-center gap-2 text-[#154273] hover:text-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 mb-6 transition-colors"
+            className="inline-flex items-center gap-2 text-[#2e75d4] hover:text-[#4d8ada] focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 mb-6 transition-colors"
           >
             <svg 
               className="w-4 h-4" 
@@ -152,7 +152,7 @@ function AankondigingTypeContent(): JSX.Element {
           <div className="mb-8">
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div 
-                className="bg-[#154273] h-2 rounded-full transition-all duration-300"
+                className="bg-[#2e75d4] h-2 rounded-full transition-all duration-300"
                 style={{ width: '10%' }}
                 role="progressbar"
                 aria-valuenow={10}
@@ -194,7 +194,7 @@ function AankondigingTypeContent(): JSX.Element {
                     value="huwelijk"
                     checked={selectedType === 'huwelijk'}
                     onChange={(e) => setSelectedType(e.target.value as 'huwelijk')}
-                    className="w-5 h-5 text-[#154273] border-gray-300 focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 cursor-pointer"
+                    className="w-5 h-5 text-[#2e75d4] border-gray-300 focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 cursor-pointer"
                   />
                   <label 
                     htmlFor="huwelijk" 
@@ -213,7 +213,7 @@ function AankondigingTypeContent(): JSX.Element {
                     value="partnerschap"
                     checked={selectedType === 'partnerschap'}
                     onChange={(e) => setSelectedType(e.target.value as 'partnerschap')}
-                    className="w-5 h-5 text-[#154273] border-gray-300 focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 cursor-pointer"
+                    className="w-5 h-5 text-[#2e75d4] border-gray-300 focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 cursor-pointer"
                   />
                   <label 
                     htmlFor="partnerschap" 
@@ -230,7 +230,7 @@ function AankondigingTypeContent(): JSX.Element {
               <button
                 type="submit"
                 disabled={!selectedType || isSaving}
-                className="inline-flex items-center justify-center gap-2 bg-[#154273] text-white font-sans text-base font-bold px-6 py-3 rounded hover:bg-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed disabled:hover:bg-gray-300"
+                className="inline-flex items-center justify-center gap-2 bg-[#2e75d4] text-white font-sans text-base font-bold px-6 py-3 rounded hover:bg-[#4d8ada] focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed disabled:hover:bg-gray-300"
               >
                 {isSaving ? 'Opslaan...' : 'Volgende stap'}
                 <svg 

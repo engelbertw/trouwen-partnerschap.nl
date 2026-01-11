@@ -60,14 +60,14 @@ function HervattenContent(): JSX.Element {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100">
       {/* Header */}
-      <header className="bg-[#154273] text-white py-4 px-4 sm:px-6 lg:px-8">
+      <header className="bg-[#004A91] text-white py-4 px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto max-w-4xl">
             <GemeenteLogoCompact />
         </div>
       </header>
 
       {/* Blue bar */}
-      <div className="bg-[#154273] text-white py-3 px-4 sm:px-6 lg:px-8 border-t border-white/20">
+      <div className="bg-[#004A91] text-white py-3 px-4 sm:px-6 lg:px-8 border-t border-white/20">
         <div className="container mx-auto max-w-4xl">
           <h1 className="text-lg font-normal">Huwelijk of partnerschap aankondigen</h1>
         </div>
@@ -78,7 +78,7 @@ function HervattenContent(): JSX.Element {
         <article className="bg-white rounded-lg shadow-md p-8 sm:p-12 max-w-2xl mx-auto text-center">
           {status === 'loading' && (
             <>
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#154273] mb-6"></div>
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#2e75d4] mb-6"></div>
               <h2 className="font-serif text-2xl font-bold mb-4">
                 Uw voortgang laden...
               </h2>
@@ -131,7 +131,7 @@ function HervattenContent(): JSX.Element {
               </p>
               <button
                 onClick={() => router.push('/000-aankondiging/000-inleiding')}
-                className="inline-flex items-center justify-center bg-[#154273] text-white font-sans text-base font-bold px-6 py-3 rounded hover:bg-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 transition-colors"
+                className="inline-flex items-center justify-center bg-[#2e75d4] text-white font-sans text-base font-bold px-6 py-3 rounded hover:bg-[#4d8ada] focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 transition-colors"
               >
                 Opnieuw beginnen
               </button>

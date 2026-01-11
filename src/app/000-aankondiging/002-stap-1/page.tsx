@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default function AankondigingStap1(): JSX.Element {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100">
-      <div className="bg-[#154273] text-white py-4 px-4 sm:px-6 lg:px-8">
+      <div className="bg-[#004A91] text-white py-4 px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto max-w-4xl">
           <h1 className="font-sans text-xl font-bold">
             Huwelijk of partnerschap aankondigen

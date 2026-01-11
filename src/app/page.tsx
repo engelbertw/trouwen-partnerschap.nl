@@ -18,7 +18,7 @@ export default function AankondigingInleiding(): JSX.Element {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100">
       {/* Page header with title */}
-      <div className="bg-[#154273] text-white py-4 px-4 sm:px-6 lg:px-8">
+      <div className="bg-[#004A91] text-white py-4 px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto max-w-4xl">
           <h1 className="font-sans text-xl font-bold">
             Huwelijk of partnerschap aankondigen
@@ -51,7 +51,7 @@ export default function AankondigingInleiding(): JSX.Element {
                 href="https://www.digid.nl" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-[#154273] underline hover:text-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2"
+                className="text-[#2e75d4] underline hover:text-[#4d8ada] focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2"
               >
                 DigiD.nl
               </a>
@@ -80,7 +80,7 @@ export default function AankondigingInleiding(): JSX.Element {
           <div className="mt-8">
             <Link
               href="/000-aankondiging/001-start"
-              className="inline-flex items-center justify-center gap-2 bg-[#154273] text-white font-sans text-base font-bold px-6 py-3 rounded hover:bg-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 transition-colors"
+              className="inline-flex items-center justify-center gap-2 bg-[#2e75d4] text-white font-sans text-base font-bold px-6 py-3 rounded hover:bg-[#4d8ada] focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 transition-colors"
             >
               Start aankondiging
               <svg 

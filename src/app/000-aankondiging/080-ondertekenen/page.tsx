@@ -110,7 +110,7 @@ function OndertekenenContent(): JSX.Element {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100">
       {/* Header */}
-      <header className="bg-[#154273] text-white py-4 px-4 sm:px-6 lg:px-8">
+      <header className="bg-[#004A91] text-white py-4 px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto max-w-4xl flex items-center justify-between">
           <div className="flex items-center gap-4">
             <GemeenteLogoCompact />
@@ -134,7 +134,7 @@ function OndertekenenContent(): JSX.Element {
       </header>
 
       {/* Blue bar */}
-      <div className="bg-[#154273] text-white py-3 px-4 sm:px-6 lg:px-8 border-t border-white/20">
+      <div className="bg-[#004A91] text-white py-3 px-4 sm:px-6 lg:px-8 border-t border-white/20">
         <div className="container mx-auto max-w-4xl">
           <h1 className="text-lg font-normal">Huwelijk of partnerschap aankondigen</h1>
         </div>
@@ -168,7 +168,7 @@ function OndertekenenContent(): JSX.Element {
           {/* Previous step link */}
           <Link
             href={dossierId ? `/000-aankondiging/070-samenvatting?dossierId=${dossierId}` : '/000-aankondiging/070-samenvatting'}
-            className="inline-flex items-center text-[#154273] hover:text-[#1a5a99] mb-6 text-sm"
+            className="inline-flex items-center text-[#2e75d4] hover:text-[#4d8ada] mb-6 text-sm"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -189,7 +189,7 @@ function OndertekenenContent(): JSX.Element {
           <div className="mb-8">
             <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
               <div
-                className="h-full bg-[#154273] transition-all"
+                className="h-full bg-[#2e75d4] transition-all"
                 style={{ width: '90%' }}
                 role="progressbar"
                 aria-valuenow={90}
@@ -287,7 +287,7 @@ function OndertekenenContent(): JSX.Element {
             <div className="flex flex-col gap-4">
               <button
                 onClick={handleSubmit}
-                className="inline-flex items-center justify-center gap-2 bg-[#154273] text-white font-sans text-base font-bold px-6 py-3 rounded hover:bg-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 transition-colors"
+                className="inline-flex items-center justify-center gap-2 bg-[#2e75d4] text-white font-sans text-base font-bold px-6 py-3 rounded hover:bg-[#4d8ada] focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 transition-colors"
               >
                 Aankondiging versturen
               </button>
@@ -298,7 +298,7 @@ function OndertekenenContent(): JSX.Element {
           <div className="mt-6 flex flex-col gap-3">
             <button
               onClick={handleDownloadPDF}
-              className="inline-flex items-center gap-2 text-[#154273] hover:text-[#1a5a99] font-medium underline focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2"
+              className="inline-flex items-center gap-2 text-[#2e75d4] hover:text-[#4d8ada] font-medium underline focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -308,7 +308,7 @@ function OndertekenenContent(): JSX.Element {
             
             <button
               onClick={handleSaveForLater}
-              className="text-[#154273] hover:text-[#1a5a99] underline text-sm"
+              className="text-[#2e75d4] hover:text-[#4d8ada] underline text-sm"
             >
               Opslaan en later verder
             </button>

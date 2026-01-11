@@ -1,0 +1,559 @@
+{
+  "timestamp": "2026-01-11T07:30:46.652Z",
+  "figmaUrl": "https://www.figma.com/design/egmJPMnreeZSwiLYYTwsZo/Schermen-vernieuwd-huwelijk?node-id=185-594&p=f&t=wqdnDCHTobAhPiwJ-0",
+  "summary": {
+    "missing": 61,
+    "exists": 0,
+    "partial": 0,
+    "needs-update": 0
+  },
+  "analyses": [
+    {
+      "name": "icon/icon-success",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Gebruik @utrecht/component-library-react Icon component",
+        "Check welke icon variant nodig is (success, info, etc.)"
+      ]
+    },
+    {
+      "name": "Type=Secondary, State=Default",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Label type=Info",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "icon/icon-info",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Gebruik @utrecht/component-library-react Icon component",
+        "Check welke icon variant nodig is (success, info, etc.)"
+      ]
+    },
+    {
+      "name": "Type=Primary, State=Default",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "State=Default",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Radio Button List",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Gebruik @utrecht/component-library-react Button component"
+      ]
+    },
+    {
+      "name": "Property 1=Error",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Selected=False, State=Default",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Selected=True, State=Default",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "DigiD",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Selected=True, Indeterminate=False, State=Default",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Selected=False, Indeterminate=False, State=Default",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Type=Primary, State=Disabled",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "State=Default, Placeholder=False",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Spacing/12",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Spacing/24",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "State=Default, Placeholder text=False",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Status=Success",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "pdf",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Property 1=Success",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "State=Default, Placeholder=True",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "State=Default, Placeholder text=True",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Status=Idle",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "State=Disabled",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "State=Default, Placeholder text=True",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Range=Month",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Property 1=Default",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Property 1=Default",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Property 1=Default",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Offset amount=2 days",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "State=Disabled",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "State=Default",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "State=Selected",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Spacing/0",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Label type=Warning",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "icon/icon-warning",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Gebruik @utrecht/component-library-react Icon component",
+        "Check welke icon variant nodig is (success, info, etc.)"
+      ]
+    },
+    {
+      "name": "Open=False, Searchable=False, State=Default, Placeholder text=False",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Open=False, Searchable=False, State=Default, Placeholder text=True",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Open=True, Searchable=True, State=Focus, Placeholder text=True",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Visible=True",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Dropdown list",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "State=Default",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Dropdown list scrollbar/10",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "State=Focus, Placeholder text=True",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Offset amount=1 day",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "eidas",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "attachment-pdf",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "State=Focus, Placeholder=True",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Selected=True, Indeterminate=False, State=Disabled",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Stepper",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "State=Default",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "State=Selected",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "State=Locked",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Open=False, Searchable=False, State=Default, Placeholder text=True",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Input validation",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Gebruik @utrecht/component-library-react Textbox component"
+      ]
+    },
+    {
+      "name": "Selected=False, Indeterminate=True, State=Default",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Offset amount=4 days",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "State=Current + disabled",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "State=Current",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    },
+    {
+      "name": "Offset amount=5 days",
+      "status": "missing",
+      "match": null,
+      "recommendations": [
+        "Maak nieuwe custom component of gebruik Utrecht equivalent",
+        "Check NL Design System documentatie voor beste match"
+      ]
+    }
+  ]
+}

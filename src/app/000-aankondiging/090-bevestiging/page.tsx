@@ -151,13 +151,13 @@ function BevestigingContent(): JSX.Element {
     return (
       <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100">
         {/* Header */}
-        <header className="bg-[#154273] text-white py-4 px-4 sm:px-6 lg:px-8">
+        <header className="bg-[#004A91] text-white py-4 px-4 sm:px-6 lg:px-8">
           <div className="container mx-auto max-w-4xl">
             <GemeenteLogoCompact />
           </div>
         </header>
 
-        <div className="bg-[#154273] text-white py-3 px-4 sm:px-6 lg:px-8 border-t border-white/20">
+        <div className="bg-[#004A91] text-white py-3 px-4 sm:px-6 lg:px-8 border-t border-white/20">
           <div className="container mx-auto max-w-4xl">
             <h1 className="text-lg font-normal">Huwelijk of partnerschap aankondigen</h1>
           </div>
@@ -165,7 +165,7 @@ function BevestigingContent(): JSX.Element {
 
         <main className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8 flex items-center justify-center min-h-[60vh]">
           <div className="bg-white rounded-lg shadow-md p-8 sm:p-12 text-center max-w-md">
-            <div className="inline-block animate-spin rounded-full h-16 w-16 border-b-4 border-[#154273] mb-6"></div>
+            <div className="inline-block animate-spin rounded-full h-16 w-16 border-b-4 border-[#2e75d4] mb-6"></div>
             <h2 className="font-serif text-2xl font-bold mb-4 text-gray-900">
               Gegevens laden...
             </h2>
@@ -184,13 +184,13 @@ function BevestigingContent(): JSX.Element {
     return (
       <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100">
         {/* Header */}
-        <header className="bg-[#154273] text-white py-4 px-4 sm:px-6 lg:px-8">
+        <header className="bg-[#004A91] text-white py-4 px-4 sm:px-6 lg:px-8">
           <div className="container mx-auto max-w-4xl">
             <GemeenteLogoCompact />
           </div>
         </header>
 
-        <div className="bg-[#154273] text-white py-3 px-4 sm:px-6 lg:px-8 border-t border-white/20">
+        <div className="bg-[#004A91] text-white py-3 px-4 sm:px-6 lg:px-8 border-t border-white/20">
           <div className="container mx-auto max-w-4xl">
             <h1 className="text-lg font-normal">Huwelijk of partnerschap aankondigen</h1>
           </div>
@@ -216,7 +216,7 @@ function BevestigingContent(): JSX.Element {
             <div className="flex flex-col gap-3">
               <button
                 onClick={() => router.push('/000-aankondiging/000-inleiding')}
-                className="bg-[#154273] text-white font-bold px-6 py-3 rounded hover:bg-[#1a5a99] transition-colors"
+                className="bg-[#2e75d4] text-white font-bold px-6 py-3 rounded hover:bg-[#4d8ada] transition-colors"
               >
                 Formulier opnieuw starten
               </button>
@@ -228,7 +228,7 @@ function BevestigingContent(): JSX.Element {
                     router.push('/000-aankondiging/070-samenvatting');
                   }
                 }}
-                className="bg-white text-[#154273] font-bold px-6 py-3 rounded border-2 border-[#154273] hover:bg-blue-50 transition-colors"
+                className="bg-white text-[#2e75d4] font-bold px-6 py-3 rounded border-2 border-[#2e75d4] hover:bg-blue-50 transition-colors"
               >
                 Terug naar samenvatting
               </button>
@@ -243,7 +243,7 @@ function BevestigingContent(): JSX.Element {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100">
       {/* Header */}
-      <header className="bg-[#154273] text-white py-4 px-4 sm:px-6 lg:px-8">
+      <header className="bg-[#004A91] text-white py-4 px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto max-w-4xl flex items-center justify-between">
           <div className="flex items-center gap-4">
             <GemeenteLogoCompact />
@@ -267,7 +267,7 @@ function BevestigingContent(): JSX.Element {
       </header>
 
       {/* Blue bar */}
-      <div className="bg-[#154273] text-white py-3 px-4 sm:px-6 lg:px-8 border-t border-white/20">
+      <div className="bg-[#004A91] text-white py-3 px-4 sm:px-6 lg:px-8 border-t border-white/20">
         <div className="container mx-auto max-w-4xl">
           <h1 className="text-lg font-normal">Huwelijk of partnerschap aankondigen</h1>
         </div>
@@ -338,7 +338,7 @@ function BevestigingContent(): JSX.Element {
               </p>
               <button
                 onClick={handleDownloadPDF}
-                className="inline-flex items-center gap-2 text-[#154273] hover:text-[#1a5a99] font-medium underline"
+                className="inline-flex items-center gap-2 text-[#2e75d4] hover:text-[#4d8ada] font-medium underline"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -352,13 +352,13 @@ function BevestigingContent(): JSX.Element {
           <div className="flex flex-col sm:flex-row gap-4 mt-8 pt-6 border-t border-gray-200">
             <button
               onClick={handleOpenDossier}
-              className="inline-flex items-center justify-center bg-[#154273] text-white font-sans text-base font-bold px-6 py-3 rounded hover:bg-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 transition-colors"
+              className="inline-flex items-center justify-center bg-[#2e75d4] text-white font-sans text-base font-bold px-6 py-3 rounded hover:bg-[#4d8ada] focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 transition-colors"
             >
               Huwelijksdossier openen
             </button>
             <button
               onClick={handleClose}
-              className="inline-flex items-center justify-center bg-white text-[#154273] font-sans text-base font-bold px-6 py-3 rounded border-2 border-[#154273] hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 transition-colors"
+              className="inline-flex items-center justify-center bg-white text-[#2e75d4] font-sans text-base font-bold px-6 py-3 rounded border-2 border-[#2e75d4] hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 transition-colors"
             >
               Formulier sluiten
             </button>

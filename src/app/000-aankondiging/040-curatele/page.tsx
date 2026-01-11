@@ -205,7 +205,7 @@ function CurateleContent(): JSX.Element | null {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100">
       {/* Blue header bar */}
-      <div className="bg-[#154273] text-white py-4 px-4 sm:px-6 lg:px-8">
+      <div className="bg-[#004A91] text-white py-4 px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto max-w-4xl">
           <h1 className="font-sans text-xl font-bold">
             Huwelijk of partnerschap aankondigen
@@ -234,7 +234,7 @@ function CurateleContent(): JSX.Element | null {
               const id = dossierId || (typeof window !== 'undefined' ? sessionStorage.getItem('dossierId') : null);
               return id ? `/000-aankondiging/031-partner2-gegevens?dossierId=${id}` : '/000-aankondiging/031-partner2-gegevens';
             })()}
-            className="inline-flex items-center gap-2 text-[#154273] hover:text-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 mb-6 transition-colors"
+            className="inline-flex items-center gap-2 text-[#2e75d4] hover:text-[#4d8ada] focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 mb-6 transition-colors"
           >
             <svg 
               className="w-4 h-4" 
@@ -262,7 +262,7 @@ function CurateleContent(): JSX.Element | null {
           <div className="mb-8">
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div 
-                className="bg-[#154273] h-2 rounded-full transition-all duration-300"
+                className="bg-[#2e75d4] h-2 rounded-full transition-all duration-300"
                 style={{ width: '60%' }}
                 role="progressbar"
                 aria-valuenow={60}
@@ -289,7 +289,7 @@ function CurateleContent(): JSX.Element | null {
                   value="ja"
                   checked={partner1UnderGuardianship === true}
                   onChange={() => setPartner1UnderGuardianship(true)}
-                  className="w-5 h-5 text-[#154273] border-gray-300 focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 cursor-pointer"
+                  className="w-5 h-5 text-[#2e75d4] border-gray-300 focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 cursor-pointer"
                 />
                 <label 
                   htmlFor="partner1-ja" 
@@ -308,7 +308,7 @@ function CurateleContent(): JSX.Element | null {
                   value="nee"
                   checked={partner1UnderGuardianship === false}
                   onChange={() => setPartner1UnderGuardianship(false)}
-                  className="w-5 h-5 text-[#154273] border-gray-300 focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 cursor-pointer"
+                  className="w-5 h-5 text-[#2e75d4] border-gray-300 focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 cursor-pointer"
                 />
                 <label 
                   htmlFor="partner1-nee" 
@@ -331,7 +331,7 @@ function CurateleContent(): JSX.Element | null {
               </p>
 
               {!partner1UploadedFile ? (
-                <label className="inline-flex items-center gap-2 bg-white text-[#154273] font-sans text-base font-bold px-5 py-3 rounded border-2 border-[#154273] hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 transition-colors cursor-pointer">
+                <label className="inline-flex items-center gap-2 bg-white text-[#2e75d4] font-sans text-base font-bold px-5 py-3 rounded border-2 border-[#2e75d4] hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 transition-colors cursor-pointer">
                   <svg 
                     className="w-5 h-5" 
                     fill="none" 
@@ -378,7 +378,7 @@ function CurateleContent(): JSX.Element | null {
                   {/* Remove button */}
                   <button
                     onClick={() => handleRemoveFile('partner1')}
-                    className="text-[#154273] hover:text-[#1a5a99] font-medium text-sm underline"
+                    className="text-[#2e75d4] hover:text-[#4d8ada] font-medium text-sm underline"
                   >
                     Verwijder
                   </button>
@@ -403,7 +403,7 @@ function CurateleContent(): JSX.Element | null {
                   value="ja"
                   checked={partner2UnderGuardianship === true}
                   onChange={() => setPartner2UnderGuardianship(true)}
-                  className="w-5 h-5 text-[#154273] border-gray-300 focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 cursor-pointer"
+                  className="w-5 h-5 text-[#2e75d4] border-gray-300 focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 cursor-pointer"
                 />
                 <label 
                   htmlFor="partner2-ja" 
@@ -422,7 +422,7 @@ function CurateleContent(): JSX.Element | null {
                   value="nee"
                   checked={partner2UnderGuardianship === false}
                   onChange={() => setPartner2UnderGuardianship(false)}
-                  className="w-5 h-5 text-[#154273] border-gray-300 focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 cursor-pointer"
+                  className="w-5 h-5 text-[#2e75d4] border-gray-300 focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 cursor-pointer"
                 />
                 <label 
                   htmlFor="partner2-nee" 
@@ -445,7 +445,7 @@ function CurateleContent(): JSX.Element | null {
               </p>
 
               {!partner2UploadedFile ? (
-                <label className="inline-flex items-center gap-2 bg-white text-[#154273] font-sans text-base font-bold px-5 py-3 rounded border-2 border-[#154273] hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 transition-colors cursor-pointer">
+                <label className="inline-flex items-center gap-2 bg-white text-[#2e75d4] font-sans text-base font-bold px-5 py-3 rounded border-2 border-[#2e75d4] hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 transition-colors cursor-pointer">
                   <svg 
                     className="w-5 h-5" 
                     fill="none" 
@@ -492,7 +492,7 @@ function CurateleContent(): JSX.Element | null {
                   {/* Remove button */}
                   <button
                     onClick={() => handleRemoveFile('partner2')}
-                    className="text-[#154273] hover:text-[#1a5a99] font-medium text-sm underline"
+                    className="text-[#2e75d4] hover:text-[#4d8ada] font-medium text-sm underline"
                   >
                     Verwijder
                   </button>
@@ -506,7 +506,7 @@ function CurateleContent(): JSX.Element | null {
             <button
               onClick={handleContinue}
               disabled={isSaving}
-              className="inline-flex items-center justify-center gap-2 bg-[#154273] text-white font-sans text-base font-bold px-6 py-3 rounded hover:bg-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center justify-center gap-2 bg-[#2e75d4] text-white font-sans text-base font-bold px-6 py-3 rounded hover:bg-[#4d8ada] focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSaving ? 'Opslaan...' : 'Volgende stap'}
               {!isSaving && (

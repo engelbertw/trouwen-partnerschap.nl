@@ -18,7 +18,7 @@ function Partner1LoginContent(): JSX.Element {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100">
       {/* Blue header bar */}
-      <div className="bg-[#154273] text-white py-4 px-4 sm:px-6 lg:px-8">
+      <div className="bg-[#004A91] text-white py-4 px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto max-w-4xl">
           <h1 className="font-sans text-xl font-bold">
             Huwelijk of partnerschap aankondigen
@@ -32,7 +32,7 @@ function Partner1LoginContent(): JSX.Element {
           {/* Previous step link */}
           <Link
             href={dossierId ? `/000-aankondiging/010-aankondiging?dossierId=${dossierId}` : '/000-aankondiging/010-aankondiging'}
-            className="inline-flex items-center gap-2 text-[#154273] hover:text-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 mb-6 transition-colors"
+            className="inline-flex items-center gap-2 text-[#2e75d4] hover:text-[#4d8ada] focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 mb-6 transition-colors"
           >
             <svg 
               className="w-4 h-4" 
@@ -60,7 +60,7 @@ function Partner1LoginContent(): JSX.Element {
           <div className="mb-8">
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div 
-                className="bg-[#154273] h-2 rounded-full transition-all duration-300"
+                className="bg-[#2e75d4] h-2 rounded-full transition-all duration-300"
                 style={{ width: '20%' }}
                 role="progressbar"
                 aria-valuenow={20}
@@ -88,7 +88,7 @@ function Partner1LoginContent(): JSX.Element {
                   <p className="text-sm text-red-800 mb-4">Geen dossier ID gevonden. Start opnieuw.</p>
                   <Link
                     href="/000-aankondiging/010-aankondiging"
-                    className="inline-flex items-center gap-2 bg-[#154273] text-white font-sans text-sm font-bold px-4 py-2 rounded hover:bg-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 transition-colors"
+                    className="inline-flex items-center gap-2 bg-[#2e75d4] text-white font-sans text-sm font-bold px-4 py-2 rounded hover:bg-[#4d8ada] focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 transition-colors"
                   >
                     Start opnieuw
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -104,7 +104,7 @@ function Partner1LoginContent(): JSX.Element {
           <div className="flex flex-col gap-4">
             <Link
               href={dossierId ? `/000-aankondiging/021-partner1-gegevens?dossierId=${dossierId}` : '/000-aankondiging/021-partner1-gegevens'}
-              className={`inline-flex items-center justify-between w-full max-w-md bg-white text-gray-900 font-sans text-base px-5 py-4 rounded border border-gray-300 hover:border-gray-400 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 transition-all ${!dossierId ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`inline-flex items-center justify-between w-full max-w-md bg-white text-gray-900 font-sans text-base px-5 py-4 rounded border border-gray-300 hover:border-gray-400 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 transition-all ${!dossierId ? 'opacity-50 cursor-not-allowed' : ''}`}
               onClick={(e) => {
                 if (!dossierId) {
                   e.preventDefault();
@@ -128,7 +128,7 @@ export default function Partner1LoginPage(): JSX.Element {
     <Suspense fallback={
       <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#154273] mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2e75d4] mx-auto mb-4"></div>
           <p className="text-gray-700">Laden...</p>
         </div>
       </div>

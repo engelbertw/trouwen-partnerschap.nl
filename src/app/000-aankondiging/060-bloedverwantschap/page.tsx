@@ -92,7 +92,7 @@ function BloedverwantschapContent(): JSX.Element | null {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100">
       {/* Header */}
-      <header className="bg-[#154273] text-white py-4 px-4 sm:px-6 lg:px-8">
+      <header className="bg-[#004A91] text-white py-4 px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto max-w-4xl flex items-center justify-between">
           <div className="flex items-center gap-4">
             <GemeenteLogoCompact />
@@ -121,7 +121,7 @@ function BloedverwantschapContent(): JSX.Element | null {
       </header>
 
       {/* Blue bar with title */}
-      <div className="bg-[#154273] text-white py-3 px-4 sm:px-6 lg:px-8 border-t border-white/20">
+      <div className="bg-[#004A91] text-white py-3 px-4 sm:px-6 lg:px-8 border-t border-white/20">
         <div className="container mx-auto max-w-4xl">
           <h1 className="text-lg font-normal">Huwelijk of partnerschap aankondigen</h1>
         </div>
@@ -145,7 +145,7 @@ function BloedverwantschapContent(): JSX.Element | null {
           {/* Previous step link */}
           <Link
             href={dossierId ? `/000-aankondiging/050-kinderen?dossierId=${dossierId}` : '/000-aankondiging/050-kinderen'}
-            className="inline-flex items-center text-[#154273] hover:text-[#1a5a99] mb-6 text-sm font-medium"
+            className="inline-flex items-center text-[#2e75d4] hover:text-[#4d8ada] mb-6 text-sm font-medium"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -173,7 +173,7 @@ function BloedverwantschapContent(): JSX.Element | null {
           <div className="mb-8">
             <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
               <div
-                className="h-full bg-[#154273] transition-all duration-300"
+                className="h-full bg-[#2e75d4] transition-all duration-300"
                 style={{ width: '60%' }}
                 role="progressbar"
                 aria-valuenow={60}
@@ -201,9 +201,9 @@ function BloedverwantschapContent(): JSX.Element | null {
                   value="ja"
                   checked={areBloodRelatives === true}
                   onChange={() => setAreBloodRelatives(true)}
-                  className="w-5 h-5 text-[#154273] border-gray-400 focus:ring-[#154273] focus:ring-2 cursor-pointer"
+                  className="w-5 h-5 text-[#2e75d4] border-gray-400 focus:ring-[#2e75d4] focus:ring-2 cursor-pointer"
                 />
-                <span className="text-base text-gray-900 group-hover:text-[#154273]">
+                <span className="text-base text-gray-900 group-hover:text-[#2e75d4]">
                   Ja
                 </span>
               </label>
@@ -215,9 +215,9 @@ function BloedverwantschapContent(): JSX.Element | null {
                   value="nee"
                   checked={areBloodRelatives === false}
                   onChange={() => setAreBloodRelatives(false)}
-                  className="w-5 h-5 text-[#154273] border-gray-400 focus:ring-[#154273] focus:ring-2 cursor-pointer"
+                  className="w-5 h-5 text-[#2e75d4] border-gray-400 focus:ring-[#2e75d4] focus:ring-2 cursor-pointer"
                 />
-                <span className="text-base text-gray-900 group-hover:text-[#154273]">
+                <span className="text-base text-gray-900 group-hover:text-[#2e75d4]">
                   Nee
                 </span>
               </label>
@@ -260,7 +260,7 @@ function BloedverwantschapContent(): JSX.Element | null {
               <button
                 onClick={handleContinue}
                 disabled={isSaving}
-                className="inline-flex items-center justify-center gap-2 bg-[#154273] text-white font-sans text-base font-bold px-6 py-3 rounded hover:bg-[#1a5a99] focus:outline-none focus:ring-2 focus:ring-[#154273] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex items-center justify-center gap-2 bg-[#2e75d4] text-white font-sans text-base font-bold px-6 py-3 rounded hover:bg-[#4d8ada] focus:outline-none focus:ring-2 focus:ring-[#2e75d4] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSaving ? 'Opslaan...' : 'Volgende stap'}
                 {!isSaving && (
