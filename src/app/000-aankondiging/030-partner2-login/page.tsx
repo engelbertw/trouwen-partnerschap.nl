@@ -5,6 +5,7 @@ import { Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { DigiDBadge } from '@/components/DigiDBadge';
+import { EidasBadge } from '@/components/EidasBadge';
 
 /**
  * Partner 2 DigiD/eIDAS login prompt
@@ -133,26 +134,7 @@ function Partner2LoginContent(): JSX.Element {
               }}
             >
               <span className="font-normal">Inloggen met eIDAS</span>
-              <span className="bg-[#003399] text-white rounded-full flex items-center justify-center w-8 h-8">
-                <svg 
-                  viewBox="0 0 24 24" 
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  className="w-5 h-5"
-                  aria-hidden="true"
-                >
-                  <circle cx="12" cy="5" r="1.5" fill="currentColor" />
-                  <circle cx="6" cy="11" r="1.5" fill="currentColor" />
-                  <circle cx="18" cy="11" r="1.5" fill="currentColor" />
-                  <circle cx="9" cy="17" r="1.5" fill="currentColor" />
-                  <circle cx="15" cy="17" r="1.5" fill="currentColor" />
-                  <line x1="12" y1="6.5" x2="6" y2="9.5" />
-                  <line x1="12" y1="6.5" x2="18" y2="9.5" />
-                  <line x1="6" y1="12.5" x2="9" y2="15.5" />
-                  <line x1="18" y1="12.5" x2="15" y2="15.5" />
-                </svg>
-              </span>
+              <EidasBadge />
             </Link>
           </div>
 
