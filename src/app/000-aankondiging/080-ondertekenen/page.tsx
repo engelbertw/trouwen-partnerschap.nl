@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { getAankondigingData } from '@/lib/aankondiging-storage';
 import { generateAndDownloadAankondigingPDF } from '@/lib/pdf-generator';
 import { GemeenteLogoCompact } from '@/components/GemeenteLogo';
+import { DigiDBadge } from '@/components/DigiDBadge';
 
 /**
  * Ondertekenen page - Both partners sign the announcement
@@ -225,9 +226,7 @@ function OndertekenenContent(): JSX.Element {
                   className="inline-flex items-center justify-between w-full max-w-md bg-white text-gray-900 font-sans text-base px-4 py-3 rounded border-2 border-gray-400 hover:border-gray-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span className="font-medium">Ondertekenen met DigiD</span>
-                  <span className="flex items-center justify-center bg-[#000000] text-white text-xs font-bold px-3 py-1 rounded min-w-[50px]">
-                    DigiD
-                  </span>
+                  <DigiDBadge />
                 </button>
               </div>
             ) : (

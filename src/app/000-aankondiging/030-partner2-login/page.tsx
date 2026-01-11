@@ -4,6 +4,7 @@ import type { JSX } from 'react';
 import { Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { DigiDBadge } from '@/components/DigiDBadge';
 
 /**
  * Partner 2 DigiD/eIDAS login prompt
@@ -118,9 +119,7 @@ function Partner2LoginContent(): JSX.Element {
               }}
             >
               <span className="font-normal">Inloggen met DigiD</span>
-              <span className="bg-black text-white text-xs font-bold px-3 py-1.5 rounded">
-                DigiD
-              </span>
+              <DigiDBadge />
             </Link>
 
             {/* eIDAS Button */}
